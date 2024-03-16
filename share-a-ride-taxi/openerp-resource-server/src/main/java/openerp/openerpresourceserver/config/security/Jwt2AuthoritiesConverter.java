@@ -26,6 +26,7 @@ public class Jwt2AuthoritiesConverter implements Converter<Jwt, Collection<Grant
         final var realmAccess = (Map<String, Object>) jwt
                 .getClaims()
                 .getOrDefault("realm_access", Collections.emptyMap());
+
         final var realmRoles = (Collection<String>) realmAccess.getOrDefault("roles", Collections.emptyList());
 
         final var resourceAccess = (Map<String, Object>) jwt
