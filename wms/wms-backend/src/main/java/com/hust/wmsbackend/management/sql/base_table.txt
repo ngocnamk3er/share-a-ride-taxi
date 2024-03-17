@@ -1,0 +1,13 @@
+application_type
+security_permission
+application
+security_group
+security_group_permission
+user_login_security_group
+party_type
+party
+user_login
+person
+status_item
+status_type
+product_category

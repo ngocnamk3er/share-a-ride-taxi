@@ -29,7 +29,8 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^6.2.0",
     "simplebar-react": "^2.3.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.21"
   },
   "scripts": {
     "start": "react-scripts start",

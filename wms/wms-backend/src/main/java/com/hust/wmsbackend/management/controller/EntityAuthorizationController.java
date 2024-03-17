@@ -39,6 +39,9 @@ public class EntityAuthorizationController {
                 })
                 .collect(Collectors.toList());
 
+        System.out.println("-------------");
+        System.out.println(roleIds);
+        System.out.println("-------------");
         return ResponseEntity.ok().body(entityAuthorizationService.getEntityAuthorization(id, roleIds));
     }
 }
