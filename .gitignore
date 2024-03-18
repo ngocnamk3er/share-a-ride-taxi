@@ -37,3 +37,5 @@ HELP.md
 ./passbook/openerp-resource-server/*.yml
 ./passbook/openerp-resource-server/.idea/
 **/node_modules/
+
+vietnam-latest.osm.pbf
