@@ -1,0 +1,45 @@
+package openerp.openerpresourceserver.controller;
+
+import lombok.RequiredArgsConstructor;
+import openerp.openerpresourceserver.entity.Location;
+import openerp.openerpresourceserver.service.LocationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/locations")
+@RequiredArgsConstructor
+
+public class LocationController {
+
+    private final LocationService locationService;
+
+
+    @GetMapping
+    public List<Location> getAllLocations() {
+        return locationService.getAllLocations();
+    }
+
+    @GetMapping("/{id}")
+    public Location getLocationById(@PathVariable UUID id) {
+        return locationService.getLocationById(id);
+    }
+
+    @PostMapping
+    public Location createLocation(@RequestBody Location location) {
+        return locationService.saveLocation(location);
+    }
+
+    @PutMapping("/{id}")
+    public Location updateLocation(@PathVariable UUID id, @RequestBody Location newLocation) {
+        return locationService.updateLocation(id, newLocation);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteLocation(@PathVariable UUID id) {
+        locationService.deleteLocation(id);
+    }
+}
