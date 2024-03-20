@@ -33,7 +33,7 @@ const Map = (props) => {
                     A pretty CSS3 popup. <br /> Easily customizable.
                 </Popup>
             </Marker> */}
-            <Routing pickupLocation={pickupLocation} dropoffLocation={dropoffLocation} />
+            <RoutingMachine pickupLocation={pickupLocation} dropoffLocation={dropoffLocation} />
         </MapContainer>
     );
 }
