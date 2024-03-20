@@ -3,6 +3,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import RoutingMachine from "./RoutingMachine";
+import Routing from "./Routing";
 
 const icon = L.icon({
     iconUrl: "../../../placeholder.png",
@@ -32,7 +33,7 @@ const Map = (props) => {
                     A pretty CSS3 popup. <br /> Easily customizable.
                 </Popup>
             </Marker> */}
-            <RoutingMachine pickupLocation={pickupLocation} dropoffLocation={dropoffLocation} />
+            <Routing pickupLocation={pickupLocation} dropoffLocation={dropoffLocation} />
         </MapContainer>
     );
 }
