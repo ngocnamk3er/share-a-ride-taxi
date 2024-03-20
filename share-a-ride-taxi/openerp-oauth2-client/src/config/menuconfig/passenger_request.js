@@ -5,7 +5,7 @@ export const passenger_request = {
     child: [
       {
         id: "MENU_SAR_PASSENGER_REQUEST.MENU_ITEM_1",
-        path: "/menu_passenger_request/screen-1",
+        path: "/menu_passenger_request/passenger",
         isPublic: false,
         text: "passenger request submenu 1",
         child: [],

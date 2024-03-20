@@ -7,7 +7,7 @@ import LoadingScreen from "components/common/loading/loading";
 import withScreenSecurity from "components/common/withScreenSecurity";
 
 const TodayDeliveryTrip = () => {
-  
+
   const [tripTableData, setTripTableData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const { path } = useRouteMatch();
@@ -31,28 +31,28 @@ const TodayDeliveryTrip = () => {
   }, []);
 
   return (
-  isLoading ? <LoadingScreen /> :
-  <Fragment>
-    <StandardTable
-      title="Danh sách chuyến giao hàng cần thực hiện hôm nay"
-      columns={[
-        { title: "Mã chuyến", field: "deliveryTripId" },
-        { title: "Ngày tạo", field: "createdStamp" },
-        { title: "Trạng thái", field: "deliveryTripStatus" },
-        { title: "Mã đợt giao hàng", field: "shipmentId"}
-      ]}
-      options={{
-        selection: false,
-        pageSize: 10,
-        search: true,
-        sorting: true,
-      }}
-      data={tripTableData}
-      onRowClick={(event, rowData) => {
-        window.location.href = `${path}/${rowData.deliveryTripId}`;
-      }}
-    />
-  </Fragment>);
+    isLoading ? <LoadingScreen /> :
+      <Fragment>
+        <StandardTable
+          title="Danh sách chuyến giao hàng cần thực hiện hôm nay"
+          columns={[
+            { title: "Mã chuyến", field: "deliveryTripId" },
+            { title: "Ngày tạo", field: "createdStamp" },
+            { title: "Trạng thái", field: "deliveryTripStatus" },
+            { title: "Mã đợt giao hàng", field: "shipmentId" }
+          ]}
+          options={{
+            selection: false,
+            pageSize: 10,
+            search: true,
+            sorting: true,
+          }}
+          data={tripTableData}
+          onRowClick={(event, rowData) => {
+            window.location.href = `${path}/${rowData.deliveryTripId}`;
+          }}
+        />
+      </Fragment>);
 }
 
 const SCR_ID = "SCR_WMSv2_TODAY_DELIVERY_TRIP";
