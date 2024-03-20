@@ -26,6 +26,9 @@ function withScreenSecurity(SecuredComponent, id, viewError) {
         "get",
         `/entity-authorization/${id}`,
         (res) => {
+          console.log("----------------")
+          console.log(`/entity-authorization/${id}`)
+          console.log(res.data)
           setScreenAuthorization(new Set(res.data));
           setChecking(false);
         },
