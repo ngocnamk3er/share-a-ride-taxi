@@ -39,3 +39,5 @@ HELP.md
 **/node_modules/
 
 vietnam-latest.osm.pbf
+
+**/application.yml
