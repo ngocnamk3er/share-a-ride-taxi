@@ -43,8 +43,11 @@ public class PassengerRequestController {
 
     @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     @PostMapping
-    public PassengerRequest createPassengerRequest(@RequestBody PassengerRequestRequest request) {
-        return passengerRequestService.savePassengerRequest(convertToEntityBeforeCreate(request));
+    public PassengerRequestResponse createPassengerRequest(@RequestBody PassengerRequestRequest request) {
+        System.out.println("-----------------------");
+        System.out.println(request);
+        System.out.println("-----------------------");
+        return convertToResponse(passengerRequestService.savePassengerRequest(convertToEntityBeforeCreate(request)));
     }
 
     @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
