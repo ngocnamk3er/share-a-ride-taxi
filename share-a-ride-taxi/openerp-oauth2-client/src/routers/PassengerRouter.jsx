@@ -1,7 +1,8 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import passengerMenu from "../screens/passenger/passengerMenu";
+import ListPassengerRequest from "../screens/passenger/ListPassengerRequest";
 import passengerDemo from "../screens/passenger/passengerDemo";
-import CreatePassenger from "screens/passenger/DetailPassenger";
+import DetailPassengerRequest from "screens/passenger/DetailPassengerRequest";
+import CreatePassengerRequest from "screens/passenger/CreatePassengerRequest";
 
 export default function PassengerRouter() {
     let { path } = useRouteMatch();
@@ -9,9 +10,14 @@ export default function PassengerRouter() {
         <div>
             <Switch>
                 <Route
-                    component={passengerMenu}
+                    component={CreatePassengerRequest}
                     exact
-                    path={`${path}/passenger`}
+                    path={`${path}/create`}
+                ></Route>
+                <Route
+                    component={ListPassengerRequest}
+                    exact
+                    path={`${path}/list`}
                 ></Route>
                 <Route
                     component={passengerDemo}
@@ -19,9 +25,9 @@ export default function PassengerRouter() {
                     path={`${path}/screen-2`}
                 ></Route>
                 <Route
-                    component={CreatePassenger}
+                    component={DetailPassengerRequest}
                     exact
-                    path={`${path}/passenger/:id`}
+                    path={`${path}/list/:id`}
                 ></Route>
             </Switch>
         </div>

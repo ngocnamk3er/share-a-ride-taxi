@@ -8,13 +8,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useHistory } from "react-router-dom";
 
-const PassengerMenu = () => {
+const ListPassengerRequest = () => {
     const [passengerRequests, setPassengerRequests] = useState([]);
     const history = useHistory(); // Initialize useHistory hook
     let { path } = useRouteMatch();
 
     useEffect(() => {
-        request("get", "http://localhost:8080/api/passenger-requests", (res) => {
+        request("get", "/passenger-requests", (res) => {
             setPassengerRequests(res.data);
         }).then();
     }, [])
@@ -112,5 +112,5 @@ const PassengerMenu = () => {
     );
 }
 
-const SCR_ID = "SCR_SAR_PASSENGER";
-export default withScreenSecurity(PassengerMenu, SCR_ID, true);
+const SCR_ID = "SCR_SAR_LIST_PASSENGER_REQUEST";
+export default withScreenSecurity(ListPassengerRequest, SCR_ID, true);

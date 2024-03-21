@@ -80,5 +80,5 @@ const PassengerDemo = () => {
     );
 }
 
-const SCR_ID = "SCR_SAR_PASSENGER";
+const SCR_ID = "SCR_SAR_DEMO_PASSENGER_REQUEST";
 export default withScreenSecurity(PassengerDemo, SCR_ID, true);
