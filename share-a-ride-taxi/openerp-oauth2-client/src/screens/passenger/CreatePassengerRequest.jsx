@@ -52,6 +52,7 @@ const CreatePassengerRequest = () => {
     };
 
     const handleSubmit = async () => {
+        console.table(passengerData)
         try {
             const response = await request(
                 "post",
@@ -77,7 +78,7 @@ const CreatePassengerRequest = () => {
             console.error("Error creating passenger request:", error);
         }
     };
-    
+
 
     return (
         <Grid container spacing={2}>
@@ -122,6 +123,7 @@ const CreatePassengerRequest = () => {
                     fullWidth
                     required
                     InputProps={{ readOnly: true }}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <Modal
                     open={showPickupModal}
@@ -131,7 +133,7 @@ const CreatePassengerRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            position={passengerData.pickupLocationLatitude ? passengerData : null}
+                            position={passengerData.pickupLocationLatitude ? [passengerData.pickupLocationLatitude, passengerData.pickupLocationLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'pickup')}
                             onClose={() => {
                                 setShowPickupModal(false)
@@ -149,6 +151,7 @@ const CreatePassengerRequest = () => {
                     fullWidth
                     required
                     InputProps={{ readOnly: true }}
+                    InputLabelProps={{ shrink: true }}
                 />
                 <Modal
                     open={showDropoffModal}
@@ -158,10 +161,10 @@ const CreatePassengerRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            position={passengerData.dropoffLocationLatitude ? passengerData : null}
+                            position={passengerData.dropoffLocationLatitude ? [passengerData.dropoffLocationLatitude, passengerData.dropoffLocationLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'dropoff')}
                             onClose={() => {
-                                setShowPickupModal(false)
+                                setShowDropoffModal(false)
                             }}
                         />
                     </div>

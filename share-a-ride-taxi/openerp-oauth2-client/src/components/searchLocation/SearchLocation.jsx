@@ -3,8 +3,8 @@ import SearchBox from "./SearchBox";
 import Map from "./Map";
 
 function SearchLocation(props) {
-    const [selectPosition, setSelectPosition] = useState();
     const { position, setPosition } = props;
+    const [selectPosition, setSelectPosition] = useState(position ? {lat : position[0], lon : position[1]} : null);
     const { onClose } = props
     return (
         <div
@@ -31,15 +31,17 @@ function SearchLocation(props) {
                     color: "red",
                 }}
                 onClick={() => {
+                    if (selectPosition != null) {
+                        setPosition(selectPosition);
+                    }
                     onClose();
-                    setPosition(selectPosition);
                 }}
             >
                 Close
             </button>
             <div style={{ display: "flex", flexDirection: "row", width: "100%", height: "100%" }}>
                 <div style={{ width: "50%", height: "100%" }}>
-                    <Map selectPosition={selectPosition} />
+                    <Map position={position} selectPosition={selectPosition} />
                 </div>
                 <div style={{ width: "50%", marginLeft: "20px" }}>
                     <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition} />
