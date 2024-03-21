@@ -6,6 +6,7 @@ import { request } from "../../api";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useHistory } from "react-router-dom";
 
 const ListPassengerRequest = () => {
@@ -20,6 +21,21 @@ const ListPassengerRequest = () => {
     }, [])
 
     const handleRowClick = (event, rowData) => {
+        // Navigate to new URL without page reload
+        history.push(`${path}/${rowData.id}`);
+    }
+
+    const handleEditClick = (rowData) => {
+        // Navigate to new URL without page reload
+        history.push(`/passenger_request/update/${rowData.id}`);
+    }
+
+    const handleDeleteClick = (rowData) => {
+        // Navigate to new URL without page reload
+        history.push(`${path}/${rowData.id}`);
+    }
+
+    const handleViewClick = (rowData) => {
         // Navigate to new URL without page reload
         history.push(`${path}/${rowData.id}`);
     }
@@ -64,7 +80,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        demoFunction(rowData)
+                        handleEditClick(rowData)
                     }}
                     variant="contained"
                     color="success"
@@ -88,6 +104,21 @@ const ListPassengerRequest = () => {
                 </IconButton>
             ),
         },
+        {
+            title: "View",
+            sorting: false,
+            render: (rowData) => (
+                <IconButton
+                    onClick={() => {
+                        handleViewClick(rowData)
+                    }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
+        },
     ];
 
     const demoFunction = (passengerRequest) => {
@@ -100,7 +131,6 @@ const ListPassengerRequest = () => {
                 title="Passenger Request List"
                 columns={columns}
                 data={passengerRequests}
-                onRowClick={handleRowClick}
                 options={{
                     selection: false,
                     pageSize: 20,
