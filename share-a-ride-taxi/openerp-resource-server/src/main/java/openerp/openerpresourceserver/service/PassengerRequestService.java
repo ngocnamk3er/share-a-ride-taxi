@@ -12,7 +12,6 @@ public interface PassengerRequestService {
 
     PassengerRequest savePassengerRequest(PassengerRequest passengerRequest);
 
-    PassengerRequest updatePassengerRequest(PassengerRequest newPassengerRequest);
 
     void deletePassengerRequest(UUID id);
 }

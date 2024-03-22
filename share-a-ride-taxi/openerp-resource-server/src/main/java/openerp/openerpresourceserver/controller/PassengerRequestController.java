@@ -54,7 +54,7 @@ public class PassengerRequestController {
     @PutMapping("/{id}")
     public PassengerRequestResponse updatePassengerRequest(@PathVariable UUID id, @RequestBody PassengerRequestRequest request) {
         PassengerRequest existPassengerRequest = passengerRequestService.getPassengerRequestById(id);
-        return convertToResponse(passengerRequestService.updatePassengerRequest(convertToEntityBeforeUpdate(existPassengerRequest, request)));
+        return convertToResponse(passengerRequestService.savePassengerRequest(convertToEntityBeforeUpdate(existPassengerRequest, request)));
     }
 
     @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
@@ -76,7 +76,6 @@ public class PassengerRequestController {
         pickupLocation.setLatitude(request.getPickupLocationLatitude());
         pickupLocation.setLongitude(request.getPickupLocationLongitude());
         pickupLocation.setAddress(request.getPickupLocationAddress());
-
         Location savedPickupLocation = locationService.saveLocation(pickupLocation);
         passengerRequest.setPickupLocationId(savedPickupLocation.getLocationId());
 
@@ -101,14 +100,14 @@ public class PassengerRequestController {
         pickupLocation.setLatitude(request.getPickupLocationLatitude());
         pickupLocation.setLongitude(request.getPickupLocationLongitude());
         pickupLocation.setAddress(request.getPickupLocationAddress());
-        Location savedPickupLocation = locationService.updateLocation(pickupLocation.getLocationId(), pickupLocation);
+        Location savedPickupLocation = locationService.saveLocation(pickupLocation);
         existPassengerRequest.setPickupLocationId(savedPickupLocation.getLocationId());
 
         Location dropoffLocation = locationService.getLocationById(existPassengerRequest.getDropoffLocationId());
         dropoffLocation.setLatitude(request.getDropoffLocationLatitude());
         dropoffLocation.setLongitude(request.getDropoffLocationLongitude());
         dropoffLocation.setAddress(request.getDropoffLocationAddress());
-        Location savedDropoffLocation = locationService.updateLocation(dropoffLocation.getLocationId(),dropoffLocation);
+        Location savedDropoffLocation = locationService.saveLocation(dropoffLocation);
         existPassengerRequest.setDropoffLocationId(savedDropoffLocation.getLocationId());
 
         return existPassengerRequest;

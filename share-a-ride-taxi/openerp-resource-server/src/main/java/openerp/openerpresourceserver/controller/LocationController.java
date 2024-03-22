@@ -35,7 +35,11 @@ public class LocationController {
 
     @PutMapping("/{id}")
     public Location updateLocation(@PathVariable UUID id, @RequestBody Location newLocation) {
-        return locationService.updateLocation(id, newLocation);
+        Location existLocation = locationService.getLocationById(id);
+        existLocation.setLatitude(newLocation.getLatitude());
+        existLocation.setLongitude(newLocation.getLongitude());
+        existLocation.setAddress(newLocation.getAddress());
+        return locationService.saveLocation(newLocation);
     }
 
     @DeleteMapping("/{id}")

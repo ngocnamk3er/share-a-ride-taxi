@@ -36,11 +36,6 @@ public class PassengerRequestServiceImpl implements PassengerRequestService {
     }
 
     @Override
-    public PassengerRequest updatePassengerRequest(PassengerRequest newPassengerRequest) {
-        return passengerRequestRepository.save(newPassengerRequest);
-    }
-
-    @Override
     public void deletePassengerRequest(UUID id) {
         passengerRequestRepository.deleteById(id);
     }

@@ -40,24 +40,4 @@ public class LocationServiceImpl implements LocationService {
     public void deleteLocation(UUID id) {
         locationRepository.deleteById(id);
     }
-
-    @Override
-    @Transactional
-    public Location updateLocation(UUID id, Location newLocation) {
-        Optional<Location> optionalLocation = locationRepository.findById(id);
-        if (optionalLocation.isPresent()) {
-            Location existingLocation = optionalLocation.get();
-            if (newLocation.getLatitude() != null) {
-                existingLocation.setLatitude(newLocation.getLatitude());
-            }
-            if (newLocation.getLongitude() != null) {
-                existingLocation.setLongitude(newLocation.getLongitude());
-            }
-            if (newLocation.getAddress() != null && !newLocation.getAddress().isEmpty()) {
-                existingLocation.setAddress(newLocation.getAddress());
-            }
-            return locationRepository.save(existingLocation);
-        }
-        return null; // Trả về null nếu không tìm thấy đối tượng
-    }
 }
