@@ -90,7 +90,7 @@ Thư mục (Folder):
 
 kebab-case cho tên thư mục.
 Phân loại thư mục dựa trên chức năng hoặc loại các tệp.
-Ví dụ: src/components, src/utils, src/pages.
+Ví dụ: src/components-x, src/utils-y, src/pages.
 
 ## Component:
 
