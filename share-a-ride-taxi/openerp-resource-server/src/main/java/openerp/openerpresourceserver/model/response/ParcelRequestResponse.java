@@ -14,6 +14,7 @@ public class ParcelRequestResponse {
     private String senderEmail;
     private String recipientName;
     private String recipientPhoneNumber;
+    private String recipientEmail;
     private LocalDateTime requestTime;
     private Integer statusId;
     private BigDecimal pickupLocationLatitude;

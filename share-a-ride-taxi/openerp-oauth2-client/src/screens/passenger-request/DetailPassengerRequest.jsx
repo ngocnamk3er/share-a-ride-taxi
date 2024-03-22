@@ -64,12 +64,6 @@ const DetailPassengerRequest = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <RoutingMap
-                    pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
-                    dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
-                />
-            </Grid>
-            <Grid item xs={12}>
                 <Typography>
                     <strong>Request Time:</strong> {new Date(passengerRequest.requestTime).toLocaleString()}
                 </Typography>
@@ -78,6 +72,12 @@ const DetailPassengerRequest = () => {
                 <Typography>
                     <strong>Status ID:</strong> {passengerRequest.statusId}
                 </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <RoutingMap
+                    pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
+                    dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
+                />
             </Grid>
         </Grid>
     );

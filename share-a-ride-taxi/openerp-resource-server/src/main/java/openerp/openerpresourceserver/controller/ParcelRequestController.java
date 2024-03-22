@@ -69,6 +69,7 @@ public class ParcelRequestController {
         parcelRequest.setSenderEmail(request.getSenderEmail());
         parcelRequest.setRecipientName(request.getRecipientName());
         parcelRequest.setRecipientPhoneNumber(request.getRecipientPhoneNumber());
+        parcelRequest.setRecipientEmail(request.getRecipientEmail());
         parcelRequest.setRequestTime(request.getRequestTime());
         parcelRequest.setStatusId(request.getStatusId());
 
@@ -96,6 +97,7 @@ public class ParcelRequestController {
         response.setSenderEmail(request.getSenderEmail());
         response.setRecipientName(request.getRecipientName());
         response.setRecipientPhoneNumber(request.getRecipientPhoneNumber());
+        response.setRecipientEmail(request.getRecipientEmail());
         response.setId(request.getRequestId());
 
         Location pickupLocation = locationService.getLocationById(request.getPickupLocationId());

@@ -33,6 +33,9 @@ public class ParcelRequest {
     @Column(name = "recipient_phone_number", nullable = false, length = 20)
     private String recipientPhoneNumber;
 
+    @Column(name = "recipient_email", length = 100)
+    private String recipientEmail;
+
     @Column(name = "pickup_location_id", nullable = false)
     private UUID pickupLocationId;
 

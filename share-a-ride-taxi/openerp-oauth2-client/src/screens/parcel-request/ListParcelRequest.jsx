@@ -9,16 +9,20 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useHistory } from "react-router-dom";
 
-const ListPassengerRequest = () => {
-    const [passengerRequests, setPassengerRequests] = useState([]);
+const ListParcelRequest = () => {
+    const [parcelRequests, setParcelRequests] = useState([]);
     const history = useHistory(); // Initialize useHistory hook
     let { path } = useRouteMatch();
 
     useEffect(() => {
-        request("get", "/passenger-requests", (res) => {
-            setPassengerRequests(res.data);
+        fetchParcelRequests();
+    }, []);
+
+    const fetchParcelRequests = () => {
+        request("get", "/parcel-requests", (res) => {
+            setParcelRequests(res.data);
         }).then();
-    }, [])
+    }
 
     const handleRowClick = (event, rowData) => {
         // Navigate to new URL without page reload
@@ -26,38 +30,42 @@ const ListPassengerRequest = () => {
     }
 
     const handleEditClick = (rowData) => {
-        // Navigate to new URL without page reload
-        history.push(`/passenger-request/update/${rowData.id}`);
+        // Navigate to edit page for selected parcel request
+        history.push(`/parcel-request/update/${rowData.id}`);
     }
 
     const handleDeleteClick = (rowData) => {
-        // Navigate to new URL without page reload
-        history.push(`${path}/${rowData.id}`);
+        const confirmDelete = window.confirm("Are you sure you want to delete this parcel request?");
+        if (confirmDelete) {
+            request("delete", `/parcel-requests/${rowData.id}`, () => {
+                // Remove the deleted parcel request from the state
+                setParcelRequests(prevState => prevState.filter(request => request.id !== rowData.id));
+            }).then(() => {
+                alert("Parcel request deleted successfully.");
+            }).catch(error => {
+                alert("Error deleting parcel request: " + error.message);
+            });
+        }
     }
 
     const handleViewClick = (rowData) => {
-        // Navigate to new URL without page reload
+        // Navigate to view page for selected parcel request
         history.push(`${path}/${rowData.id}`);
     }
 
     const columns = [
-        // {
-        //     title: "Passenger Id",
-        //     field: "id",
-        // },
         {
-            title: "Passenger Name",
-            field: "passengerName",
+            title: "Sender Name",
+            field: "senderName",
         },
         {
-            title: "Phone Number",
-            field: "phoneNumber",
+            title: "Recipient Name",
+            field: "recipientName",
         },
         {
-            title: "Email",
-            field: "email",
+            title: "Request Time",
+            field: "requestTime",
         },
-
         {
             title: "Pickup Location Address",
             field: "pickupLocationAddress",
@@ -67,20 +75,12 @@ const ListPassengerRequest = () => {
             field: "dropoffLocationAddress",
         },
         {
-            title: "Request Time",
-            field: "requestTime",
-        },
-        {
-            title: "Status ID",
-            field: "statusId",
-        },
-        {
             title: "View",
             sorting: false,
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleViewClick(rowData)
+                        handleViewClick(rowData);
                     }}
                     variant="contained"
                     color="primary"
@@ -95,7 +95,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleEditClick(rowData)
+                        handleEditClick(rowData);
                     }}
                     variant="contained"
                     color="success"
@@ -110,7 +110,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        demoFunction(rowData)
+                        handleDeleteClick(rowData);
                     }}
                     variant="contained"
                     color="error"
@@ -121,16 +121,12 @@ const ListPassengerRequest = () => {
         },
     ];
 
-    const demoFunction = (passengerRequest) => {
-        alert("You clicked on Passenger Request: " + passengerRequest.passengerName)
-    }
-
     return (
         <div>
             <StandardTable
-                title="Passenger Request List"
+                title="Parcel Request List"
                 columns={columns}
-                data={passengerRequests}
+                data={parcelRequests}
                 options={{
                     selection: false,
                     pageSize: 20,
@@ -142,5 +138,5 @@ const ListPassengerRequest = () => {
     );
 }
 
-const SCR_ID = "SCR_SAR_LIST_PASSENGER_REQUEST";
-export default withScreenSecurity(ListPassengerRequest, SCR_ID, true);
+const SCR_ID = "SCR_SAR_LIST_PARCEL_REQUEST";
+export default withScreenSecurity(ListParcelRequest, SCR_ID, true);
