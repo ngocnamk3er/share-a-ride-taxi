@@ -27,7 +27,7 @@ const ListPassengerRequest = () => {
 
     const handleEditClick = (rowData) => {
         // Navigate to new URL without page reload
-        history.push(`/passenger_request/update/${rowData.id}`);
+        history.push(`/passenger-request/update/${rowData.id}`);
     }
 
     const handleDeleteClick = (rowData) => {

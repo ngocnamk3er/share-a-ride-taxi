@@ -27,8 +27,8 @@ import { general } from "./menuconfig/general";
 import { student } from "./menuconfig/student";
 import { teacher } from "./menuconfig/teacher";
 import { user } from "./menuconfig/user";
-import {demo} from "./menuconfig/demo";
-import { passenger_request } from "./menuconfig/passenger_request";
+import { demo } from "./menuconfig/demo";
+import { PASSENGER_REQUEST } from "./menuconfig/passenger-request";
 
 export const MENUS = [];
 
@@ -37,7 +37,7 @@ MENUS.push(user);
 MENUS.push(teacher);
 MENUS.push(student);
 MENUS.push(demo);
-MENUS.push(passenger_request);
+MENUS.push(PASSENGER_REQUEST);
 
 export const menuIconMap = new Map();
 

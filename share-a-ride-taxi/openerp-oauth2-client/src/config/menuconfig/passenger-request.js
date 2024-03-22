@@ -1,25 +1,25 @@
-export const passenger_request = {
+export const PASSENGER_REQUEST = {
     id: "MENU_SAR_PASSENGER_REQUEST",
     icon: "LocalLibraryIcon",
     text: "PASSENGER REQUEST",
     child: [
       {
         id: "MENU_SAR_PASSENGER_REQUEST.MENU_ITEM_1",
-        path: "/passenger_request/list",
+        path: "/passenger-request/list",
         isPublic: false,
         text: "List passenger request",
         child: [],
       },
       {
         id: "MENU_SAR_PASSENGER_REQUEST.MENU_ITEM_1",
-        path: "/passenger_request/create",
+        path: "/passenger-request/create",
         isPublic: false,
         text: "Create passenger request",
         child: [],
       },
       {
         id: "MENU_SAR_PASSENGER_REQUEST.MENU_ITEM_2",
-        path: "/passenger_request/screen-2",
+        path: "/passenger-request/screen-2",
         isPublic: false,
         text: "DEMO PASSENGER REQUEST",
         child: [],

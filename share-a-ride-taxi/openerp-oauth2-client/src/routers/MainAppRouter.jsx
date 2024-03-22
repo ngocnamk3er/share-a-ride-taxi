@@ -38,7 +38,7 @@ function MainAppRouter(props) {
           <Route component={() => <></>} exact path="/" />
           <PrivateRoute component={DemoScreen} exact path="/demo" />
           <PrivateRoute component={TeacherRouter} path="/teacher" />
-          <PrivateRoute component={PassengerRouter} path="/passenger_request" />
+          <PrivateRoute component={PassengerRouter} path="/passenger-request" />
           {/* <Route component={error} path="*" /> */}
           <Route component={NotFound} />
         </Switch>

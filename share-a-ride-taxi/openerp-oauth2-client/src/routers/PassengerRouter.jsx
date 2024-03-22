@@ -1,9 +1,9 @@
 import { Route, Switch, useRouteMatch } from "react-router";
-import ListPassengerRequest from "../screens/passenger/ListPassengerRequest";
-import passengerDemo from "../screens/passenger/passengerDemo";
-import DetailPassengerRequest from "screens/passenger/DetailPassengerRequest";
-import CreatePassengerRequest from "screens/passenger/CreatePassengerRequest";
-import UpdatePassengerRequest from "screens/passenger/UpdatePassengerRequest";
+import ListPassengerRequest from "../screens/passenger_request/ListPassengerRequest";
+import passengerDemo from "../screens/passenger_request/passengerDemo";
+import DetailPassengerRequest from "screens/passenger_request/DetailPassengerRequest";
+import CreatePassengerRequest from "screens/passenger_request/CreatePassengerRequest";
+import UpdatePassengerRequest from "screens/passenger_request/UpdatePassengerRequest";
 
 export default function PassengerRouter() {
     let { path } = useRouteMatch();

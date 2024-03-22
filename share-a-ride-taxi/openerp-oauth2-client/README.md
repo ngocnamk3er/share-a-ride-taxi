@@ -68,3 +68,56 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Quy tắc Đặt Tên trong Dự án React:
+## Biến:
+
+Sử dụng camelCase cho tên biến.
+Ví dụ: myVariable, currentUser, isLoading.
+Hằng số (Constants):
+
+Sử dụng SCREAMING_SNAKE_CASE cho tên hằng số.
+Ví dụ: API_BASE_URL, MAX_RETRIES, ERROR_MESSAGES.
+
+## File:
+
+PascalCase cho tên file component.
+Kebab-case cho tên file khác.
+Ví dụ: MyComponent.js, api-helper.js, constants.js.
+Thư mục (Folder):
+
+## Thư mục
+
+kebab-case cho tên thư mục.
+Phân loại thư mục dựa trên chức năng hoặc loại các tệp.
+Ví dụ: src/components, src/utils, src/pages.
+
+## Component:
+
+Tên file component nên trùng với tên component và sử dụng PascalCase.
+Ví dụ: MyComponent.js chứa component MyComponent.
+Hàm Util (Utility Functions):
+
+## Hàm
+Sử dụng camelCase tên hàm.
+Ví dụ:  hàm formatData
+
+## Chú Thích (Comments):
+
+Sử dụng ngắn gọn và mô tả rõ ràng chức năng của code.
+Bắt đầu mỗi comment với chữ viết hoa.
+Ví dụ: // This function sorts the array in ascending order.
+Tên biến trong CSS:
+
+## Sử dụng kebab-case cho tên biến CSS.
+
+Ví dụ: --primary-color, --font-size.
+Tên Component trong CSS:
+
+## Sử dụng kebab-case cho tên class và ID trong CSS.
+Ví dụ: .container, #header.
+Tên Repository:
+
+Sử dụng tên ngắn gọn, mô tả chính xác nội dung của dự án.
+Ví dụ: react-blog-app, portfolio-website.
+

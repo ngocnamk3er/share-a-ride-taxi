@@ -30,12 +30,12 @@ function ResetCenterView(props) {
 }
 
 export default function Map(props) {
-  const {position, selectPosition } = props;
+  const {centerPos, selectPosition } = props;
   const locationSelection = [selectPosition?.lat, selectPosition?.lon];
 
   return (
     <MapContainer
-      center={position ? position : [51.505, -0.09]}
+      center={centerPos ? centerPos : [51.505, -0.09]}
       zoom={8}
       style={{ width: "100%", height: "100%" }}
     >

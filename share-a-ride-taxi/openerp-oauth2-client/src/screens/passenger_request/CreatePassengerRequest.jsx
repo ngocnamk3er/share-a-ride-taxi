@@ -65,7 +65,7 @@ const CreatePassengerRequest = () => {
                         phoneNumber: "",
                         email: "",
                     });
-                    history.push("/passenger_request/list");
+                    history.push("/passenger-request/list");
                 },
                 {
                     400: (error) => {
@@ -133,7 +133,7 @@ const CreatePassengerRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            position={passengerData.pickupLocationLatitude ? [passengerData.pickupLocationLatitude, passengerData.pickupLocationLongitude] : null}
+                            centerPos={passengerData.pickupLocationLatitude ? [passengerData.pickupLocationLatitude, passengerData.pickupLocationLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'pickup')}
                             onClose={() => {
                                 setShowPickupModal(false)
@@ -161,7 +161,7 @@ const CreatePassengerRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            position={passengerData.dropoffLocationLatitude ? [passengerData.dropoffLocationLatitude, passengerData.dropoffLocationLongitude] : null}
+                            centerPos={passengerData.dropoffLocationLatitude ? [passengerData.dropoffLocationLatitude, passengerData.dropoffLocationLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'dropoff')}
                             onClose={() => {
                                 setShowDropoffModal(false)
