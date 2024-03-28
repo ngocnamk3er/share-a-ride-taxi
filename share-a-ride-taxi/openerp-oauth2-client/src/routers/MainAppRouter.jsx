@@ -10,6 +10,7 @@ import TeacherRouter from "./TeacherRouter";
 import DemoScreen from "views/DemoScreen";
 import PassengerRouter from "./PassengerRouter";
 import ParcelRequestRouter from "./ParcelRequestRouter";
+import ManageDriverRouter from "./ManageDriverRouter";
 
 const styles = {
   loadingProgress: {
@@ -41,6 +42,7 @@ function MainAppRouter(props) {
           <PrivateRoute component={TeacherRouter} path="/teacher" />
           <PrivateRoute component={PassengerRouter} path="/passenger-request" />
           <PrivateRoute component={ParcelRequestRouter} path="/parcel-request" />
+          <PrivateRoute component={ManageDriverRouter} path="/manage-drivers" />
           {/* <Route component={error} path="*" /> */}
           <Route component={NotFound} />
         </Switch>

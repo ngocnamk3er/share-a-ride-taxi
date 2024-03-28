@@ -14,4 +14,6 @@ public interface PassengerRequestService {
 
 
     void deletePassengerRequest(UUID id);
+
+    boolean existsById(UUID requestId);
 }

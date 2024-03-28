@@ -57,6 +57,8 @@ public class PassengerRequestController {
         return convertToResponse(passengerRequestService.savePassengerRequest(convertToEntityBeforeUpdate(existPassengerRequest, request)));
     }
 
+
+
     @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     @DeleteMapping("/{id}")
     public void deletePassengerRequest(@PathVariable UUID id) {

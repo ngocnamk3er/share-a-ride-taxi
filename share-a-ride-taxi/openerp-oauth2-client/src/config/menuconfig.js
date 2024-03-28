@@ -30,6 +30,7 @@ import { user } from "./menuconfig/user";
 import { demo } from "./menuconfig/demo";
 import { PASSENGER_REQUEST } from "./menuconfig/passenger-request";
 import { PARCEL_REQUEST } from "./menuconfig/parcel-request";
+import { MANAGE_DRIVE } from "./menuconfig/manage-drive";
 
 export const MENUS = [];
 
@@ -40,6 +41,7 @@ MENUS.push(student);
 MENUS.push(demo);
 MENUS.push(PASSENGER_REQUEST);
 MENUS.push(PARCEL_REQUEST);
+MENUS.push(MANAGE_DRIVE)
 
 export const menuIconMap = new Map();
 

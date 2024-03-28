@@ -39,4 +39,9 @@ public class PassengerRequestServiceImpl implements PassengerRequestService {
     public void deletePassengerRequest(UUID id) {
         passengerRequestRepository.deleteById(id);
     }
+
+    @Override
+    public boolean existsById(UUID requestId) {
+        return passengerRequestRepository.existsById(requestId);
+    }
 }

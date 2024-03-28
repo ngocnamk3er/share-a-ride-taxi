@@ -36,4 +36,9 @@ public class ParcelRequestServiceImpl implements ParcelRequestService {
     public void deleteParcelRequest(UUID id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public boolean existsById(UUID requestId) {
+        return repository.existsById(requestId);
+    }
 }

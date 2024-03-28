@@ -13,4 +13,6 @@ public interface ParcelRequestService {
     List<ParcelRequest> getAllParcelRequests();
 
     void deleteParcelRequest(UUID id);
+
+    boolean existsById(UUID requestId);
 }

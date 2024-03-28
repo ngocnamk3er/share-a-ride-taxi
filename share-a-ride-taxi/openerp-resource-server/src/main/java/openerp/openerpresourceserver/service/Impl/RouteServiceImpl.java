@@ -1,22 +1,22 @@
 package openerp.openerpresourceserver.service.Impl;
 
+import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Route;
 import openerp.openerpresourceserver.repo.RouteRepository;
 import openerp.openerpresourceserver.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
 
     private final RouteRepository routeRepository;
 
-    @Autowired
-    public RouteServiceImpl(RouteRepository routeRepository) {
-        this.routeRepository = routeRepository;
-    }
 
     @Override
     public List<Route> getAllRoutes() {
@@ -36,5 +36,10 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public void deleteRoute(UUID id) {
         routeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Route> searchRoutes(UUID driverId) {
+        return routeRepository.findByDriverId(driverId);
     }
 }
