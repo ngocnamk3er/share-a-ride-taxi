@@ -74,7 +74,7 @@ const DetailPassengerRequest = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <RoutingMap
+                <RoutingMap style={{ width: "100%", height: "80vh" }}
                     pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
                     dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
                 />

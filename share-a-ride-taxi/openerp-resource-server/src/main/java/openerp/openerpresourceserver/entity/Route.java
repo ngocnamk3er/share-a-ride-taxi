@@ -28,4 +28,10 @@ public class Route {
 
     @Column(name = "driver_id")
     private UUID driverId;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
 }

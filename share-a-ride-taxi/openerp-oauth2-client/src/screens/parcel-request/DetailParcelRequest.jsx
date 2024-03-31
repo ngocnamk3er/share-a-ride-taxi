@@ -72,7 +72,7 @@ const DetailParcelRequest = () => {
             <Typography>
                 <strong>Status ID:</strong> {parcelRequest.statusId}
             </Typography>
-            <RoutingMap
+            <RoutingMap style={{ width: "100%", height: "80vh" }}
                 pickupLocation={{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude }}
                 dropoffLocation={{ lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }}
             />

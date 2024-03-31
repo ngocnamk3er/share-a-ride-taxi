@@ -18,12 +18,28 @@ const ListDrivers = () => {
 
     const columns = [
         {
-            title: "Driver",
-            field: "id",
-        },
-        {
             title: "Full name",
             field: "fullName",
+        },
+        {
+            title: "Phone number",
+            field: "phoneNumber",
+        },
+        {
+            title: "Email",
+            field: "email",
+        },
+        {
+            title: "Gender",
+            field: "gender",
+        },
+        {
+            title: "Vehicle Type",
+            field: "vehicleType",
+        },
+        {
+            title: "Vehicle License Plate",
+            field: "vehicleLicensePlate",
         },
         {
             title: "Edit",

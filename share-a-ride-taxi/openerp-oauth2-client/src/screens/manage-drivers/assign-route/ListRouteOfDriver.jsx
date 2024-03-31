@@ -31,8 +31,12 @@ const ListRouteOfDriver = () => {
 
     const columns = [
         {
-            title: "Route ID",
-            field: "id",
+            title: "Tilte ",
+            field: "title",
+        },
+        {
+            title: "Description",
+            field: "description",
         },
     ];
 

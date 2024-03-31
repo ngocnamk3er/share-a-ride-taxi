@@ -35,10 +35,10 @@ import { MANAGE_DRIVE } from "./menuconfig/manage-drive";
 export const MENUS = [];
 
 MENUS.push(general);
+// MENUS.push(demo);
 MENUS.push(user);
 MENUS.push(teacher);
 MENUS.push(student);
-MENUS.push(demo);
 MENUS.push(PASSENGER_REQUEST);
 MENUS.push(PARCEL_REQUEST);
 MENUS.push(MANAGE_DRIVE)

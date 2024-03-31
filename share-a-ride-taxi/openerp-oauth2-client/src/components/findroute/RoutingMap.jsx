@@ -10,9 +10,10 @@ const RoutingMap = (props) => {
     const pickupPosition = [pickupLocation.lat, pickupLocation.lon];
     const myMap = useRef(null);
     const dropoffLocation = props.dropoffLocation;
+    const { style } = props;
 
     return (
-        <MapContainer ref={myMap} style={{ width: "100%", height: "80vh" }} center={pickupPosition} zoom={8} scrollWheelZoom={true}>
+        <MapContainer style={style} ref={myMap} center={pickupPosition} zoom={8} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

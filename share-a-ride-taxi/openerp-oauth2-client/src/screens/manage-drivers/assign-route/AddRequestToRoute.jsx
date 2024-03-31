@@ -4,19 +4,23 @@ import './AddRequestToRoute.css';
 import { useParams } from "react-router-dom";
 import { request } from "../../../api";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Typography, Grid, TextField, Button, Box, Modal } from "@mui/material";
+import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDetailPassengerRequest";
 
 const AddRequestToRoute = () => {
     const { id } = useParams();
     const [listRequest, setListRequest] = useState([]);
+    const [selectedDraggble, setSelectedDraggble] = useState([]);
+    const [showPickupModal, setShowPickupModal] = useState(false);
     const [columns, setColumns] = useState({
         'column1': {
             id: 'column1',
-            title: 'Available requests',
+            title: 'Available passenger requests',
             taskIds: []
         },
         'column2': {
             id: 'column2',
-            title: 'Assigned requests',
+            title: 'Assigned passenger requests',
             taskIds: []
         }
     });
@@ -79,6 +83,12 @@ const AddRequestToRoute = () => {
         });
     };
 
+    const handleDraggableClick = (request) => {
+        // alert('Draggable click');
+        setSelectedDraggble(request.id)
+        setShowPickupModal(true);
+    };
+
     const handleSave = () => {
         // Hàm demo có thể làm bất kỳ điều gì bạn muốn khi nút lưu được bấm
         console.log("Demo function is called!");
@@ -104,18 +114,35 @@ const AddRequestToRoute = () => {
                                         className="task-list"
                                     >
                                         {listTasks.map((request, index) => (
-                                            <Draggable key={request.id} draggableId={request.id} index={index}>
-                                                {(provided) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        className="task"
+                                            <div>
+                                                <Draggable key={request.id} draggableId={request.id} index={index}>
+                                                    {(provided) => (
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            className="task"
+                                                            onClick={() => handleDraggableClick(request)}
+                                                        >
+                                                            Yêu cầu của khách : {request.passengerName}
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                                {
+                                                    selectedDraggble === request.id &&
+                                                    <Modal
+                                                        open={showPickupModal}
+                                                        onClose={() => setShowPickupModal(false)}
+                                                    // aria-labelledby="modal-modal-title"
+                                                    // aria-describedby="modal-modal-description"
                                                     >
-                                                        Yêu cầu của khách tên : {request.passengerName}
-                                                    </div>
-                                                )}
-                                            </Draggable>
+                                                        <div>
+                                                            <ModalDetailPassengerRequest request = {request}/>
+                                                        </div>
+                                                    </Modal>
+
+                                                }
+                                            </div>
                                         ))}
                                         {provided.placeholder}
                                     </div>
