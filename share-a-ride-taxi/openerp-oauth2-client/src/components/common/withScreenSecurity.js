@@ -2,6 +2,8 @@ import { LinearProgress } from "@mui/material";
 import { request } from "api";
 import { useEffect, useState } from "react";
 import NotAuthorized from "./NotAuthorized";
+import Breadcrumbs from "./Breadcrumbs";
+
 
 /**
  * The function withScreenSecurity is a higher-order component that adds screen security to a component
@@ -55,10 +57,13 @@ function withScreenSecurity(SecuredComponent, id, viewError) {
       );
     else if (screenAuthorization.has(`${id}.VIEW`))
       return (
-        <SecuredComponent
-          {...props}
-          screenAuthorization={screenAuthorization}
-        />
+        <div>
+          <Breadcrumbs />
+          <SecuredComponent
+            {...props}
+            screenAuthorization={screenAuthorization}
+          />
+        </div>
       );
     else if (viewError) return <NotAuthorized />;
     else return "";
