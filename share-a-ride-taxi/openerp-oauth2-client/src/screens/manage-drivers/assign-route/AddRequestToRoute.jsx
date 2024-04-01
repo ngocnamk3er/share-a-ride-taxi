@@ -10,7 +10,7 @@ import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDe
 const AddRequestToRoute = () => {
     const { id } = useParams();
     const [listRequest, setListRequest] = useState([]);
-    const [selectedDraggble, setSelectedDraggble] = useState([]);
+    const [selectedDraggble, setSelectedDraggble] = useState();
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [columns, setColumns] = useState({
         'column1': {
@@ -96,9 +96,6 @@ const AddRequestToRoute = () => {
 
     return (
         <div>
-            <div className="save-button-container">
-                <button onClick={handleSave} className="save-button">Save</button>
-            </div>
             <DragDropContext onDragEnd={onDragEnd}>
                 {Object.values(columns).map(column => {
                     const listTasks = column.taskIds.map(taskId => listRequest.find(request => request.id === taskId));
@@ -137,7 +134,7 @@ const AddRequestToRoute = () => {
                                                     // aria-describedby="modal-modal-description"
                                                     >
                                                         <div>
-                                                            <ModalDetailPassengerRequest request = {request}/>
+                                                            <ModalDetailPassengerRequest request={request} />
                                                         </div>
                                                     </Modal>
 
@@ -152,10 +149,14 @@ const AddRequestToRoute = () => {
                     );
                 })}
             </DragDropContext>
+            <br />
+            <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
+
+
         </div>
     );
 }
 
-const SCR_ID = "SCR_SAR_LIST_DRIVERS";
+const SCR_ID = "SCR_SAR_DEFAULT";
 
 export default withScreenSecurity(AddRequestToRoute, SCR_ID, true);

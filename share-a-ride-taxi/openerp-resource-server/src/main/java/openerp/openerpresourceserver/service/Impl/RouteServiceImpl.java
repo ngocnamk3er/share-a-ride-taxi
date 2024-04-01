@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Route;
 import openerp.openerpresourceserver.repo.RouteRepository;
 import openerp.openerpresourceserver.service.RouteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +29,9 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route createRoute(Route route) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        route.setLastUpdatedStamp(currentTime);
+        route.setCreatedStamp(currentTime);
         return routeRepository.save(route);
     }
 
@@ -42,4 +44,17 @@ public class RouteServiceImpl implements RouteService {
     public List<Route> searchRoutes(UUID driverId) {
         return routeRepository.findByDriverId(driverId);
     }
+
+    @Override
+    public Route updateRoute(UUID id, Route routeDetails) {
+        if (routeRepository.existsById(id)) {
+            LocalDateTime currentTime = LocalDateTime.now();
+            routeDetails.setLastUpdatedStamp(currentTime);
+            routeDetails.setId(id);
+            return routeRepository.save(routeDetails);
+        }
+        return null;
+    }
+
+
 }

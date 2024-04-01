@@ -16,4 +16,6 @@ public interface RouteService {
     void deleteRoute(UUID id);
 
     List<Route> searchRoutes(UUID driverId);
+
+    Route updateRoute(UUID id, Route routeDetails);
 }

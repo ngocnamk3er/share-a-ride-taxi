@@ -65,4 +65,20 @@ public class RouteDetailController {
         routeDetailService.deleteRouteDetail(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<RouteDetail>> searchRouteDetails(
+            @RequestParam(value = "routeId", required = false) UUID routeId,
+            @RequestParam(value = "requestType", required = false) String requestType,
+            @RequestParam(value = "requestId", required = false) UUID requestId,
+            @RequestParam(value = "isPickup", required = false) String isPickup,
+            @RequestParam(value = "seqIndex", required = false) Integer seqIndex
+    ) {
+        List<RouteDetail> routeDetails = routeDetailService.searchRouteDetails(routeId, requestType, requestId, isPickup, seqIndex);
+        if (!routeDetails.isEmpty()) {
+            return new ResponseEntity<>(routeDetails, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

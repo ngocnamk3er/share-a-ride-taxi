@@ -2,6 +2,8 @@ package openerp.openerpresourceserver.controller;
 
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Route;
+import openerp.openerpresourceserver.entity.RouteDetail;
+import openerp.openerpresourceserver.service.RouteDetailService;
 import openerp.openerpresourceserver.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class RouteController {
 
     private final RouteService routeService;
+    private final RouteDetailService routeDetailService;
 
     @GetMapping
     public ResponseEntity<List<Route>> getAllRoutes() {
@@ -39,30 +42,20 @@ public class RouteController {
     @PostMapping
     public ResponseEntity<Route> createRoute(@RequestBody Route route) {
         // Đặt thời gian hiện tại cho lastUpdatedStamp và createdStamp trước khi lưu đối tượng Route
-        LocalDateTime currentTime = LocalDateTime.now();
-        route.setLastUpdatedStamp(currentTime);
-        route.setCreatedStamp(currentTime);
-
         Route createdRoute = routeService.createRoute(route);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRoute);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Route> updateRoute(@PathVariable UUID id, @RequestBody Route routeDetails) {
-        Route existingRoute = routeService.getRouteById(id);
-        if (existingRoute != null) {
-            // Cập nhật thông tin của tuyến đường
-            existingRoute.setStartExecutionStamp(routeDetails.getStartExecutionStamp());
-            existingRoute.setLastUpdatedStamp(LocalDateTime.now()); // Cập nhật thời điểm cập nhật cuối cùng
-            existingRoute.setDriverId(routeDetails.getDriverId());
-            // Cập nhật các trường thông tin khác cần thiết
-
-            Route updatedRoute = routeService.createRoute(existingRoute); // Sử dụng createRoute để cập nhật đối tượng đã tồn tại
+    public ResponseEntity<Route> updateRoute(@PathVariable UUID id, @RequestBody Route route) {
+        Route updatedRoute = routeService.updateRoute(id, route);
+        if (updatedRoute != null) {
             return ResponseEntity.ok(updatedRoute);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRoute(@PathVariable UUID id) {
@@ -74,6 +67,26 @@ public class RouteController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{routeId}/route-details")
+    public ResponseEntity<?> updateRouteDetailsForRoute(@PathVariable("routeId") UUID routeId, @RequestBody List<RouteDetail> routeDetails) {
+        Route existingRoute = routeService.getRouteById(routeId);
+        if (existingRoute == null) {
+            return new ResponseEntity<>("\"Route not found\"", HttpStatus.NOT_FOUND);
+        }
+
+        // Xóa tất cả RouteDetail của Route hiện tại
+        routeDetailService.deleteRouteDetailsByRouteId(routeId);
+
+        // Thêm mới danh sách RouteDetail được cung cấp
+        for (RouteDetail routeDetail : routeDetails) {
+            routeDetail.setRouteId(routeId);
+            routeDetailService.createRouteDetail(routeDetail);
+        }
+
+        return new ResponseEntity<>("\"RouteDetails updated for Route successfully\"", HttpStatus.OK);
+    }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<Route>> searchRoutes(
