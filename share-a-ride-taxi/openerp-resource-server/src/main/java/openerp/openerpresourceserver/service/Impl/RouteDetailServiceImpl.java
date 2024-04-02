@@ -45,6 +45,7 @@ public class RouteDetailServiceImpl implements RouteDetailService {
             PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(routeDetail.getRequestId());
             passengerRequest.setStatusId(2);
         }
+        routeDetail.setIsPickup(false);
         return routeDetailRepository.save(routeDetail);
     }
 

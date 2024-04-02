@@ -29,7 +29,7 @@ public class RouteDetail {
     private UUID requestId;
 
     @Column(name = "is_pickup")
-    private String isPickup;
+    private Boolean isPickup;
 
     @Column(name = "seq_index")
     private Integer seqIndex;

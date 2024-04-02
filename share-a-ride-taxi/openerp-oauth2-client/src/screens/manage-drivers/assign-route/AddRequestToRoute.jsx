@@ -9,9 +9,12 @@ import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDe
 
 const AddRequestToRoute = () => {
     const { id } = useParams();
-    const [listRequest, setListRequest] = useState([]);
+    const { routeId } = useParams();
+    const [allListRequest, setAllListRequest] = useState([]);
+    const [availablelistRequest, setAvailabletListRequest] = useState([]);
     const [selectedDraggble, setSelectedDraggble] = useState();
     const [showPickupModal, setShowPickupModal] = useState(false);
+    const [assignedRequests, setAssignedRequests] = useState([]);
     const [columns, setColumns] = useState({
         'column1': {
             id: 'column1',
@@ -27,10 +30,15 @@ const AddRequestToRoute = () => {
 
     useEffect(() => {
         request("get", `/passenger-requests`, (res) => {
-            setListRequest(res.data);
+            const availableListFromData = res.data.filter(item => item.statusId === 1)
+            // console.log(11111111111111111)
+            // console.log(test)
+            // console.log(res.data)
+            setAllListRequest(res.data);
+            setAvailabletListRequest(availableListFromData);
             const newColumn1 = {
                 ...columns['column1'],
-                taskIds: res.data.map(request => request.id)
+                taskIds: availableListFromData.map(request => request.id)
             };
             setColumns({
                 ...columns,
@@ -89,16 +97,64 @@ const AddRequestToRoute = () => {
         setShowPickupModal(true);
     };
 
-    const handleSave = () => {
-        // Hàm demo có thể làm bất kỳ điều gì bạn muốn khi nút lưu được bấm
-        console.log("Demo function is called!");
+    const handleSave = async () => {
+
+        const assignedTaskIds = columns['column2'].taskIds;
+        const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.id === taskId));
+        console.log(assignedRequestsData)
+        setAssignedRequests(assignedRequestsData);
+        const listRouteDetails = assignedRequestsData.map(item => {
+            return {
+                requestType: "passenger",
+                requestId: item.id
+            }
+        })
+
+        console.log(listRouteDetails)
+
+        try {
+            const response = await request(
+                "post",
+                `/routes/${routeId}/route-details`,
+                (response) => {
+                    console.log("Passenger request created successfully:", response.data);
+                    // loadData();
+                },
+                {
+                    400: (error) => {
+                        console.error("Error creating passenger request:", error);
+                    }
+                },
+                listRouteDetails
+            );
+        } catch (error) {
+            console.error("Error creating passenger request:", error);
+        }
+
+    };
+
+    const loadData = () => {
+        // Gọi lại useEffect để load lại dữ liệu
+        request("get", `/passenger-requests`, (res) => {
+            const availableListFromData = res.data.filter(item => item.statusId === 1);
+            setAllListRequest(res.data);
+            setAvailabletListRequest(availableListFromData);
+            const newColumn1 = {
+                ...columns['column1'],
+                taskIds: availableListFromData.map(request => request.id)
+            };
+            setColumns({
+                ...columns,
+                'column1': newColumn1
+            });
+        });
     };
 
     return (
         <div>
             <DragDropContext onDragEnd={onDragEnd}>
                 {Object.values(columns).map(column => {
-                    const listTasks = column.taskIds.map(taskId => listRequest.find(request => request.id === taskId));
+                    const listTasks = column.taskIds.map(taskId => availablelistRequest.find(request => request.id === taskId));
 
                     return (
                         <div key={column.id} className="column">

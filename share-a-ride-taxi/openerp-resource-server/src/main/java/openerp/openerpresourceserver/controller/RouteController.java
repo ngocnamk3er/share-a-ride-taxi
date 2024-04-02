@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,6 +71,8 @@ public class RouteController {
 
     @PostMapping("/{routeId}/route-details")
     public ResponseEntity<?> updateRouteDetailsForRoute(@PathVariable("routeId") UUID routeId, @RequestBody List<RouteDetail> routeDetails) {
+        System.out.println("xxxxxxxxxx");
+        System.out.println(routeDetails);
         Route existingRoute = routeService.getRouteById(routeId);
         if (existingRoute == null) {
             return new ResponseEntity<>("\"Route not found\"", HttpStatus.NOT_FOUND);
@@ -79,13 +82,16 @@ public class RouteController {
         routeDetailService.deleteRouteDetailsByRouteId(routeId);
 
         // Thêm mới danh sách RouteDetail được cung cấp
+        List<RouteDetail> updatedRouteDetails = new ArrayList<>();
         for (RouteDetail routeDetail : routeDetails) {
             routeDetail.setRouteId(routeId);
-            routeDetailService.createRouteDetail(routeDetail);
+            RouteDetail updatedRouteDetail = routeDetailService.createRouteDetail(routeDetail);
+            updatedRouteDetails.add(updatedRouteDetail);
         }
 
-        return new ResponseEntity<>("\"RouteDetails updated for Route successfully\"", HttpStatus.OK);
+        return new ResponseEntity<>(updatedRouteDetails, HttpStatus.OK);
     }
+
 
 
     @GetMapping("/search")
