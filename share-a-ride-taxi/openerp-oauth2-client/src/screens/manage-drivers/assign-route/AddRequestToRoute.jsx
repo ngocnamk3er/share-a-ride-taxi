@@ -29,23 +29,50 @@ const AddRequestToRoute = () => {
     });
 
     useEffect(() => {
-        request("get", `/passenger-requests`, (res) => {
-            const availableListFromData = res.data.filter(item => item.statusId === 1)
-            // console.log(11111111111111111)
-            // console.log(test)
-            // console.log(res.data)
-            setAllListRequest(res.data);
-            setAvailabletListRequest(availableListFromData);
-            const newColumn1 = {
-                ...columns['column1'],
-                taskIds: availableListFromData.map(request => request.id)
-            };
-            setColumns({
-                ...columns,
-                'column1': newColumn1
-            });
-        });
+        const fetchData = async () => {
+            try {
+
+
+                const res = await request("get", `/passenger-requests`);
+                const availableListFromData = res.data.filter(item => item.statusId === 1);
+                const assignedRequestsData = res.data.filter(item => item.statusId === 2);
+                const assignedRequestsDataSorted = []
+
+                const resRouteDetail = await request("get", `/route-details/search?routeId=${routeId}`)
+                const currentRoute = resRouteDetail.data
+                currentRoute.forEach((routeDetail, indexRouteDetail) => {
+                    assignedRequestsData.forEach((requestElement, indexReq) => {
+                        if(requestElement.id === routeDetail.requestId) {
+                            assignedRequestsDataSorted.push(requestElement);
+                        }
+                    });
+                });
+
+                console.log(assignedRequestsData)
+
+                setAllListRequest(res.data);
+                setAvailabletListRequest(availableListFromData);
+                const newColumn1 = {
+                    ...columns['column1'],
+                    taskIds: availableListFromData.map(request => request.id)
+                };
+                const newColumn2 = {
+                    ...columns['column2'],
+                    taskIds: assignedRequestsDataSorted.map(request => request.id)
+                };
+                setColumns({
+                    ...columns,
+                    'column1': newColumn1,
+                    'column2': newColumn2
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
     }, [id]);
+
 
     const onDragEnd = result => {
         const { destination, source, draggableId } = result;
@@ -101,12 +128,12 @@ const AddRequestToRoute = () => {
 
         const assignedTaskIds = columns['column2'].taskIds;
         const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.id === taskId));
-        console.log(assignedRequestsData)
         setAssignedRequests(assignedRequestsData);
-        const listRouteDetails = assignedRequestsData.map(item => {
+        const listRouteDetails = assignedRequestsData.map((item, index) => {
             return {
                 requestType: "passenger",
-                requestId: item.id
+                requestId: item.id,
+                seqIndex: index + 1
             }
         })
 
@@ -154,7 +181,7 @@ const AddRequestToRoute = () => {
         <div>
             <DragDropContext onDragEnd={onDragEnd}>
                 {Object.values(columns).map(column => {
-                    const listTasks = column.taskIds.map(taskId => availablelistRequest.find(request => request.id === taskId));
+                    const listTasks = column.taskIds.map(taskId => allListRequest.find(request => request.id === taskId));
 
                     return (
                         <div key={column.id} className="column">
