@@ -13,7 +13,7 @@ const RoutingMapTwoPoint = (props) => {
     const { style } = props;
 
     return (
-        <MapContainer style={style} ref={myMap} center={pickupPosition} zoom={8} scrollWheelZoom={true}>
+        <MapContainer style={style} ref={myMap} center={[16.506, 80.648]} zoom={8} scrollWheelZoom={true}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

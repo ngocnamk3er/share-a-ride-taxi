@@ -8,7 +8,7 @@ const createRoutineMachineLayer = (props) => {
     waypoints: [
       L.latLng(pickupLocation.lat, pickupLocation.lon),
       L.latLng(dropoffLocation.lat, dropoffLocation.lon),
-      L.latLng(19.9781573, 105.4816107)
+      L.latLng(19.9781573, 105.4816107),
     ],
     lineOptions: {
       styles: [{ color: "#6FA1EC", weight: 4 }]
