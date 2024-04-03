@@ -5,7 +5,7 @@ import L from "leaflet";
 import RoutingMachine from "./RoutingMachine";
 import Routing from "./Routing";
 
-const RoutingMap = (props) => {
+const RoutingMapTwoPoint = (props) => {
     const pickupLocation = props.pickupLocation;
     const pickupPosition = [pickupLocation.lat, pickupLocation.lon];
     const myMap = useRef(null);
@@ -23,4 +23,4 @@ const RoutingMap = (props) => {
     );
 }
 
-export default RoutingMap;
+export default RoutingMapTwoPoint;

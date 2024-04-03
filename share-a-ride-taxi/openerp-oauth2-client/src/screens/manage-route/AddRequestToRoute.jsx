@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
 import './AddRequestToRoute.css';
 import { useParams } from "react-router-dom";
-import { request } from "../../../api";
+import { request } from "../../api";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Typography, Grid, TextField, Button, Box, Modal } from "@mui/material";
 import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDetailPassengerRequest";

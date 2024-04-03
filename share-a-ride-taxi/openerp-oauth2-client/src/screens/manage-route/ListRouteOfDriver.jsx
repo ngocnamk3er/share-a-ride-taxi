@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
 import { useParams, useHistory } from "react-router-dom";
 import { StandardTable } from "erp-hust/lib/StandardTable";
-import { request } from "../../../api";
+import { request } from "../../api";
 import { useRouteMatch } from 'react-router-dom';
 
 const ListRouteOfDriver = () => {

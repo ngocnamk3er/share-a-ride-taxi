@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { request } from "../../api";
 import { Typography, CircularProgress, Grid } from "@mui/material";
-import RoutingMap from "../../components/findroute/RoutingMap";
+import RoutingMapTwoPoint from "../findroute/RoutingMapTwoPoint";
 import withScreenSecurity from 'components/common/withScreenSecurity';
 const ModalDetailPassengerRequest = props => {
 
@@ -67,7 +67,7 @@ const ModalDetailPassengerRequest = props => {
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <RoutingMap style={{ width: "100%", height: "45vh" }}
+                    <RoutingMapTwoPoint style={{ width: "100%", height: "45vh" }}
                         pickupLocation={{ lat: request.pickupLocationLatitude, lon: request.pickupLocationLongitude }}
                         dropoffLocation={{ lat: request.dropoffLocationLatitude, lon: request.dropoffLocationLongitude }}
                     />

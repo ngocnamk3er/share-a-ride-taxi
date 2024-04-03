@@ -11,10 +11,10 @@ export const MANAGE_DRIVE = {
       child: [],
     },
     {
-      id: "MENU_SAR_MANAGE_DRIVE.ASSIGN_ROUTE",
-      path: "/manage-drivers/assign-route",
+      id: "MENU_SAR_MANAGE_DRIVE.APPROVE_DRIVER",
+      path: "manage-drivers/approve-drivers",
       isPublic: false,
-      text: "Assign route",
+      text: "Approve drivers",
       child: [],
     },
   ],

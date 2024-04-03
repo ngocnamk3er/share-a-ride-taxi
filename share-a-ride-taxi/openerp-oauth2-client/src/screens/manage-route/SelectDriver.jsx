@@ -3,7 +3,7 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import { useHistory } from "react-router-dom";
 import { useRouteMatch } from 'react-router-dom';
 import { StandardTable } from "erp-hust/lib/StandardTable";
-import { request } from "../../../api";
+import { request } from "../../api";
 
 const SelectDriver = () => {
     const history = useHistory();

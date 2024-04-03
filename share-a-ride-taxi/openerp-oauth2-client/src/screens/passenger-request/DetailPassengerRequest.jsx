@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { request } from "../../api";
 import { Typography, CircularProgress, Grid } from "@mui/material";
-import RoutingMap from "../../components/findroute/RoutingMap";
+import RoutingMapTwoPoint from "../../components/findroute/RoutingMapTwoPoint";
 import withScreenSecurity from 'components/common/withScreenSecurity';
 
 const DetailPassengerRequest = () => {
@@ -74,7 +74,7 @@ const DetailPassengerRequest = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <RoutingMap style={{ width: "100%", height: "80vh" }}
+                <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
                     pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
                     dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
                 />
