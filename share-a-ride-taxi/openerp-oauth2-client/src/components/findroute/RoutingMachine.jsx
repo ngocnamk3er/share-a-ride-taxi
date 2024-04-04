@@ -3,16 +3,22 @@ import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
 const createRoutineMachineLayer = (props) => {
-  const { pickupLocation, dropoffLocation } = props;
+  const { listLocation } = props;
+  const waypoints = listLocation.map(location => L.latLng(location.lat, location.lon));
+
+  const waypointIcon = L.icon({
+    iconUrl: require('../../assets/img/placeholder.png'), // Đường dẫn đến biểu tượng của bạn
+    iconSize: [25, 41], // Kích thước của biểu tượng (điều chỉnh theo nhu cầu)
+    iconAnchor: [12, 41], // Điểm neo của biểu tượng (điều chỉnh theo nhu cầu)
+  });
+
   const instance = L.Routing.control({
-    waypoints: [
-      L.latLng(pickupLocation.lat, pickupLocation.lon),
-      L.latLng(dropoffLocation.lat, dropoffLocation.lon),
-      L.latLng(19.9781573, 105.4816107),
-    ],
+
+    waypoints: waypoints,
     lineOptions: {
       styles: [{ color: "#6FA1EC", weight: 4 }]
     },
+    waypointIcon: waypointIcon,
     show: true,
     addWaypoints: false,
     routeWhileDragging: true,

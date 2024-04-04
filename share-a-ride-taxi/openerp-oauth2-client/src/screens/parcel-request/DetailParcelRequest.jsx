@@ -73,8 +73,12 @@ const DetailParcelRequest = () => {
                 <strong>Status ID:</strong> {parcelRequest.statusId}
             </Typography>
             <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
-                pickupLocation={{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude }}
-                dropoffLocation={{ lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }}
+                // pickupLocation={{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude }}
+                // dropoffLocation={{ lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }}
+                listLocation={
+                    [{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude },
+                    { lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }]
+                }
             />
         </Grid>
     );

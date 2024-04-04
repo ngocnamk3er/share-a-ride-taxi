@@ -75,8 +75,12 @@ const DetailPassengerRequest = () => {
             </Grid>
             <Grid item xs={12}>
                 <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
-                    pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
-                    dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
+                    // pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
+                    // dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
+                    listLocation={
+                        [{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude },
+                        { lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }]
+                    }
                 />
             </Grid>
         </Grid>

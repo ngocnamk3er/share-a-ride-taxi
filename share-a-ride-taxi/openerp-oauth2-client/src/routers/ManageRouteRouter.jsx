@@ -29,6 +29,13 @@ export default function ManageDriverRouter() {
                     path={`${path}/assign-route/:id/list-routes/:routeId`}
                 ></Route>
             </Switch>
+            <Switch>
+                <Route
+                    component={AddRequestToRoute}
+                    exact
+                    path={`${path}/assign-route/:id/list-routes/:routeId/addrequests`}
+                ></Route>
+            </Switch>
         </div>
     );
 }

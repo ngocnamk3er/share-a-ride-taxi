@@ -6,10 +6,11 @@ import RoutingMachine from "./RoutingMachine";
 import Routing from "./Routing";
 
 const RoutingMapTwoPoint = (props) => {
-    const pickupLocation = props.pickupLocation;
-    const pickupPosition = [pickupLocation.lat, pickupLocation.lon];
     const myMap = useRef(null);
-    const dropoffLocation = props.dropoffLocation;
+
+    const listLocation = props.listLocation;
+    console.log("listLocation in RoutingMapTwoPoint")
+    console.log(listLocation)
     const { style } = props;
 
     return (
@@ -18,7 +19,7 @@ const RoutingMapTwoPoint = (props) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <RoutingMachine pickupLocation={pickupLocation} dropoffLocation={dropoffLocation} />
+            <RoutingMachine listLocation = {listLocation} />
         </MapContainer>
     );
 }

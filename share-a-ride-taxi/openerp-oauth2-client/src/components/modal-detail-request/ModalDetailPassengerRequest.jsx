@@ -68,8 +68,12 @@ const ModalDetailPassengerRequest = props => {
                 </Grid>
                 <Grid item xs={12}>
                     <RoutingMapTwoPoint style={{ width: "100%", height: "45vh" }}
-                        pickupLocation={{ lat: request.pickupLocationLatitude, lon: request.pickupLocationLongitude }}
-                        dropoffLocation={{ lat: request.dropoffLocationLatitude, lon: request.dropoffLocationLongitude }}
+                        // pickupLocation={{ lat: request.pickupLocationLatitude, lon: request.pickupLocationLongitude }}
+                        // dropoffLocation={{ lat: request.dropoffLocationLatitude, lon: request.dropoffLocationLongitude }}
+                        listLocation={
+                            [{ lat: request.pickupLocationLatitude, lon: request.pickupLocationLongitude },
+                            { lat: request.dropoffLocationLatitude, lon: request.dropoffLocationLongitude }]
+                        }
                     />
                 </Grid>
             </Grid>
