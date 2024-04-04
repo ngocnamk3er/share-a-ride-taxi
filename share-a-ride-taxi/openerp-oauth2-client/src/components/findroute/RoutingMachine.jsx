@@ -2,29 +2,46 @@ import L from "leaflet";
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
 
+
 const createRoutineMachineLayer = (props) => {
   const { listLocation } = props;
-  const waypoints = listLocation.map(location => L.latLng(location.lat, location.lon));
+  const waypoints = listLocation.map((location, index) =>
+    L.latLng(location.lat, location.lon)
+  );
 
-  const waypointIcon = L.icon({
-    iconUrl: require('../../assets/img/placeholder.png'), // Đường dẫn đến biểu tượng của bạn
-    iconSize: [25, 41], // Kích thước của biểu tượng (điều chỉnh theo nhu cầu)
-    iconAnchor: [12, 41], // Điểm neo của biểu tượng (điều chỉnh theo nhu cầu)
-  });
+  // Import your custom icon images
+  const iconUrls = [];
+  for (let i = 0; i < listLocation.length; i++) {
+    iconUrls.push(require(`../../assets/img/${i + 1}.png`));
+  }
+
+  // Define your custom icons
+  const customIcons = iconUrls.map(url =>
+    L.icon({
+      iconUrl: url,
+      iconSize: [32, 32], // Adjust the size as needed
+      iconAnchor: [16, 32], // Adjust the anchor point if needed
+    })
+  );
 
   const instance = L.Routing.control({
-
     waypoints: waypoints,
     lineOptions: {
-      styles: [{ color: "#6FA1EC", weight: 4 }]
+      styles: [{ color: "#6FA1EC", weight: 4 }],
     },
-    waypointIcon: waypointIcon,
+    createMarker: function (i, waypoint, n) {
+      // Use the custom icon for markers
+      return L.marker(waypoint.latLng, {
+        draggable: false,
+        icon: customIcons[i]
+      });
+    },
     show: true,
     addWaypoints: false,
     routeWhileDragging: true,
     draggableWaypoints: true,
     fitSelectedRoutes: true,
-    showAlternatives: false
+    showAlternatives: false,
   });
 
   return instance;
