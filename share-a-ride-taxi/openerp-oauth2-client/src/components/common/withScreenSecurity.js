@@ -58,7 +58,7 @@ function withScreenSecurity(SecuredComponent, id, viewError) {
     else if (screenAuthorization.has(`${id}.VIEW`))
       return (
         <div>
-          <Breadcrumbs />
+          {/* <Breadcrumbs /> */}
           <SecuredComponent
             {...props}
             screenAuthorization={screenAuthorization}

@@ -3,6 +3,7 @@ package openerp.openerpresourceserver.service.Impl;
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.ParcelRequest;
 import openerp.openerpresourceserver.entity.PassengerRequest;
+import openerp.openerpresourceserver.enums.RequestStatus;
 import openerp.openerpresourceserver.enums.RequestType;
 import openerp.openerpresourceserver.repo.RouteDetailRepository;
 import openerp.openerpresourceserver.service.ParcelRequestService;
@@ -41,9 +42,11 @@ public class RouteDetailServiceImpl implements RouteDetailService {
         if (requestType.equals("parcel")){
             ParcelRequest parcelRequest = parcelRequestService.getParcelRequestById(routeDetail.getRequestId());
             parcelRequest.setStatusId(2);
+            parcelRequestService.createParcelRequest(parcelRequest);
         }else{
             PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(routeDetail.getRequestId());
             passengerRequest.setStatusId(2);
+            passengerRequestService.savePassengerRequest(passengerRequest);
         }
         routeDetail.setIsPickup(false);
         return routeDetailRepository.save(routeDetail);
@@ -65,6 +68,18 @@ public class RouteDetailServiceImpl implements RouteDetailService {
 
     @Override
     public void deleteRouteDetailsByRouteId(UUID routeId) {
+        List<RouteDetail> routeDetails = routeDetailRepository.findByRouteId(routeId);
+        for (int i = 0; i<routeDetails.size();i++){
+            if(routeDetails.get(i).getRequestType().equals(RequestType.parcel.toString())){
+                ParcelRequest parcelRequest = parcelRequestService.getParcelRequestById(routeDetails.get(i).getRequestId());
+                parcelRequest.setStatusId(RequestStatus.RECEIVED.ordinal()+1);
+                parcelRequestService.createParcelRequest(parcelRequest);
+            }else{
+                PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(routeDetails.get(i).getRequestId());
+                passengerRequest.setStatusId(RequestStatus.RECEIVED.ordinal()+1);
+                passengerRequestService.savePassengerRequest(passengerRequest);
+            }
+        }
         routeDetailRepository.deleteByRouteId(routeId);
     }
 
@@ -73,6 +88,6 @@ public class RouteDetailServiceImpl implements RouteDetailService {
         System.out.println("---------------------");
         System.out.println(routeId);
         System.out.println("---------------------");
-        return routeDetailRepository.search(routeId);
+        return routeDetailRepository.findByRouteId(routeId);
     }
 }

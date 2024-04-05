@@ -6,6 +6,8 @@ import { request } from "../../api";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Typography, Grid, TextField, Button, Box, Modal } from "@mui/material";
 import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDetailPassengerRequest";
+import { useRouteMatch } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 const AddRequestToRoute = () => {
     const { id } = useParams();
@@ -15,6 +17,8 @@ const AddRequestToRoute = () => {
     const [selectedDraggble, setSelectedDraggble] = useState();
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [assignedRequests, setAssignedRequests] = useState([]);
+    const history = useHistory();
+    let { path } = useRouteMatch();
     const [columns, setColumns] = useState({
         'column1': {
             id: 'column1',
@@ -39,10 +43,11 @@ const AddRequestToRoute = () => {
                 const assignedRequestsDataSorted = []
 
                 const resRouteDetail = await request("get", `/route-details/search?routeId=${routeId}`)
-                const currentRoute = resRouteDetail.data
+
+                const currentRoute = resRouteDetail !== undefined ? resRouteDetail.data : []
                 currentRoute.forEach((routeDetail, indexRouteDetail) => {
                     assignedRequestsData.forEach((requestElement, indexReq) => {
-                        if(requestElement.id === routeDetail.requestId) {
+                        if (requestElement.id === routeDetail.requestId) {
                             assignedRequestsDataSorted.push(requestElement);
                         }
                     });
@@ -154,6 +159,10 @@ const AddRequestToRoute = () => {
                 },
                 listRouteDetails
             );
+
+            const currentPath = history.location.pathname; // Lấy đường dẫn hiện tại
+            const newPath = currentPath.replace('/addrequests', ''); // Loại bỏ '/addrequests' từ currentPath
+            history.push(newPath); // Chuyển hướng đến đường dẫn mới
         } catch (error) {
             console.error("Error creating passenger request:", error);
         }

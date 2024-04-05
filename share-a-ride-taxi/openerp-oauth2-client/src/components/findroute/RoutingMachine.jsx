@@ -19,7 +19,7 @@ const createRoutineMachineLayer = (props) => {
   const customIcons = iconUrls.map(url =>
     L.icon({
       iconUrl: url,
-      iconSize: [32, 32], // Adjust the size as needed
+      iconSize: [48, 48], // Adjust the size as needed
       iconAnchor: [16, 32], // Adjust the anchor point if needed
     })
   );

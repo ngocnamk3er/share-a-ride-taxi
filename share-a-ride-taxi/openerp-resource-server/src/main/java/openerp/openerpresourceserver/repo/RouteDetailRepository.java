@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.repo;
 
+import openerp.openerpresourceserver.entity.Route;
 import org.springframework.data.jpa.repository.JpaRepository;
 import openerp.openerpresourceserver.entity.RouteDetail;
 import org.springframework.data.jpa.repository.Query;
@@ -10,9 +11,7 @@ import java.util.UUID;
 
 public interface RouteDetailRepository extends JpaRepository<RouteDetail, UUID> {
     // Thêm các phương thức tùy chỉnh nếu cần
-    @Query("SELECT rd FROM RouteDetail rd WHERE " +
-            "(:routeId is null OR rd.routeId = :routeId)")
-    List<RouteDetail> search(@Param("routeId") UUID routeId);
-
+    List<RouteDetail> findByRouteId(UUID routeId);
     void deleteByRouteId(UUID routeId);
+
 }
