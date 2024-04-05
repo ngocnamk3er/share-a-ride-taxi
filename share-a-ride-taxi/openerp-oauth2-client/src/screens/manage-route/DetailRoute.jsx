@@ -60,7 +60,16 @@ const DetailRoute = () => {
         history.push(newPath); // Chuyển hướng đến đường dẫn mới
     }
     if (loading) {
-        return <CircularProgress />;
+        return (
+            <div>
+                <Typography variant="h4" gutterBottom>
+                    List of Requests in route
+                </Typography>
+                <Button onClick={handleRowClick} variant="contained" color="primary" style={{ marginBottom: '20px' }}>
+                    Add Request
+                </Button>
+            </div>
+        )
     }
 
     return (
