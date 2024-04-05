@@ -15,9 +15,10 @@ function ResetCenterView(props) {
         if (center) {
             map.setView(
                 L.latLng(center[0], center[1]),
+                12, 
                 map.getZoom(),
                 {
-                    animate: true
+                    animate: true,
                 }
             )
         }
@@ -42,7 +43,7 @@ const RoutingMapTwoPoint = (props) => {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <RoutingMachine listLocation={listLocation} />
+            <RoutingMachine listLocation={listLocation}/>
             <ResetCenterView center={center} />
         </MapContainer>
     );

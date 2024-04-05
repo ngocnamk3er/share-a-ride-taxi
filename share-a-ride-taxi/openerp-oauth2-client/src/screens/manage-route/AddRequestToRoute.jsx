@@ -8,6 +8,7 @@ import { Typography, Grid, TextField, Button, Box, Modal } from "@mui/material";
 import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDetailPassengerRequest";
 import { useRouteMatch } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
+import PreviewRoute from "components/modal-preview-route/PreviewRoute";
 
 const AddRequestToRoute = () => {
     const { id } = useParams();
@@ -16,6 +17,7 @@ const AddRequestToRoute = () => {
     const [availablelistRequest, setAvailabletListRequest] = useState([]);
     const [selectedDraggble, setSelectedDraggble] = useState();
     const [showPickupModal, setShowPickupModal] = useState(false);
+    const [showPreviewRoute, setShowPreviewRoute] = useState(false);
     const [assignedRequests, setAssignedRequests] = useState([]);
     const history = useHistory();
     let { path } = useRouteMatch();
@@ -169,6 +171,13 @@ const AddRequestToRoute = () => {
 
     };
 
+    const openPreviewRoute = () => {
+        const assignedTaskIds = columns['column2'].taskIds;
+        const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.id === taskId));
+        setAssignedRequests(assignedRequestsData);
+        setShowPreviewRoute(true);
+    }
+
     const loadData = () => {
         // Gọi lại useEffect để load lại dữ liệu
         request("get", `/passenger-requests`, (res) => {
@@ -241,6 +250,17 @@ const AddRequestToRoute = () => {
                     );
                 })}
             </DragDropContext>
+            <br />
+
+            <Modal
+                open={showPreviewRoute}
+                onClose={() => setShowPreviewRoute(false)}
+            >
+                <PreviewRoute assignedRequests = {assignedRequests}/>
+            </Modal>
+
+            <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
+            <br />
             <br />
             <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
 
