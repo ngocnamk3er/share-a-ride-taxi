@@ -23,7 +23,7 @@ public class ParcelRequestController {
     private final ParcelRequestService parcelRequestService;
     private final LocationService locationService;
 
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     @GetMapping
     public List<ParcelRequestResponse> getAllParcelRequests() {
         List<ParcelRequest> parcelRequests = parcelRequestService.getAllParcelRequests();
@@ -37,7 +37,7 @@ public class ParcelRequestController {
         return responseList;
     }
 
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     @GetMapping("/{id}")
     public ParcelRequestResponse getParcelRequestById(@PathVariable UUID id) {
         return convertToResponse(parcelRequestService.getParcelRequestById(id));

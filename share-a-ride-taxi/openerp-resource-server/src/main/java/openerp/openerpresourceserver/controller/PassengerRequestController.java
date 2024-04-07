@@ -21,7 +21,7 @@ public class PassengerRequestController {
 
     private final PassengerRequestService passengerRequestService;
     private final LocationService locationService;
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     @GetMapping
     public List<PassengerRequestResponse> getAllPassengerRequests() {
         List<PassengerRequest> passengerRequests = passengerRequestService.getAllPassengerRequests();
@@ -35,7 +35,7 @@ public class PassengerRequestController {
         return responseList;
     }
 
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     @GetMapping("/{id}")
     public PassengerRequestResponse getPassengerRequestById(@PathVariable UUID id) {
         return convertToResponse(passengerRequestService.getPassengerRequestById(id));
