@@ -2,6 +2,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Route;
+import openerp.openerpresourceserver.entity.RouteDetail;
 import openerp.openerpresourceserver.repo.RouteRepository;
 import openerp.openerpresourceserver.service.RouteService;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,10 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public Route updateRoute(UUID id, Route routeDetails) {
+        Route route = routeRepository.findById(id).orElseThrow();
         if (routeRepository.existsById(id)) {
             LocalDateTime currentTime = LocalDateTime.now();
+            routeDetails.setCreatedStamp(route.getCreatedStamp());
             routeDetails.setLastUpdatedStamp(currentTime);
             routeDetails.setId(id);
             return routeRepository.save(routeDetails);

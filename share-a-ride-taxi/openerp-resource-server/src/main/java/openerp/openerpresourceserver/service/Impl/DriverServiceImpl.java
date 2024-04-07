@@ -8,6 +8,7 @@ import openerp.openerpresourceserver.service.DriverService;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +30,8 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver saveDriver(Driver driver) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        driver.setCreatedAt(currentTime);
         return driverRepository.save(driver);
     }
 
@@ -40,24 +43,17 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Driver updateDriver(UUID id, Driver driverRequest) {
         Driver driver = driverRepository.findById(id).orElseThrow();
-        if (driverRequest.getGender() != null) {
-            driver.setGender(driverRequest.getGender());
+        if(driverRepository.existsById(id)){
+            LocalDateTime currentTime = LocalDateTime.now();
+            driverRequest.setUpdatedAt(currentTime);
+            driverRequest.setCreatedAt(driver.getCreatedAt());
+            driverRequest.setId(id);
+            System.out.println("driverRequest");
+            System.out.println(driverRequest);
+            return driverRepository.save(driverRequest);
+        }else{
+            return null;
         }
-        if (driverRequest.getEmail() != null) {
-            driver.setEmail(driverRequest.getEmail());
-        }
-        if (driverRequest.getFullName() != null) {
-            driver.setFullName(driverRequest.getFullName());
-        }
-        if (driverRequest.getPhoneNumber() != null) {
-            driver.setPhoneNumber(driverRequest.getPhoneNumber());
-        }
-        if (driverRequest.getVehicleType() != null) {
-            driver.setVehicleType(driverRequest.getVehicleType());
-        }
-        if (driverRequest.getVehicleLicensePlate() != null) {
-            driver.setVehicleLicensePlate(driverRequest.getVehicleLicensePlate());
-        }
-        return driverRepository.save(driver);
+
     }
 }

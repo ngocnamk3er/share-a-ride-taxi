@@ -89,6 +89,10 @@ public class RouteController {
             updatedRouteDetails.add(updatedRouteDetail);
         }
 
+        LocalDateTime now = LocalDateTime.now();
+        existingRoute.setCreatedStamp(now);
+        routeService.updateRoute(routeId, existingRoute);
+
         return new ResponseEntity<>(updatedRouteDetails, HttpStatus.OK);
     }
 
