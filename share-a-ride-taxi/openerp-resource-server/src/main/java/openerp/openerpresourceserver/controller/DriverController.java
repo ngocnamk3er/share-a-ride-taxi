@@ -23,14 +23,14 @@ public class DriverController {
 
 
     @GetMapping
-//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<List<Driver>> getAllDrivers() {
         List<Driver> drivers = driverService.getAllDrivers();
         return ResponseEntity.ok().body(drivers);
     }
 
     @GetMapping("/{id}")
-//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<Driver> getDriverById(@PathVariable UUID id) {
         Driver driver = driverService.getDriverById(id);
         if (driver != null) {
@@ -41,14 +41,14 @@ public class DriverController {
     }
 
     @PostMapping
-//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
         Driver savedDriver = driverService.saveDriver(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDriver);
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<Driver> updateDriver(@PathVariable UUID id, @RequestBody Driver driverRequest) {
         Driver updatedDriver = driverService.updateDriver(id, driverRequest);
         return ResponseEntity.ok().body(updatedDriver);
@@ -56,7 +56,7 @@ public class DriverController {
 
 
     @DeleteMapping("/{id}")
-//    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<String> deleteDriver(@PathVariable UUID id) {
         try {
             driverService.deleteDriver(id);
