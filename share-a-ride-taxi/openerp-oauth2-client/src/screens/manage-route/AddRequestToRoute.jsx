@@ -20,6 +20,7 @@ const AddRequestToRoute = () => {
     const [showPreviewRoute, setShowPreviewRoute] = useState(false);
     const [assignedRequests, setAssignedRequests] = useState([]);
     const [assignedRequestsOfThisRoute, setAssignedRequestsOfThisRoute] = useState([]);
+    const [changed, setChanged] = useState(false);
     const history = useHistory();
     let { path } = useRouteMatch();
     const [columns, setColumns] = useState({
@@ -82,13 +83,14 @@ const AddRequestToRoute = () => {
             'column1': newColumn1,
             'column2': newColumn2
         });
-    }, [assignedRequestsOfThisRoute, availablelistRequest, columns])
+    }, [assignedRequestsOfThisRoute, availablelistRequest])
 
     useEffect(() => {
         console.log("allListRequest:", allListRequest);
     }, [allListRequest]);
 
     const onDragEnd = result => {
+        setChanged(true)
         const { destination, source, draggableId } = result;
         if (!destination) {
             return;
@@ -185,6 +187,23 @@ const AddRequestToRoute = () => {
         setShowPreviewRoute(true);
     }
 
+    const undo = () => {
+        const newColumn1 = {
+            ...columns['column1'],
+            taskIds: availablelistRequest.map(request => request.id)
+        };
+        const newColumn2 = {
+            ...columns['column2'],
+            taskIds: assignedRequestsOfThisRoute.map(request => request.id)
+        };
+        setColumns({
+            ...columns,
+            'column1': newColumn1,
+            'column2': newColumn2
+        });
+        setChanged(false)
+    }
+
     const loadData = () => {
         // Gọi lại useEffect để load lại dữ liệu
         request("get", `/passenger-requests`, (res) => {
@@ -210,7 +229,7 @@ const AddRequestToRoute = () => {
 
                     return (
                         <div key={column.id} className="column">
-                            <h2>{column.title}</h2>
+                            <h2>{!changed ? column.title : `${column.title} *`}</h2>
                             <Droppable droppableId={column.id}>
                                 {(provided) => (
                                     <div
@@ -266,6 +285,9 @@ const AddRequestToRoute = () => {
                 <PreviewRoute assignedRequests={assignedRequests} />
             </Modal>
 
+            <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Undo</Button>
+            <br />
+            <br />
             <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
             <br />
             <br />
