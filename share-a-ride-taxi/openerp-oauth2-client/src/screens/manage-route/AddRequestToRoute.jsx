@@ -19,6 +19,7 @@ const AddRequestToRoute = () => {
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [showPreviewRoute, setShowPreviewRoute] = useState(false);
     const [assignedRequests, setAssignedRequests] = useState([]);
+    const [assignedRequestsOfThisRoute, setAssignedRequestsOfThisRoute] = useState([]);
     const history = useHistory();
     let { path } = useRouteMatch();
     const [columns, setColumns] = useState({
@@ -39,38 +40,25 @@ const AddRequestToRoute = () => {
             try {
 
 
-                const res = await request("get", `/passenger-requests`);
-                const availableListFromData = res.data.filter(item => item.statusId === 1);
-                const assignedRequestsData = res.data.filter(item => item.statusId === 2);
-                const assignedRequestsDataSorted = []
+                const resPassengerRequest = await request("get", `/passenger-requests`);
 
                 const resRouteDetail = await request("get", `/route-details/search?routeId=${routeId}`)
 
-                const currentRoute = resRouteDetail !== undefined ? resRouteDetail.data : []
-                currentRoute.forEach((routeDetail, indexRouteDetail) => {
-                    assignedRequestsData.forEach((requestElement, indexReq) => {
-                        if (requestElement.id === routeDetail.requestId) {
-                            assignedRequestsDataSorted.push(requestElement);
-                        }
-                    });
-                });
+                console.log("resPassengerRequest.data", resPassengerRequest.data)
+                console.log("resRouteDetail.data", resRouteDetail.data)
 
-                console.log(assignedRequestsData)
-
-                setAllListRequest(res.data);
-                setAvailabletListRequest(availableListFromData);
-                const newColumn1 = {
-                    ...columns['column1'],
-                    taskIds: availableListFromData.map(request => request.id)
-                };
-                const newColumn2 = {
-                    ...columns['column2'],
-                    taskIds: assignedRequestsDataSorted.map(request => request.id)
-                };
-                setColumns({
-                    ...columns,
-                    'column1': newColumn1,
-                    'column2': newColumn2
+                resPassengerRequest.data.forEach(req => {
+                    setAllListRequest(prev => [...prev, req])
+                    if (req.statusId === 1) {
+                        setAvailabletListRequest(prev => [...prev, req])
+                    } else {
+                        setAssignedRequests(prev => [...prev, req])
+                        resRouteDetail.data.forEach(element => {
+                            if (element.requestId === req.id) {
+                                setAssignedRequestsOfThisRoute(prev => [...prev, req]);
+                            }
+                        });
+                    }
                 });
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -78,8 +66,27 @@ const AddRequestToRoute = () => {
         };
 
         fetchData();
-    }, [id]);
+    }, [id, routeId]);
 
+    useEffect(() => {
+        const newColumn1 = {
+            ...columns['column1'],
+            taskIds: availablelistRequest.map(request => request.id)
+        };
+        const newColumn2 = {
+            ...columns['column2'],
+            taskIds: assignedRequestsOfThisRoute.map(request => request.id)
+        };
+        setColumns({
+            ...columns,
+            'column1': newColumn1,
+            'column2': newColumn2
+        });
+    }, [assignedRequestsOfThisRoute, availablelistRequest, columns])
+
+    useEffect(() => {
+        console.log("allListRequest:", allListRequest);
+    }, [allListRequest]);
 
     const onDragEnd = result => {
         const { destination, source, draggableId } = result;
@@ -256,7 +263,7 @@ const AddRequestToRoute = () => {
                 open={showPreviewRoute}
                 onClose={() => setShowPreviewRoute(false)}
             >
-                <PreviewRoute assignedRequests = {assignedRequests}/>
+                <PreviewRoute assignedRequests={assignedRequests} />
             </Modal>
 
             <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
