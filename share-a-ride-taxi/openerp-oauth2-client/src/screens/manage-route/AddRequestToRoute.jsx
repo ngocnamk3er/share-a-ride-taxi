@@ -223,59 +223,64 @@ const AddRequestToRoute = () => {
 
     return (
         <div>
-            <DragDropContext onDragEnd={onDragEnd}>
-                {Object.values(columns).map(column => {
-                    const listTasks = column.taskIds.map(taskId => allListRequest.find(request => request.id === taskId));
+            <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Undo</Button>
+            <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
+            <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
+            <Grid container spacing={2}>
+                <DragDropContext onDragEnd={onDragEnd}>
+                    {Object.values(columns).map(column => {
+                        const listTasks = column.taskIds.map(taskId => allListRequest.find(request => request.id === taskId));
 
-                    return (
-                        <div key={column.id} className="column">
-                            <h2>{!changed ? column.title : `${column.title} *`}</h2>
-                            <Droppable droppableId={column.id}>
-                                {(provided) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.droppableProps}
-                                        className="task-list"
-                                    >
-                                        {listTasks.map((request, index) => (
-                                            <div>
-                                                <Draggable key={request.id} draggableId={request.id} index={index}>
-                                                    {(provided) => (
-                                                        <div
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}
-                                                            className="task"
-                                                            onClick={() => handleDraggableClick(request)}
+                        return (
+                            <Grid item xs={6} key={column.id} className="column">
+                                <h2>{!changed ? column.title : `${column.title} *`}</h2>
+                                <Droppable droppableId={column.id}>
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            className="task-list"
+                                        >
+                                            {listTasks.map((request, index) => (
+                                                <div>
+                                                    <Draggable key={request.id} draggableId={request.id} index={index}>
+                                                        {(provided) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                className="task"
+                                                                onClick={() => handleDraggableClick(request)}
+                                                            >
+                                                                Yêu cầu của khách : {request.passengerName}
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                    {
+                                                        selectedDraggble === request.id &&
+                                                        <Modal
+                                                            open={showPickupModal}
+                                                            onClose={() => setShowPickupModal(false)}
+                                                        // aria-labelledby="modal-modal-title"
+                                                        // aria-describedby="modal-modal-description"
                                                         >
-                                                            Yêu cầu của khách : {request.passengerName}
-                                                        </div>
-                                                    )}
-                                                </Draggable>
-                                                {
-                                                    selectedDraggble === request.id &&
-                                                    <Modal
-                                                        open={showPickupModal}
-                                                        onClose={() => setShowPickupModal(false)}
-                                                    // aria-labelledby="modal-modal-title"
-                                                    // aria-describedby="modal-modal-description"
-                                                    >
-                                                        <div>
-                                                            <ModalDetailPassengerRequest request={request} />
-                                                        </div>
-                                                    </Modal>
+                                                            <div>
+                                                                <ModalDetailPassengerRequest request={request} />
+                                                            </div>
+                                                        </Modal>
 
-                                                }
-                                            </div>
-                                        ))}
-                                        {provided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                        </div>
-                    );
-                })}
-            </DragDropContext>
+                                                    }
+                                                </div>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </Grid>
+                        );
+                    })}
+                </DragDropContext>
+            </Grid>
             <br />
 
             <Modal
@@ -284,15 +289,6 @@ const AddRequestToRoute = () => {
             >
                 <PreviewRoute assignedRequests={assignedRequests} />
             </Modal>
-
-            <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Undo</Button>
-            <br />
-            <br />
-            <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
-            <br />
-            <br />
-            <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
-
 
         </div>
     );
