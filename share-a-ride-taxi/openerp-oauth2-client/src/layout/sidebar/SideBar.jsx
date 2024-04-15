@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import { styled } from "@mui/material/styles";
 import { useKeycloak } from "@react-keycloak/web";
@@ -86,6 +87,8 @@ export default function SideBar(props) {
   const { open, image, color: bgColor } = props;
 
   const { keycloak } = useKeycloak();
+
+  
 
   useEffect(() => {
     if (keycloak.authenticated) fetchMenu();

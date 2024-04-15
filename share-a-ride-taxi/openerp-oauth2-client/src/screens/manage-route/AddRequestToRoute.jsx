@@ -21,6 +21,9 @@ const AddRequestToRoute = () => {
     const [assignedRequests, setAssignedRequests] = useState([]);
     const [assignedRequestsOfThisRoute, setAssignedRequestsOfThisRoute] = useState([]);
     const [changed, setChanged] = useState(false);
+    const [maxDo, setMaxDo] = useState(0);
+    const [index, setIndex] = useState(0);
+    const [stackColumns, setStackColumns] = useState([]);
     const history = useHistory();
     let { path } = useRouteMatch();
     const [columns, setColumns] = useState({
@@ -70,28 +73,36 @@ const AddRequestToRoute = () => {
     }, [id, routeId]);
 
     useEffect(() => {
-        const newColumn1 = {
-            ...columns['column1'],
-            taskIds: availablelistRequest.map(request => request.id)
-        };
-        const newColumn2 = {
-            ...columns['column2'],
-            taskIds: assignedRequestsOfThisRoute.map(request => request.id)
-        };
-        setColumns({
-            ...columns,
-            'column1': newColumn1,
-            'column2': newColumn2
+        setColumns(prevColumns => {
+            const newColumn1 = {
+                ...prevColumns['column1'],
+                taskIds: availablelistRequest.map(request => request.id)
+            };
+            const newColumn2 = {
+                ...prevColumns['column2'],
+                taskIds: assignedRequestsOfThisRoute.map(request => request.id)
+            };
+            return {
+                ...prevColumns,
+                'column1': newColumn1,
+                'column2': newColumn2
+            };
         });
-    }, [assignedRequestsOfThisRoute, availablelistRequest])
+    }, [assignedRequestsOfThisRoute, availablelistRequest]);
+
 
     useEffect(() => {
-        console.log("allListRequest:", allListRequest);
-    }, [allListRequest]);
+        setStackColumns((prevStack) => [...prevStack, columns])
+    }, [columns])
+
 
     const onDragEnd = result => {
         setChanged(true)
+        setMaxDo(prevMaxdo => prevMaxdo + 1)
         const { destination, source, draggableId } = result;
+
+        console.log(result)
+
         if (!destination) {
             return;
         }
@@ -202,6 +213,11 @@ const AddRequestToRoute = () => {
             'column2': newColumn2
         });
         setChanged(false)
+        console.log("undo")
+    }
+
+    const redo = () => {
+        console.log("redo");
     }
 
     const loadData = () => {
@@ -223,10 +239,14 @@ const AddRequestToRoute = () => {
 
     return (
         <div>
-            <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Undo</Button>
-            <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
-            <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
-            <Grid container spacing={2}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
+                <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Undo</Button>
+                <Button onClick={redo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Redo</Button>
+                <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
+                <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
+            </div>
+
+            <Grid style={{ width: '100%' }} container spacing={2}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {Object.values(columns).map(column => {
                         const listTasks = column.taskIds.map(taskId => allListRequest.find(request => request.id === taskId));
@@ -240,6 +260,7 @@ const AddRequestToRoute = () => {
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}
                                             className="task-list"
+                                            style={{ height: '100%' }}
                                         >
                                             {listTasks.map((request, index) => (
                                                 <div>
