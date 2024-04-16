@@ -9,6 +9,7 @@ import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDe
 import { useRouteMatch } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import PreviewRoute from "components/modal-preview-route/PreviewRoute";
+import { TempleBuddhist } from "@mui/icons-material";
 
 const AddRequestToRoute = () => {
     const { id } = useParams();
@@ -21,9 +22,10 @@ const AddRequestToRoute = () => {
     const [assignedRequests, setAssignedRequests] = useState([]);
     const [assignedRequestsOfThisRoute, setAssignedRequestsOfThisRoute] = useState([]);
     const [changed, setChanged] = useState(false);
-    const [maxDo, setMaxDo] = useState(0);
-    const [index, setIndex] = useState(0);
-    const [stackColumns, setStackColumns] = useState([]);
+    const [newStateColumns, setNewStateColumns] = useState([]);
+    const [historyColumns, setHistoryColumns] = useState([]);
+    const [futureColumns, setFutureColumns] = useState([]);
+    const [index, setIndex] = useState(-1);
     const history = useHistory();
     let { path } = useRouteMatch();
     const [columns, setColumns] = useState({
@@ -42,35 +44,70 @@ const AddRequestToRoute = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-
-
                 const resPassengerRequest = await request("get", `/passenger-requests`);
+                const resRouteDetail = await request("get", `/route-details/search?routeId=${routeId}`);
 
-                const resRouteDetail = await request("get", `/route-details/search?routeId=${routeId}`)
+                // Tạo các biến trung gian để lưu kết quả
+                const allListRequestTemp = [];
+                const availableListRequestTemp = [];
+                const assignedRequestsTemp = [];
+                const assignedRequestsOfThisRouteTemp = [];
 
-                console.log("resPassengerRequest.data", resPassengerRequest.data)
-                console.log("resRouteDetail.data", resRouteDetail.data)
-
+                // Lặp qua kết quả từ resPassengerRequest
                 resPassengerRequest.data.forEach(req => {
-                    setAllListRequest(prev => [...prev, req])
+                    allListRequestTemp.push(req);
                     if (req.statusId === 1) {
-                        setAvailabletListRequest(prev => [...prev, req])
+                        availableListRequestTemp.push(req);
                     } else {
-                        setAssignedRequests(prev => [...prev, req])
+                        assignedRequestsTemp.push(req);
+                        // Lặp qua kết quả từ resRouteDetail để tìm các yêu cầu được gán cho tuyến đường này
                         resRouteDetail.data.forEach(element => {
                             if (element.requestId === req.id) {
-                                setAssignedRequestsOfThisRoute(prev => [...prev, req]);
+                                assignedRequestsOfThisRouteTemp.push(req);
                             }
                         });
                     }
                 });
+
+                // Sau khi lặp xong, setState với các biến trung gian
+                setAllListRequest(allListRequestTemp);
+                setAvailabletListRequest(availableListRequestTemp);
+                setAssignedRequests(assignedRequestsTemp);
+                setAssignedRequestsOfThisRoute(assignedRequestsOfThisRouteTemp);
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
 
         fetchData();
-    }, [id, routeId]);
+    }, [routeId]); // Thêm routeId vào dependency array để useEffect được kích hoạt khi routeId thay đổi
+
+    useEffect(() => {
+        console.log('index', index)
+    }, [index])
+
+    // useEffect(() => {
+    //     if (newStateColumns.length !== 0) {
+    //         setIndex(prev => prev + 1)
+    //     }
+    // }, [newStateColumns])
+
+    useEffect(() => {
+        console.log("historyColumns")
+        console.log(historyColumns)
+    }, [historyColumns])
+
+    useEffect(() => {
+        console.log("futureColumns")
+        console.log(futureColumns)
+    }, [futureColumns])
+
+    useEffect(() => {
+        if (columns['column1']['taskIds'].length === 0 || columns['column2']['taskIds'].length === 0)
+            return
+        setNewStateColumns(prev => [...prev, columns])
+    }, [columns])
 
     useEffect(() => {
         setColumns(prevColumns => {
@@ -91,17 +128,10 @@ const AddRequestToRoute = () => {
     }, [assignedRequestsOfThisRoute, availablelistRequest]);
 
 
-    useEffect(() => {
-        setStackColumns((prevStack) => [...prevStack, columns])
-    }, [columns])
-
 
     const onDragEnd = result => {
         setChanged(true)
-        setMaxDo(prevMaxdo => prevMaxdo + 1)
         const { destination, source, draggableId } = result;
-
-        console.log(result)
 
         if (!destination) {
             return;
@@ -120,10 +150,16 @@ const AddRequestToRoute = () => {
                 ...start,
                 taskIds: newTaskIds
             };
-            setColumns({
-                ...columns,
-                [newColumn.id]: newColumn
+
+            setColumns(prevColumns => {
+                setHistoryColumns(prev => [...prev, prevColumns])
+                const updatedColumns = {
+                    ...prevColumns,
+                    [newColumn.id]: newColumn
+                };
+                return updatedColumns;
             });
+            setFutureColumns([])
             return;
         }
         const startTaskIds = Array.from(start.taskIds);
@@ -138,11 +174,16 @@ const AddRequestToRoute = () => {
             ...finish,
             taskIds: finishTaskIds
         };
-        setColumns({
-            ...columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish
+        setColumns(prevColumns => {
+            setHistoryColumns(prev => [...prev, prevColumns])
+            const updatedColumns = {
+                ...prevColumns,
+                [newStart.id]: newStart,
+                [newFinish.id]: newFinish
+            };
+            return updatedColumns;
         });
+        setFutureColumns([])
     };
 
     const handleDraggableClick = (request) => {
@@ -199,26 +240,39 @@ const AddRequestToRoute = () => {
     }
 
     const undo = () => {
-        const newColumn1 = {
-            ...columns['column1'],
-            taskIds: availablelistRequest.map(request => request.id)
-        };
-        const newColumn2 = {
-            ...columns['column2'],
-            taskIds: assignedRequestsOfThisRoute.map(request => request.id)
-        };
-        setColumns({
-            ...columns,
-            'column1': newColumn1,
-            'column2': newColumn2
-        });
-        setChanged(false)
+        if (historyColumns.length === 0) {
+            return;
+        }
+
+        setFutureColumns((prev) => [columns, ...prev])
+
+        const history = historyColumns[historyColumns.length - 1]
+        setColumns(history)
+        setHistoryColumns(historyColumns.slice(0, historyColumns.length - 1))
         console.log("undo")
     }
 
     const redo = () => {
+        if (futureColumns.length === 0) {
+            return;
+        }
+
+        setHistoryColumns((prev) => [...prev, columns])
+        const future = futureColumns[0]
+        setColumns(future);
+        setFutureColumns(futureColumns.slice(1, futureColumns.length))
+
         console.log("redo");
     }
+
+    useEffect(() => {
+        if (historyColumns.length === 0) {
+            setChanged(false);
+        } else {
+            setChanged(true);
+        }
+    }, [historyColumns])
+
 
     const loadData = () => {
         // Gọi lại useEffect để load lại dữ liệu
