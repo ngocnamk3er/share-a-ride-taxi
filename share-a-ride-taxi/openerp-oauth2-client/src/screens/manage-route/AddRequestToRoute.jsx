@@ -9,7 +9,10 @@ import ModalDetailPassengerRequest from "components/modal-detail-request/ModalDe
 import { useRouteMatch } from 'react-router-dom';
 import { useHistory } from "react-router-dom";
 import PreviewRoute from "components/modal-preview-route/PreviewRoute";
-import { TempleBuddhist } from "@mui/icons-material";
+import UndoIcon from '@mui/icons-material/Undo';
+import RedoIcon from '@mui/icons-material/Redo';
+import PreviewIcon from '@mui/icons-material/Preview';
+import SaveIcon from '@mui/icons-material/Save';
 
 const AddRequestToRoute = () => {
     const { id } = useParams();
@@ -294,10 +297,18 @@ const AddRequestToRoute = () => {
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-                <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Undo</Button>
-                <Button onClick={redo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>Redo</Button>
-                <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>Preview route</Button>
-                <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>Save</Button>
+                <Button onClick={undo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>
+                    <UndoIcon /> Undo
+                </Button>
+                <Button onClick={redo} className="save-button" style={{ backgroundColor: 'orange', color: 'white' }}>
+                    Redo <RedoIcon />
+                </Button>
+                <Button onClick={openPreviewRoute} className="save-button" style={{ backgroundColor: 'green', color: 'white' }}>
+                    <PreviewIcon /> Preview route
+                </Button>
+                <Button onClick={handleSave} className="save-button" style={{ backgroundColor: 'blue', color: 'white' }}>
+                    <SaveIcon /> Save
+                </Button>
             </div>
 
             <Grid style={{ width: '100%' }} container spacing={2}>
