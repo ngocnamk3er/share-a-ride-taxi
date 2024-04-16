@@ -31,6 +31,8 @@ const AddRequestToRoute = () => {
     const [index, setIndex] = useState(-1);
     const history = useHistory();
     let { path } = useRouteMatch();
+    const RECEIVED = 'RECEIVED';
+
     const [columns, setColumns] = useState({
         'column1': {
             id: 'column1',
@@ -59,7 +61,7 @@ const AddRequestToRoute = () => {
                 // Lặp qua kết quả từ resPassengerRequest
                 resPassengerRequest.data.forEach(req => {
                     allListRequestTemp.push(req);
-                    if (req.statusId === 1) {
+                    if (req.requestStatus === RECEIVED) {
                         availableListRequestTemp.push(req);
                     } else {
                         assignedRequestsTemp.push(req);
@@ -280,7 +282,7 @@ const AddRequestToRoute = () => {
     const loadData = () => {
         // Gọi lại useEffect để load lại dữ liệu
         request("get", `/passenger-requests`, (res) => {
-            const availableListFromData = res.data.filter(item => item.statusId === 1);
+            const availableListFromData = res.data.filter(item => item.requestStatus === RECEIVED);
             setAllListRequest(res.data);
             setAvailabletListRequest(availableListFromData);
             const newColumn1 = {

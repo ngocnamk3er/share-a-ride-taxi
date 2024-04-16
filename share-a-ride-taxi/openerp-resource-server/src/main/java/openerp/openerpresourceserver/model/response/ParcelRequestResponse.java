@@ -16,11 +16,11 @@ public class ParcelRequestResponse {
     private String recipientPhoneNumber;
     private String recipientEmail;
     private LocalDateTime requestTime;
-    private Integer statusId;
     private BigDecimal pickupLocationLatitude;
     private BigDecimal pickupLocationLongitude;
     private String pickupLocationAddress;
     private BigDecimal dropoffLocationLatitude;
     private BigDecimal dropoffLocationLongitude;
     private String dropoffLocationAddress;
+    private String requestStatus;
 }

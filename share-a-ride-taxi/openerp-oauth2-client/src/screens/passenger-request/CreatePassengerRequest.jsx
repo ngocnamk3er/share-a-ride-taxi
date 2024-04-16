@@ -6,6 +6,7 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import { useHistory } from "react-router-dom";
 
 const CreatePassengerRequest = () => {
+    const RECEIVED = 1
 
     const history = useHistory();
 
@@ -20,7 +21,7 @@ const CreatePassengerRequest = () => {
         dropoffLocationLongitude: "",
         dropoffLocationAddress: "",
         requestTime: "",
-        statusId: 1 // Default status ID
+        statusId: RECEIVED // Default status ID
     });
 
     const [showPickupModal, setShowPickupModal] = useState(false);

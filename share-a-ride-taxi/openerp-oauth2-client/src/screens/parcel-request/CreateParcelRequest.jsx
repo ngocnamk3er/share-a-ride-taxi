@@ -9,6 +9,8 @@ const CreateParcelRequest = () => {
 
     const history = useHistory();
 
+    const RECEIVED = 1;
+
     const [parcelData, setParcelData] = useState({
         senderName: "",
         senderPhoneNumber: "",
@@ -23,7 +25,7 @@ const CreateParcelRequest = () => {
         dropoffLocationLongitude: "",
         dropoffLocationAddress: "",
         requestTime: "",
-        statusId: 1, // Default status ID
+        statusId: RECEIVED, // Default status ID
     });
 
     const [showPickupModal, setShowPickupModal] = useState(false);

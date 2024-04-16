@@ -70,7 +70,7 @@ const DetailPassengerRequest = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography>
-                    <strong>Status ID:</strong> {passengerRequest.statusId}
+                    <strong>Status :</strong> {passengerRequest.requestStatus}
                 </Typography>
             </Grid>
             <Grid item xs={12}>

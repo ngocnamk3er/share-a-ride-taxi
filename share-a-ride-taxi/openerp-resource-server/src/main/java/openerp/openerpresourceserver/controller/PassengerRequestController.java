@@ -3,6 +3,7 @@ package openerp.openerpresourceserver.controller;
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Location;
 import openerp.openerpresourceserver.entity.PassengerRequest;
+import openerp.openerpresourceserver.enums.RequestStatus;
 import openerp.openerpresourceserver.model.request.PassengerRequestRequest;
 import openerp.openerpresourceserver.model.response.PassengerRequestResponse;
 import openerp.openerpresourceserver.service.LocationService;
@@ -134,7 +135,8 @@ public class PassengerRequestController {
         response.setDropoffLocationAddress(dropoffLocation.getAddress());
 
         response.setRequestTime(request.getRequestTime());
-        response.setStatusId(request.getStatusId());
+        RequestStatus status = RequestStatus.values()[request.getStatusId()];
+        response.setRequestStatus(status.toString());
 
         return response;
     }

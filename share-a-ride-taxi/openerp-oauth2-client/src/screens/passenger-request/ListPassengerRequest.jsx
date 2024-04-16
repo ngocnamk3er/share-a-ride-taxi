@@ -71,8 +71,8 @@ const ListPassengerRequest = () => {
             field: "requestTime",
         },
         {
-            title: "Status ID",
-            field: "statusId",
+            title: "Status",
+            field: "requestStatus",
         },
         {
             title: "View",

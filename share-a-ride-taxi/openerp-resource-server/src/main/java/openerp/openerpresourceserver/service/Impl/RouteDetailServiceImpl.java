@@ -41,11 +41,11 @@ public class RouteDetailServiceImpl implements RouteDetailService {
         String requestType = routeDetail.getRequestType();
         if (requestType.equals("parcel")){
             ParcelRequest parcelRequest = parcelRequestService.getParcelRequestById(routeDetail.getRequestId());
-            parcelRequest.setStatusId(2);
+            parcelRequest.setStatusId(RequestStatus.DRIVER_ASSIGNED.ordinal());
             parcelRequestService.createParcelRequest(parcelRequest);
         }else{
             PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(routeDetail.getRequestId());
-            passengerRequest.setStatusId(2);
+            passengerRequest.setStatusId(RequestStatus.DRIVER_ASSIGNED.ordinal());
             passengerRequestService.savePassengerRequest(passengerRequest);
         }
         routeDetail.setIsPickup(false);
@@ -72,11 +72,11 @@ public class RouteDetailServiceImpl implements RouteDetailService {
         for (int i = 0; i<routeDetails.size();i++){
             if(routeDetails.get(i).getRequestType().equals(RequestType.parcel.toString())){
                 ParcelRequest parcelRequest = parcelRequestService.getParcelRequestById(routeDetails.get(i).getRequestId());
-                parcelRequest.setStatusId(RequestStatus.RECEIVED.ordinal()+1);
+                parcelRequest.setStatusId(RequestStatus.RECEIVED.ordinal());
                 parcelRequestService.createParcelRequest(parcelRequest);
             }else{
                 PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(routeDetails.get(i).getRequestId());
-                passengerRequest.setStatusId(RequestStatus.RECEIVED.ordinal()+1);
+                passengerRequest.setStatusId(RequestStatus.RECEIVED.ordinal());
                 passengerRequestService.savePassengerRequest(passengerRequest);
             }
         }

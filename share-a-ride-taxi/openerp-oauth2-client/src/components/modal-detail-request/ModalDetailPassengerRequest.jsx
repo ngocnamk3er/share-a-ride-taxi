@@ -63,7 +63,7 @@ const ModalDetailPassengerRequest = props => {
                 </Grid>
                 <Grid item xs={3}>
                     <Typography>
-                        <strong>Status ID:</strong> {request.statusId}
+                        <strong>Status :</strong> {request.requestStatus}
                     </Typography>
                 </Grid>
                 <Grid item xs={12}>

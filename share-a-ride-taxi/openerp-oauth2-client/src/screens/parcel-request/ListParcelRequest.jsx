@@ -75,6 +75,10 @@ const ListParcelRequest = () => {
             field: "dropoffLocationAddress",
         },
         {
+            title: "Status",
+            field: "requestStatus",
+        },
+        {
             title: "View",
             sorting: false,
             render: (rowData) => (

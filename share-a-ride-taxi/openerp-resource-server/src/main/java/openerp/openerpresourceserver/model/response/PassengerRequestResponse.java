@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import openerp.openerpresourceserver.enums.RequestStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,5 +26,6 @@ public class PassengerRequestResponse {
     private BigDecimal dropoffLocationLongitude;
     private String dropoffLocationAddress;
     private LocalDateTime requestTime;
-    private Integer statusId;
+    private String requestStatus;
+
 }
