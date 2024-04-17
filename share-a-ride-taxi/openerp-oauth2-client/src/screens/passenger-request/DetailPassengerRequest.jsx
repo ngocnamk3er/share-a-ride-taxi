@@ -55,12 +55,12 @@ const DetailPassengerRequest = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography>
-                    <strong>Pickup Location Address:</strong> {passengerRequest.pickupLocationAddress || 'N/A'}
+                    <strong>Pickup Location Address:</strong> {passengerRequest.pickupAddress || 'N/A'}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
                 <Typography>
-                    <strong>Dropoff Location Address:</strong> {passengerRequest.dropoffLocationAddress || 'N/A'}
+                    <strong>Dropoff Location Address:</strong> {passengerRequest.dropoffAddress || 'N/A'}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -70,7 +70,12 @@ const DetailPassengerRequest = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography>
-                    <strong>Status :</strong> {passengerRequest.requestStatus}
+                    <strong>End Time:</strong> {new Date(passengerRequest.endTime).toLocaleString()}
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography>
+                    <strong>Status :</strong> {passengerRequest.statusId}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -78,8 +83,8 @@ const DetailPassengerRequest = () => {
                     // pickupLocation={{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude }}
                     // dropoffLocation={{ lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }}
                     listLocation={
-                        [{ lat: passengerRequest.pickupLocationLatitude, lon: passengerRequest.pickupLocationLongitude },
-                        { lat: passengerRequest.dropoffLocationLatitude, lon: passengerRequest.dropoffLocationLongitude }]
+                        [{ lat: passengerRequest.pickupLatitude, lon: passengerRequest.pickupLongitude },
+                        { lat: passengerRequest.dropoffLatitude, lon: passengerRequest.dropoffLongitude }]
                     }
                 />
             </Grid>

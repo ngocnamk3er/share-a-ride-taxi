@@ -1,19 +1,21 @@
 package openerp.openerpresourceserver.service.Impl;
 
-import openerp.openerpresourceserver.service.Impl.Object.Coordinates;
+import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
 import openerp.openerpresourceserver.service.Impl.Object.RoutingEstimate;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+@Service
 public class GraphhopperService {
 
     @Value("${graphhopper.api.key}")
-    private static String graphhopperApiKey;
+    private String graphhopperApiKey;
 
-    public static RoutingEstimate getRoutingEstimate(Coordinates point1, Coordinates point2) {
+    public RoutingEstimate getRoutingEstimate(Coordinate point1, Coordinate point2) {
         // Lấy tọa độ của điểm 1 và điểm 2 từ hai đối tượng Coordinates được truyền vào
         double latitude1 = point1.getLatitude();
         double longitude1 = point1.getLongitude();

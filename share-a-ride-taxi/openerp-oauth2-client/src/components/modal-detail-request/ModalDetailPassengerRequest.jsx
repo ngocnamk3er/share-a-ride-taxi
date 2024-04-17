@@ -48,31 +48,37 @@ const ModalDetailPassengerRequest = props => {
                 </Grid>
                 <Grid item xs={4}>
                     <Typography>
-                        <strong>Pickup Location Address:</strong> {request.pickupLocationAddress || 'N/A'}
+                        <strong>Pickup Location Address:</strong> {request.pickupAddress || 'N/A'}
                     </Typography>
                 </Grid>
                 <Grid item xs={4}>
                     <Typography>
-                        <strong>Dropoff Location Address:</strong> {request.dropoffLocationAddress || 'N/A'}
+                        <strong>Dropoff Location Address:</strong> {request.dropoffAddress || 'N/A'}
                     </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
+                    <Typography>
+                        <strong>Status :</strong> {request.statusId}
+                    </Typography>
+                </Grid>
+                <Grid item xs={4}>
                     <Typography>
                         <strong>Request Time:</strong> {new Date(request.requestTime).toLocaleString()}
                     </Typography>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                     <Typography>
-                        <strong>Status :</strong> {request.requestStatus}
+                        <strong>End Time:</strong> {new Date(request.endTime).toLocaleString()}
                     </Typography>
                 </Grid>
+                
                 <Grid item xs={12}>
                     <RoutingMapTwoPoint style={{ width: "100%", height: "45vh" }}
                         // pickupLocation={{ lat: request.pickupLocationLatitude, lon: request.pickupLocationLongitude }}
                         // dropoffLocation={{ lat: request.dropoffLocationLatitude, lon: request.dropoffLocationLongitude }}
                         listLocation={
-                            [{ lat: request.pickupLocationLatitude, lon: request.pickupLocationLongitude },
-                            { lat: request.dropoffLocationLatitude, lon: request.dropoffLocationLongitude }]
+                            [{ lat: request.pickupLatitude, lon: request.pickupLongitude },
+                            { lat: request.dropoffLatitude, lon: request.dropoffLongitude }]
                         }
                     />
                 </Grid>

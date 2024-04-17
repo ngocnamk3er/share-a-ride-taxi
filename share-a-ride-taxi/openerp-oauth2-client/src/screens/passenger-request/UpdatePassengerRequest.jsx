@@ -15,12 +15,12 @@ const UpdatePassengerRequest = () => {
         passengerName: "",
         phoneNumber: "",
         email: "",
-        pickupLocationLatitude: "",
-        pickupLocationLongitude: "",
-        pickupLocationAddress: "",
-        dropoffLocationLatitude: "",
-        dropoffLocationLongitude: "",
-        dropoffLocationAddress: "",
+        pickupLatitude: "",
+        pickupLongitude: "",
+        pickupAddress: "",
+        dropoffLatitude: "",
+        dropoffLongitude: "",
+        dropoffAddress: "",
         requestTime: "",
         statusId: 1 // Default status ID
     });
@@ -49,17 +49,17 @@ const UpdatePassengerRequest = () => {
         if (locationType === 'pickup') {
             setPassengerData({
                 ...passengerData,
-                pickupLocationLatitude: position.lat,
-                pickupLocationLongitude: position.lon,
-                pickupLocationAddress: position.display_name
+                pickupLatitude: position.lat,
+                pickupLongitude: position.lon,
+                pickupAddress: position.display_name
             });
             setShowPickupModal(false);
         } else if (locationType === 'dropoff') {
             setPassengerData({
                 ...passengerData,
-                dropoffLocationLatitude: position.lat,
-                dropoffLocationLongitude: position.lon,
-                dropoffLocationAddress: position.display_name
+                dropoffLatitude: position.lat,
+                dropoffLongitude: position.lon,
+                dropoffAddress: position.display_name
             });
             setShowDropoffModal(false);
         }
@@ -130,9 +130,9 @@ const UpdatePassengerRequest = () => {
             </Grid>
             <Grid item xs={6}>
                 <TextField
-                    name="pickupLocationAddress"
+                    name="pickupAddress"
                     label="Pickup Location"
-                    value={passengerData.pickupLocationAddress}
+                    value={passengerData.pickupAddress}
                     onClick={() => setShowPickupModal(true)}
                     fullWidth
                     required
@@ -147,7 +147,7 @@ const UpdatePassengerRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            centerPos={passengerData.pickupLocationLatitude ? [passengerData.pickupLocationLatitude, passengerData.pickupLocationLongitude] : null}
+                            centerPos={passengerData.pickupLatitude ? [passengerData.pickupLatitude, passengerData.pickupLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'pickup')}
                             onClose={() => {
                                 setShowPickupModal(false)
@@ -158,9 +158,9 @@ const UpdatePassengerRequest = () => {
             </Grid>
             <Grid item xs={6}>
                 <TextField
-                    name="dropoffLocationAddress"
+                    name="dropoffAddress"
                     label="Dropoff Location"
-                    value={passengerData.dropoffLocationAddress}
+                    value={passengerData.dropoffAddress}
                     onClick={() => setShowDropoffModal(true)}
                     fullWidth
                     required
@@ -175,7 +175,7 @@ const UpdatePassengerRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            centerPos={passengerData.dropoffLocationLatitude ? [passengerData.dropoffLocationLatitude, passengerData.dropoffLocationLongitude] : null}
+                            centerPos={passengerData.dropoffLatitude ? [passengerData.dropoffLatitude, passengerData.dropoffLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'dropoff')}
                             onClose={() => {
                                 setShowDropoffModal(false)

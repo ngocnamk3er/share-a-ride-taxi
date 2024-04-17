@@ -34,7 +34,7 @@ const DetailParcelRequest = () => {
             <Grid container spacing={2}>
                 <Grid item xs={6}>
                     <Typography>
-                        <strong>ID:</strong> {parcelRequest.id}
+                        <strong>ID:</strong> {parcelRequest.requestId}
                     </Typography>
                     <Typography>
                         <strong>Sender Name:</strong> {parcelRequest.senderName}
@@ -46,7 +46,7 @@ const DetailParcelRequest = () => {
                         <strong>Sender Email:</strong> {parcelRequest.senderEmail}
                     </Typography>
                     <Typography>
-                        <strong>Pickup Location:</strong> {parcelRequest.pickupLocationAddress}
+                        <strong>Pickup Location:</strong> {parcelRequest.pickupAddress}
                     </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -62,22 +62,24 @@ const DetailParcelRequest = () => {
                     <Typography>
                         <strong>Request Time:</strong> {new Date(parcelRequest.requestTime).toLocaleString()}
                     </Typography>
-
                     <Typography>
-                        <strong>Dropoff Location:</strong> {parcelRequest.dropoffLocationAddress}
+                        <strong>End Time:</strong> {new Date(parcelRequest.endTime).toLocaleString()}
+                    </Typography>
+                    <Typography>
+                        <strong>Dropoff Location:</strong> {parcelRequest.dropoffAddress}
                     </Typography>
                 </Grid>
             </Grid>
             <br />
             <Typography>
-                <strong>Status :</strong> {parcelRequest.requestStatus}
+                <strong>Status :</strong> {parcelRequest.statusId}
             </Typography>
             <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
                 // pickupLocation={{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude }}
                 // dropoffLocation={{ lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }}
                 listLocation={
-                    [{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude },
-                    { lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }]
+                    [{ lat: parcelRequest.pickupLatitude, lon: parcelRequest.pickupLongitude },
+                    { lat: parcelRequest.dropoffLatitude, lon: parcelRequest.dropoffLongitude }]
                 }
             />
         </Grid>

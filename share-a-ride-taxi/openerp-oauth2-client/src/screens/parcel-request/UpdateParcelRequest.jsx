@@ -18,12 +18,12 @@ const CreateParcelRequest = () => {
         recipientName: "",
         recipientPhoneNumber: "",
         recipientEmail: "",
-        pickupLocationLatitude: "",
-        pickupLocationLongitude: "",
-        pickupLocationAddress: "",
-        dropoffLocationLatitude: "",
-        dropoffLocationLongitude: "",
-        dropoffLocationAddress: "",
+        pickupLatitude: "",
+        pickupLongitude: "",
+        pickupAddress: "",
+        dropoffLatitude: "",
+        dropoffLongitude: "",
+        dropoffAddress: "",
         requestTime: "",
         statusId: 1, // Default status ID
     });
@@ -54,17 +54,17 @@ const CreateParcelRequest = () => {
         if (locationType === 'pickup') {
             setParcelData({
                 ...parcelData,
-                pickupLocationLatitude: position.lat,
-                pickupLocationLongitude: position.lon,
-                pickupLocationAddress: position.display_name
+                pickupLatitude: position.lat,
+                pickupLongitude: position.lon,
+                pickupAddress: position.display_name
             });
             setShowPickupModal(false);
         } else if (locationType === 'dropoff') {
             setParcelData({
                 ...parcelData,
-                dropoffLocationLatitude: position.lat,
-                dropoffLocationLongitude: position.lon,
-                dropoffLocationAddress: position.display_name
+                dropoffLatitude: position.lat,
+                dropoffLongitude: position.lon,
+                dropoffAddress: position.display_name
             });
             setShowDropoffModal(false);
         }
@@ -84,12 +84,12 @@ const CreateParcelRequest = () => {
                         senderEmail: "",
                         recipientName: "",
                         recipientPhoneNumber: "",
-                        pickupLocationLatitude: "",
-                        pickupLocationLongitude: "",
-                        pickupLocationAddress: "",
-                        dropoffLocationLatitude: "",
-                        dropoffLocationLongitude: "",
-                        dropoffLocationAddress: "",
+                        pickupLatitude: "",
+                        pickupLongitude: "",
+                        pickupAddress: "",
+                        dropoffLatitude: "",
+                        dropoffLongitude: "",
+                        dropoffAddress: "",
                         requestTime: "",
                         statusId: 1 // Reset status ID
                     });
@@ -181,9 +181,9 @@ const CreateParcelRequest = () => {
             </Grid>
             <Grid item xs={6}>
                 <TextField
-                    name="pickupLocationAddress"
+                    name="pickupAddress"
                     label="Pickup Location"
-                    value={parcelData.pickupLocationAddress}
+                    value={parcelData.pickupAddress}
                     onClick={() => setShowPickupModal(true)}
                     fullWidth
                     required
@@ -198,7 +198,7 @@ const CreateParcelRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            centerPos={parcelData.pickupLocationLatitude ? [parcelData.pickupLocationLatitude, parcelData.pickupLocationLongitude] : null}
+                            centerPos={parcelData.pickupLatitude ? [parcelData.pickupLatitude, parcelData.pickupLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'pickup')}
                             onClose={() => setShowPickupModal(false)}
                         />
@@ -207,9 +207,9 @@ const CreateParcelRequest = () => {
             </Grid>
             <Grid item xs={6}>
                 <TextField
-                    name="dropoffLocationAddress"
+                    name="dropoffAddress"
                     label="Dropoff Location"
-                    value={parcelData.dropoffLocationAddress}
+                    value={parcelData.dropoffAddress}
                     onClick={() => setShowDropoffModal(true)}
                     fullWidth
                     required
@@ -224,7 +224,7 @@ const CreateParcelRequest = () => {
                 >
                     <div>
                         <SearchLocation
-                            centerPos={parcelData.dropoffLocationLatitude ? [parcelData.dropoffLocationLatitude, parcelData.dropoffLocationLongitude] : null}
+                            centerPos={parcelData.dropoffLatitude ? [parcelData.dropoffLatitude, parcelData.dropoffLongitude] : null}
                             setPosition={(position) => handleSelectPosition(position, 'dropoff')}
                             onClose={() => setShowDropoffModal(false)}
                         />

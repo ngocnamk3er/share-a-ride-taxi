@@ -20,18 +20,18 @@ const ListParcelRequest = () => {
 
     const fetchParcelRequests = () => {
         request("get", "/parcel-requests", (res) => {
-            setParcelRequests(res.data);
+            setParcelRequests(res.data.reverse());
         }).then();
     }
 
     const handleRowClick = (event, rowData) => {
         // Navigate to new URL without page reload
-        history.push(`${path}/${rowData.id}`);
+        history.push(`${path}/${rowData.requestId}`);
     }
 
     const handleEditClick = (rowData) => {
         // Navigate to edit page for selected parcel request
-        history.push(`/parcel-request/update/${rowData.id}`);
+        history.push(`/parcel-request/update/${rowData.requestId}`);
     }
 
     const handleDeleteClick = (rowData) => {
@@ -65,6 +65,10 @@ const ListParcelRequest = () => {
         {
             title: "Request Time",
             field: "requestTime",
+        },
+        {
+            title: "End Time",
+            field: "endTime",
         },
         {
             title: "Pickup Location Address",

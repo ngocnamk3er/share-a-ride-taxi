@@ -87,13 +87,13 @@ const AddRequestToRoute = () => {
                 // Lặp qua kết quả từ resPassengerRequest
                 resPassengerRequest.data.forEach(req => {
                     allListRequestTemp.push(req);
-                    if (req.requestStatus === RECEIVED) {
+                    if (req.statusId === 1) {
                         availableListRequestTemp.push(req);
                     } else {
                         assignedRequestsTemp.push(req);
                         // Lặp qua kết quả từ resRouteDetail để tìm các yêu cầu được gán cho tuyến đường này
                         resRouteDetail.data.forEach(element => {
-                            if (element.requestId === req.id) {
+                            if (element.requestId === req.requestId) {
                                 assignedRequestsOfThisRouteTemp.push(req);
                             }
                         });
@@ -145,11 +145,11 @@ const AddRequestToRoute = () => {
         setColumns(prevColumns => {
             const newColumn1 = {
                 ...prevColumns['column1'],
-                taskIds: availablelistRequest.map(request => request.id)
+                taskIds: availablelistRequest.map(request => request.requestId)
             };
             const newColumn2 = {
                 ...prevColumns['column2'],
-                taskIds: assignedRequestsOfThisRoute.map(request => request.id)
+                taskIds: assignedRequestsOfThisRoute.map(request => request.requestId)
             };
             return {
                 ...prevColumns,
@@ -234,14 +234,14 @@ const AddRequestToRoute = () => {
 
     const handleDraggableClick = (request) => {
         // alert('Draggable click');
-        setSelectedDraggble(request.id)
+        setSelectedDraggble(request.requestId)
         setShowPickupModal(true);
     };
 
     const handleSave = async () => {
 
         const assignedTaskIds = columns['column2'].taskIds;
-        const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.id === taskId));
+        const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.requestId === taskId));
         setAssignedRequests(assignedRequestsData);
         const listRouteDetails = assignedRequestsData.map((item, index) => {
             return {
@@ -280,7 +280,7 @@ const AddRequestToRoute = () => {
 
     const openPreviewRoute = () => {
         const assignedTaskIds = columns['column2'].taskIds;
-        const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.id === taskId));
+        const assignedRequestsData = assignedTaskIds.map(taskId => allListRequest.find(request => request.requestId === taskId));
         setAssignedRequests(assignedRequestsData);
         setShowPreviewRoute(true);
     }
@@ -303,7 +303,7 @@ const AddRequestToRoute = () => {
             setAvailabletListRequest(availableListFromData);
             const newColumn1 = {
                 ...columns['column1'],
-                taskIds: availableListFromData.map(request => request.id)
+                taskIds: availableListFromData.map(request => request.requestId)
             };
             setColumns({
                 ...columns,
@@ -332,7 +332,7 @@ const AddRequestToRoute = () => {
             <Grid style={{ width: '100%' }} container spacing={2}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {Object.values(columns).map(column => {
-                        const listTasks = column.taskIds.map(taskId => allListRequest.find(request => request.id === taskId));
+                        const listTasks = column.taskIds.map(taskId => allListRequest.find(request => request.requestId === taskId));
 
                         return (
                             <Grid item xs={6} key={column.id} className="column">
@@ -347,7 +347,7 @@ const AddRequestToRoute = () => {
                                         >
                                             {listTasks.map((request, index) => (
                                                 <div>
-                                                    <Draggable key={request.id} draggableId={request.id} index={index}>
+                                                    <Draggable key={request.requestId} draggableId={request.requestId} index={index}>
                                                         {(provided) => (
                                                             <div
                                                                 ref={provided.innerRef}
@@ -361,7 +361,7 @@ const AddRequestToRoute = () => {
                                                         )}
                                                     </Draggable>
                                                     {
-                                                        selectedDraggble === request.id &&
+                                                        selectedDraggble === request.requestId &&
                                                         <Modal
                                                             open={showPickupModal}
                                                             onClose={() => setShowPickupModal(false)}

@@ -14,7 +14,7 @@ const ListRouteOfDriver = () => {
 
     useEffect(() => {
         request("get", `/routes/search?driverId=${id}`, (res) => {
-            setRoutes(res.data);
+            setRoutes(res.data.reverse());
         }).then();
 
         request("get", `/drivers/${id}`, (res) => {

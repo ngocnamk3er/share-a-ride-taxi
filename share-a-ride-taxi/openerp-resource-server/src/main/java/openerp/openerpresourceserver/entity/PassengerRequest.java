@@ -35,7 +35,7 @@ public class PassengerRequest {
 
     @Column(name = "distance")
     private Double distance;
-    
+
 
     @Column(name = "end_time")
     private LocalDateTime endTime;

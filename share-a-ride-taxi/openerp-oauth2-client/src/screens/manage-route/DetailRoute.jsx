@@ -27,9 +27,9 @@ const DetailRoute = () => {
 
                 const newLocations = passengerRequest.reduce((acc, curr) => {
                     routeDetail.forEach(route => {
-                        if (route.requestId === curr.id) {
-                            acc.push({ lat: curr.pickupLocationLatitude, lon: curr.pickupLocationLongitude });
-                            acc.push({ lat: curr.dropoffLocationLatitude, lon: curr.dropoffLocationLongitude });
+                        if (route.requestId === curr.requestId) {
+                            acc.push({ lat: curr.pickupLatitude, lon: curr.pickupLongitude });
+                            acc.push({ lat: curr.dropoffLatitude, lon: curr.dropoffLongitude });
                             setCurrentRequests(prev => [...prev, curr]);
                         }
                     });
@@ -47,11 +47,11 @@ const DetailRoute = () => {
     }, [routeId]);
 
     const handlePickUpCellClick = (request) => {
-        setCenter([request.pickupLocationLatitude, request.pickupLocationLongitude]);
+        setCenter([request.pickupLatitude, request.pickupLongitude]);
     };
 
     const handleDropOffCellClick = (request) => {
-        setCenter([request.dropoffLocationLatitude, request.dropoffLocationLongitude]);
+        setCenter([request.dropoffLatitude, request.dropoffLongitude]);
     };
 
     const handleRowClick = () => {
@@ -90,6 +90,7 @@ const DetailRoute = () => {
                             <TableCell>Pickup Location</TableCell>
                             <TableCell>Dropoff Location</TableCell>
                             <TableCell>Request Time</TableCell>
+                            <TableCell>End Time</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -98,9 +99,10 @@ const DetailRoute = () => {
                                 key={request.id} style={{ backgroundColor: index % 2 === 0 ? '#f0f0f0' : 'transparent' }}
                             >
                                 <TableCell>{index + 1}</TableCell>
-                                <TableCell className="clickable-cell" onClick={() => handlePickUpCellClick(request)}>{request.pickupLocationAddress}</TableCell>
-                                <TableCell className="clickable-cell" onClick={() => handleDropOffCellClick(request)}>{request.dropoffLocationAddress}</TableCell>
+                                <TableCell className="clickable-cell" onClick={() => handlePickUpCellClick(request)}>{request.pickupAddress}</TableCell>
+                                <TableCell className="clickable-cell" onClick={() => handleDropOffCellClick(request)}>{request.dropoffAddress}</TableCell>
                                 <TableCell>{request.requestTime}</TableCell>
+                                <TableCell>{request.endTime}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

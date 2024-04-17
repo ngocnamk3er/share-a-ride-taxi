@@ -1,5 +1,13 @@
 package openerp.openerpresourceserver.controller;
 
+import lombok.RequiredArgsConstructor;
+import openerp.openerpresourceserver.entity.ParcelRequest;
+import openerp.openerpresourceserver.entity.PassengerRequest;
+import openerp.openerpresourceserver.service.Impl.GraphhopperService;
+import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
+import openerp.openerpresourceserver.service.Impl.Object.RoutingEstimate;
+import openerp.openerpresourceserver.service.ParcelRequestService;
+import openerp.openerpresourceserver.service.PassengerRequestService;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +23,11 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/recommend")
+@RequiredArgsConstructor
 public class RecommendControllerTest {
+    private final ParcelRequestService parcelRequestService;
+    private final PassengerRequestService passengerRequestService;
+    private final GraphhopperService graphhopperService;
     @Value("${graphhopper.api.key}")
     private String graphhopperApiKey;
     @GetMapping()
@@ -34,6 +46,40 @@ public class RecommendControllerTest {
 
         // Trả về danh sách các số ngẫu nhiên
         return randomNumbers;
+    }
+
+    @GetMapping("/addData")
+    public String getAddData() {
+        List<PassengerRequest> requests = passengerRequestService.getAllPassengerRequests();
+        for (PassengerRequest request : requests) {
+            RoutingEstimate routingEstimate =
+                    graphhopperService.getRoutingEstimate(new Coordinate(request.getPickupLatitude(), request.getPickupLongitude()),
+                            new Coordinate(request.getDropoffLatitude(), request.getDropoffLongitude()));
+            System.out.println("===========");
+            request.setDistance(routingEstimate.getDistance());
+            request.setEndTime(request.getRequestTime().plusSeconds(routingEstimate.getTime()/1000));
+            passengerRequestService.savePassengerRequest(request);
+            System.out.println(routingEstimate.getDistance());
+            System.out.println(routingEstimate.getTime());
+        }
+        return "OK";
+    }
+
+    @GetMapping("/addData2")
+    public String getAddData2() {
+        List<ParcelRequest> requests = parcelRequestService.getAllParcelRequests();
+        for (ParcelRequest request : requests) {
+            RoutingEstimate routingEstimate =
+                    graphhopperService.getRoutingEstimate(new Coordinate(request.getPickupLatitude(), request.getPickupLongitude()),
+                            new Coordinate(request.getDropoffLatitude(), request.getDropoffLongitude()));
+            System.out.println("===========");
+            request.setDistance(routingEstimate.getDistance());
+            request.setEndTime(request.getRequestTime().plusSeconds(routingEstimate.getTime()/1000));
+            parcelRequestService.createParcelRequest(request);
+            System.out.println(routingEstimate.getDistance());
+            System.out.println(routingEstimate.getTime());
+        }
+        return "OK";
     }
 
     @GetMapping("/distance")

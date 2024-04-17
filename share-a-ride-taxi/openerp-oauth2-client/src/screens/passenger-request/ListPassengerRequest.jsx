@@ -16,7 +16,7 @@ const ListPassengerRequest = () => {
 
     useEffect(() => {
         request("get", "/passenger-requests", (res) => {
-            setPassengerRequests(res.data);
+            setPassengerRequests(res.data.reverse());
         }).then();
     }, [])
 
@@ -27,17 +27,17 @@ const ListPassengerRequest = () => {
 
     const handleEditClick = (rowData) => {
         // Navigate to new URL without page reload
-        history.push(`/passenger-request/update/${rowData.id}`);
+        history.push(`/passenger-request/update/${rowData.requestId}`);
     }
 
     const handleDeleteClick = (rowData) => {
         // Navigate to new URL without page reload
-        history.push(`${path}/${rowData.id}`);
+        history.push(`${path}/${rowData.requestId}`);
     }
 
     const handleViewClick = (rowData) => {
         // Navigate to new URL without page reload
-        history.push(`${path}/${rowData.id}`);
+        history.push(`${path}/${rowData.requestId}`);
     }
 
     const columns = [
@@ -69,6 +69,10 @@ const ListPassengerRequest = () => {
         {
             title: "Request Time",
             field: "requestTime",
+        },
+        {
+            title: "End Time",
+            field: "endTime",
         },
         {
             title: "Status",

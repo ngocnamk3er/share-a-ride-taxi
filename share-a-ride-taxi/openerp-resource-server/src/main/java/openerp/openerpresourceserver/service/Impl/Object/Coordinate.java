@@ -1,10 +1,10 @@
 package openerp.openerpresourceserver.service.Impl.Object;
 
-public class Coordinates {
-    private double latitude;
-    private double longitude;
+public class Coordinate {
+    private Double latitude;
+    private Double longitude;
 
-    public Coordinates(double latitude, double longitude) {
+    public Coordinate(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -14,7 +14,7 @@ public class Coordinates {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
@@ -22,7 +22,7 @@ public class Coordinates {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 }

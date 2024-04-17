@@ -9,16 +9,16 @@ const PreviewRoute = (props) => {
     const [center, setCenter] = useState(null);
 
     assignedRequests.forEach(req => {
-        locations.push({ lat: req.pickupLocationLatitude, lon: req.pickupLocationLongitude });
-        locations.push({ lat: req.dropoffLocationLatitude, lon: req.dropoffLocationLongitude });
+        locations.push({ lat: req.pickupLatitude, lon: req.pickupLongitude });
+        locations.push({ lat: req.dropoffLatitude, lon: req.dropoffLongitude });
     });
 
     const handlePickUpCellClick = (request) => {
-        setCenter([request.pickupLocationLatitude, request.pickupLocationLongitude]);
+        setCenter([request.pickupLatitude, request.pickupLongitude]);
     };
 
     const handleDropOffCellClick = (request) => {
-        setCenter([request.dropoffLocationLatitude, request.dropoffLocationLongitude]);
+        setCenter([request.dropoffLatitude, request.dropoffLongitude]);
     };
 
     return (
@@ -50,8 +50,8 @@ const PreviewRoute = (props) => {
                             {assignedRequests.map((request, index) => (
                                 <TableRow key={request.id} style={{ backgroundColor: index % 2 === 0 ? '#f0f0f0' : 'transparent' }}>
                                     <TableCell>{index + 1}</TableCell>
-                                    <TableCell className="clickable-cell" onClick={() => handlePickUpCellClick(request)}>{request.pickupLocationAddress}</TableCell>
-                                    <TableCell className="clickable-cell" onClick={() => handleDropOffCellClick(request)}>{request.dropoffLocationAddress}</TableCell>
+                                    <TableCell className="clickable-cell" onClick={() => handlePickUpCellClick(request)}>{request.pickupAddress}</TableCell>
+                                    <TableCell className="clickable-cell" onClick={() => handleDropOffCellClick(request)}>{request.dropoffAddress}</TableCell>
                                     <TableCell>{request.requestTime}</TableCell>
                                 </TableRow>
                             ))}
