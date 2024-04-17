@@ -36,17 +36,36 @@ public class ParcelRequest {
     @Column(name = "recipient_email", length = 100)
     private String recipientEmail;
 
-    @Column(name = "pickup_location_id", nullable = false)
-    private UUID pickupLocationId;
-
-    @Column(name = "dropoff_location_id", nullable = false)
-    private UUID dropoffLocationId;
-
     @Column(name = "request_time", nullable = false)
     private LocalDateTime requestTime;
 
     @Column(name = "status_id", nullable = false)
     private Integer statusId;
+
+    @Column(name = "distance")
+    private Double distance;
+
+
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
+
+    @Column(name = "pickup_latitude")
+    private Double pickupLatitude;
+
+    @Column(name = "pickup_longitude")
+    private Double pickupLongitude;
+
+    @Column(name = "pickup_address")
+    private String pickupAddress;
+
+    @Column(name = "dropoff_latitude")
+    private Double dropoffLatitude;
+
+    @Column(name = "dropoff_longitude")
+    private Double dropoffLongitude;
+
+    @Column(name = "dropoff_address")
+    private String dropoffAddress;
 
     // Getters and setters
 }

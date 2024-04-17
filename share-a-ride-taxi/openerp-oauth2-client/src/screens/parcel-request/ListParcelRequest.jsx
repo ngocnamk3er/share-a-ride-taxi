@@ -68,15 +68,15 @@ const ListParcelRequest = () => {
         },
         {
             title: "Pickup Location Address",
-            field: "pickupLocationAddress",
+            field: "pickupAddress",
         },
         {
             title: "Dropoff Location Address",
-            field: "dropoffLocationAddress",
+            field: "dropoffAddress",
         },
         {
             title: "Status",
-            field: "requestStatus",
+            field: "statusId",
         },
         {
             title: "View",

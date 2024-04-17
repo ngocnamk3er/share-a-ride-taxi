@@ -60,11 +60,11 @@ const ListPassengerRequest = () => {
 
         {
             title: "Pickup Location Address",
-            field: "pickupLocationAddress",
+            field: "pickupAddress",
         },
         {
             title: "Dropoff Location Address",
-            field: "dropoffLocationAddress",
+            field: "dropoffAddress",
         },
         {
             title: "Request Time",
@@ -72,7 +72,7 @@ const ListPassengerRequest = () => {
         },
         {
             title: "Status",
-            field: "requestStatus",
+            field: "statusId",
         },
         {
             title: "View",
