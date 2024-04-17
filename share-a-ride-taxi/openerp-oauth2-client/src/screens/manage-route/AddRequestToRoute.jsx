@@ -46,6 +46,32 @@ const AddRequestToRoute = () => {
         }
     });
 
+    const undo = () => {
+        if (historyColumns.length === 0) {
+            return;
+        }
+
+        setFutureColumns((prev) => [columns, ...prev])
+
+        const history = historyColumns[historyColumns.length - 1]
+        setColumns(history)
+        setHistoryColumns(historyColumns.slice(0, historyColumns.length - 1))
+        console.log("undo")
+    }
+
+    const redo = () => {
+        if (futureColumns.length === 0) {
+            return;
+        }
+
+        setHistoryColumns((prev) => [...prev, columns])
+        const future = futureColumns[0]
+        setColumns(future);
+        setFutureColumns(futureColumns.slice(1, futureColumns.length))
+
+        console.log("redo");
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -98,6 +124,7 @@ const AddRequestToRoute = () => {
     //     }
     // }, [newStateColumns])
 
+
     useEffect(() => {
         console.log("historyColumns")
         console.log(historyColumns)
@@ -132,7 +159,21 @@ const AddRequestToRoute = () => {
         });
     }, [assignedRequestsOfThisRoute, availablelistRequest]);
 
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.ctrlKey && event.key === 'z') {
+                undo();
+            } else if (event.ctrlKey && event.key === 'y') {
+                redo();
+            }
+        };
 
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     const onDragEnd = result => {
         setChanged(true)
@@ -244,31 +285,6 @@ const AddRequestToRoute = () => {
         setShowPreviewRoute(true);
     }
 
-    const undo = () => {
-        if (historyColumns.length === 0) {
-            return;
-        }
-
-        setFutureColumns((prev) => [columns, ...prev])
-
-        const history = historyColumns[historyColumns.length - 1]
-        setColumns(history)
-        setHistoryColumns(historyColumns.slice(0, historyColumns.length - 1))
-        console.log("undo")
-    }
-
-    const redo = () => {
-        if (futureColumns.length === 0) {
-            return;
-        }
-
-        setHistoryColumns((prev) => [...prev, columns])
-        const future = futureColumns[0]
-        setColumns(future);
-        setFutureColumns(futureColumns.slice(1, futureColumns.length))
-
-        console.log("redo");
-    }
 
     useEffect(() => {
         if (historyColumns.length === 0) {

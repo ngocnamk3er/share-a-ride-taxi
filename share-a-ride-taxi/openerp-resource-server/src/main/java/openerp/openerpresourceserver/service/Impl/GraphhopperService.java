@@ -1,0 +1,55 @@
+package openerp.openerpresourceserver.service.Impl;
+
+import openerp.openerpresourceserver.service.Impl.Object.Coordinates;
+import openerp.openerpresourceserver.service.Impl.Object.RoutingEstimate;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+public class GraphhopperService {
+
+    @Value("${graphhopper.api.key}")
+    private static String graphhopperApiKey;
+
+    public static RoutingEstimate getRoutingEstimate(Coordinates point1, Coordinates point2) {
+        // Lấy tọa độ của điểm 1 và điểm 2 từ hai đối tượng Coordinates được truyền vào
+        double latitude1 = point1.getLatitude();
+        double longitude1 = point1.getLongitude();
+        double latitude2 = point2.getLatitude();
+        double longitude2 = point2.getLongitude();
+
+        // Khởi tạo RestTemplate
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Tạo URL với các thông số tọa độ
+        String url = String.format("https://graphhopper.com/api/1/route?point=%.3f,%.3f&point=%.3f,%.3f&profile=car&locale=de&calc_points=false&key=%s",
+                latitude1, longitude1, latitude2, longitude2, graphhopperApiKey);
+
+        // Thực hiện yêu cầu GET và lấy phản hồi dưới dạng String
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+
+        // Lấy phản hồi từ ResponseEntity
+        String responseBody = responseEntity.getBody();
+
+        // Phân tích dữ liệu JSON từ phản hồi
+        JSONObject jsonObject = new JSONObject(responseBody);
+
+        // Lấy mảng paths từ đối tượng JSON
+        JSONArray pathsArray = jsonObject.getJSONArray("paths");
+
+        // Lấy đối tượng JSON đầu tiên từ mảng paths (giả sử chỉ có một đối tượng)
+        JSONObject firstPathObject = pathsArray.getJSONObject(0);
+
+        // Lấy giá trị distance từ đối tượng firstPathObject
+        double distance = firstPathObject.getDouble("distance");
+
+        // Lấy giá trị time từ đối tượng firstPathObject
+        int time = firstPathObject.getInt("time");
+
+        // Trả về đối tượng DistanceResult
+        return new RoutingEstimate(distance, time);
+    }
+
+}
