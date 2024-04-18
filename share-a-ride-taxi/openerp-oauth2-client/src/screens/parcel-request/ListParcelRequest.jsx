@@ -37,9 +37,9 @@ const ListParcelRequest = () => {
     const handleDeleteClick = (rowData) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this parcel request?");
         if (confirmDelete) {
-            request("delete", `/parcel-requests/${rowData.id}`, () => {
+            request("delete", `/parcel-requests/${rowData.requestId}`, () => {
                 // Remove the deleted parcel request from the state
-                setParcelRequests(prevState => prevState.filter(request => request.id !== rowData.id));
+                setParcelRequests(prevState => prevState.filter(request => request.requestId !== rowData.requestId));
             }).then(() => {
                 alert("Parcel request deleted successfully.");
             }).catch(error => {
@@ -50,7 +50,7 @@ const ListParcelRequest = () => {
 
     const handleViewClick = (rowData) => {
         // Navigate to view page for selected parcel request
-        history.push(`${path}/${rowData.id}`);
+        history.push(`${path}/${rowData.requestId}`);
     }
 
     const columns = [

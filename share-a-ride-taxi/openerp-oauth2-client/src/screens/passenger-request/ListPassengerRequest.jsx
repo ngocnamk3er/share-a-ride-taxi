@@ -22,7 +22,7 @@ const ListPassengerRequest = () => {
 
     const handleRowClick = (event, rowData) => {
         // Navigate to new URL without page reload
-        history.push(`${path}/${rowData.id}`);
+        history.push(`${path}/${rowData.requestId}`);
     }
 
     const handleEditClick = (rowData) => {
@@ -53,11 +53,6 @@ const ListPassengerRequest = () => {
             title: "Phone Number",
             field: "phoneNumber",
         },
-        {
-            title: "Email",
-            field: "email",
-        },
-
         {
             title: "Pickup Location Address",
             field: "pickupAddress",
