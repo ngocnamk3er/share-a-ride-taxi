@@ -23,6 +23,7 @@ const AddRequestToRoute = () => {
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [showPreviewRoute, setShowPreviewRoute] = useState(false);
     const [assignedRequests, setAssignedRequests] = useState([]);
+    const [recommendRequests, setRecommendRequests] = useState([]);
     const [assignedRequestsOfThisRoute, setAssignedRequestsOfThisRoute] = useState([]);
     const [changed, setChanged] = useState(false);
     const [newStateColumns, setNewStateColumns] = useState([]);
@@ -139,6 +140,14 @@ const AddRequestToRoute = () => {
         if (columns['column1']['taskIds'].length === 0 || columns['column2']['taskIds'].length === 0)
             return
         setNewStateColumns(prev => [...prev, columns])
+
+        const fetchRecommendRequest = async () => {
+            const recommendRequest = await request("get", `/recommend`)
+            setRecommendRequests(recommendRequest.data)
+        }
+
+        fetchRecommendRequest();
+
     }, [columns])
 
     useEffect(() => {
@@ -353,7 +362,7 @@ const AddRequestToRoute = () => {
                                                                 ref={provided.innerRef}
                                                                 {...provided.draggableProps}
                                                                 {...provided.dragHandleProps}
-                                                                className="task"
+                                                                className={`task ${columns['column1'].taskIds.includes(request.requestId) && recommendRequests.map(recommend => recommend.requestId).includes(request.requestId) ? 'highlighted-row' : ''}`}
                                                                 onClick={() => handleDraggableClick(request)}
                                                             >
                                                                 Yêu cầu của khách : {request.passengerName}

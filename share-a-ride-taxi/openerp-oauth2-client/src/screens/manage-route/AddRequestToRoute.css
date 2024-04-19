@@ -118,3 +118,7 @@ h4 {
 .clickable-cell:hover {
   cursor: pointer;
 }
+
+.highlighted-row {
+  background-color: rgba(0, 128, 0, 0.5); /* Màu xanh lá cây với opacity 0.5 */
+}

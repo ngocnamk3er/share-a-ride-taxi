@@ -61,7 +61,7 @@ const ListRouteOfDriver = () => {
             const shouldShow = showAll || !isPastDate;
             return (
                 <div key={index}>
-                    <h2>{group.date}</h2>
+                    {/* <h2>{group.date}</h2> */}
                     {shouldShow && (
                         <StandardTable
                             title={`Routes on ${group.date}`}
@@ -91,7 +91,7 @@ const ListRouteOfDriver = () => {
             <br />
             <br />
             {showExpandButton && (
-                <Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={toggleShowAll}>{showAll ? "Thu gọn" : "Xem thêm"}</Button>
+                <Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={toggleShowAll}>{showAll ? "Thu gọn" : "Lịch sử"}</Button>
             )}
         </div>
     );
