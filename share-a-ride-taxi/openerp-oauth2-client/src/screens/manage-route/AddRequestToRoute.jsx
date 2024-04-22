@@ -255,7 +255,7 @@ const AddRequestToRoute = () => {
         const listRouteDetails = assignedRequestsData.map((item, index) => {
             return {
                 requestType: "passenger",
-                requestId: item.id,
+                requestId: item.requestId,
                 seqIndex: index + 1
             }
         })
@@ -307,7 +307,7 @@ const AddRequestToRoute = () => {
     const loadData = () => {
         // Gọi lại useEffect để load lại dữ liệu
         request("get", `/passenger-requests`, (res) => {
-            const availableListFromData = res.data.filter(item => item.requestStatus === RECEIVED);
+            const availableListFromData = res.data.filter(item => item.statusId === 1);
             setAllListRequest(res.data);
             setAvailabletListRequest(availableListFromData);
             const newColumn1 = {

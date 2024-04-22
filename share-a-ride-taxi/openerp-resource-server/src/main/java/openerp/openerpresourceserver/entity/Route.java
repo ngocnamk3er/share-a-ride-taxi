@@ -34,4 +34,15 @@ public class Route {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "area")
+    private String area;
+
+    // Thêm trường tọa độ lat
+    @Column(name = "lat")
+    private Double lat;
+
+    // Thêm trường tọa độ lon
+    @Column(name = "lon")
+    private Double lon;
 }

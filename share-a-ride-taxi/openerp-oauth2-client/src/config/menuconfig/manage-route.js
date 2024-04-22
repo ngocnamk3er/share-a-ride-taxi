@@ -10,13 +10,6 @@ export const MANAGE_ROUTE = {
             text: "Assign route",
             child: [],
         },
-        {
-            id: "MENU_SAR_MANAGE_ROUTE.ASSIGN_ROUTE",
-            path: "/manage-routes/xxxxxx",
-            isPublic: false,
-            text: "XXXXXXXXX",
-            child: [],
-        },
     ],
 
 };

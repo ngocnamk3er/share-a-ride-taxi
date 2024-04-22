@@ -6,6 +6,7 @@ import { request } from "../../api";
 import { useRouteMatch } from 'react-router-dom';
 import { format, isSameDay, isAfter } from 'date-fns';
 import { Button } from "@mui/material";
+import { Typography } from "@mui/material";
 
 const ListRouteOfDriver = () => {
     const [routeGroups, setRouteGroups] = useState([]);
@@ -54,6 +55,12 @@ const ListRouteOfDriver = () => {
         // setShowExpandButton(!showExpandButton);
     };
 
+    const handleCreateRputeForThisDriver = () => {
+        const currentPath = history.location.pathname; // Lấy đường dẫn hiện tại
+        const newPath = currentPath.replace('/list-routes', '/create-route'); // Loại bỏ '/addrequests' từ currentPath
+        history.push(newPath); // Chuyển hướng đến đường dẫn mới
+    }
+
     const renderGroupedRoutes = () => {
         return routeGroups.map((group, index) => {
             const currentDate = new Date(group.date);
@@ -87,6 +94,10 @@ const ListRouteOfDriver = () => {
 
     return (
         <div>
+            <Typography style={{ marginBottom: '16px' }} variant="h4">The route list is assigned to driver {driverName}</Typography>
+            <Button style={{ backgroundColor: 'blue', color: 'white' }} onClick={handleCreateRputeForThisDriver}>Create new route</Button>
+            <br />
+            <br />
             {renderGroupedRoutes()}
             <br />
             <br />

@@ -90,7 +90,7 @@ public class RouteController {
         }
 
         LocalDateTime now = LocalDateTime.now();
-        existingRoute.setCreatedStamp(now);
+        existingRoute.setLastUpdatedStamp(now);
         routeService.updateRoute(routeId, existingRoute);
 
         return new ResponseEntity<>(updatedRouteDetails, HttpStatus.OK);

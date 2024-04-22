@@ -3,6 +3,7 @@ import SelectDriver from "screens/manage-route/SelectDriver";
 import ListRouteOfDriver from "screens/manage-route/ListRouteOfDriver";
 import DetailRoute from "screens/manage-route/DetailRoute";
 import AddRequestToRoute from "screens/manage-route/AddRequestToRoute";
+import CreateRouteForDriver from "screens/manage-route/CreateRouteForDriver";
 
 export default function ManageDriverRouter() {
     let { path } = useRouteMatch();
@@ -24,6 +25,13 @@ export default function ManageDriverRouter() {
             </Switch>
             <Switch>
                 <Route
+                    component={CreateRouteForDriver}
+                    exact
+                    path={`${path}/assign-route/:id/create-route`}
+                ></Route>
+            </Switch>
+            <Switch>
+                <Route
                     component={DetailRoute}
                     exact
                     path={`${path}/assign-route/:id/list-routes/:routeId`}
@@ -36,6 +44,7 @@ export default function ManageDriverRouter() {
                     path={`${path}/assign-route/:id/list-routes/:routeId/addrequests`}
                 ></Route>
             </Switch>
+
         </div>
     );
 }
