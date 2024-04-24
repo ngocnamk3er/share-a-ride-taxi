@@ -3,6 +3,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.Driver;
+import openerp.openerpresourceserver.enums.DriverStatus;
 import openerp.openerpresourceserver.repo.DriverRepository;
 import openerp.openerpresourceserver.service.DriverService;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -55,5 +57,18 @@ public class DriverServiceImpl implements DriverService {
             return null;
         }
 
+    }
+
+    @Override
+    public Driver activateDriver(UUID id) {
+        Driver driver = driverRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Driver not found with ID: " + id));
+
+        if (driver.getStatusId() == DriverStatus.WAITING.ordinal()) {
+            driver.setStatusId(DriverStatus.ACTIVE.ordinal());
+            return driverRepository.save(driver);
+        } else {
+            throw new IllegalStateException("Driver with ID " + id + " is not in waiting state");
+        }
     }
 }

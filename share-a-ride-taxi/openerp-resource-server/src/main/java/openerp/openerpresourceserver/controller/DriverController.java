@@ -17,20 +17,19 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping("/drivers")
+@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
 public class DriverController {
 
     private final DriverService driverService;
 
 
     @GetMapping
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<List<Driver>> getAllDrivers() {
         List<Driver> drivers = driverService.getAllDrivers();
         return ResponseEntity.ok().body(drivers);
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<Driver> getDriverById(@PathVariable UUID id) {
         Driver driver = driverService.getDriverById(id);
         if (driver != null) {
@@ -48,7 +47,6 @@ public class DriverController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<Driver> updateDriver(@PathVariable UUID id, @RequestBody Driver driverRequest) {
         Driver updatedDriver = driverService.updateDriver(id, driverRequest);
         return ResponseEntity.ok().body(updatedDriver);
@@ -56,7 +54,6 @@ public class DriverController {
 
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<String> deleteDriver(@PathVariable UUID id) {
         try {
             driverService.deleteDriver(id);
@@ -64,5 +61,11 @@ public class DriverController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete driver", e);
         }
+    }
+
+    @PostMapping("/{id}/activate")
+    public ResponseEntity<Driver> activateDriver(@PathVariable UUID id) {
+        Driver activatedDriver = driverService.activateDriver(id);
+        return ResponseEntity.ok().body(activatedDriver);
     }
 }

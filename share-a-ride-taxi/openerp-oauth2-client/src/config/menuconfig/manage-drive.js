@@ -12,9 +12,9 @@ export const MANAGE_DRIVE = {
     },
     {
       id: "MENU_SAR_MANAGE_DRIVE.APPROVE_DRIVER",
-      path: "manage-drivers/approve-drivers",
+      path: "/manage-drivers/active-driver",
       isPublic: false,
-      text: "Approve drivers",
+      text: "Active drivers",
       child: [],
     },
   ],

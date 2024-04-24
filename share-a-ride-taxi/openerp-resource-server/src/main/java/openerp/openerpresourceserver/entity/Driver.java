@@ -63,4 +63,7 @@ public class Driver {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "status_id")
+    private Integer statusId;
 }

@@ -3,16 +3,16 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import { request } from "../../api";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const ListDrivers = () => {
+const ActivateDriver = () => {
 
     const [drivers, setDrivers] = useState([]);
 
     useEffect(() => {
         request("get", "/drivers", (res) => {
-            setDrivers([...drivers, ...res.data]);
+            const filteredDrivers = res.data.filter(driver => driver.statusId === 0);
+            setDrivers(filteredDrivers);
         }).then();
     }, [])
 
@@ -49,18 +49,39 @@ const ListDrivers = () => {
                 1: 'Active',
                 2: 'Inactive',
             },
-            filter: true
+        },
+        {
+            title: "Activate driver",
+            sorting: false,
+            render: (rowData) => (
+                <IconButton
+                    onClick={() => activateDriver(rowData.id)}
+                    variant="contained"
+                    color="success"
+                >
+                    <CheckCircleIcon />
+                </IconButton>
+            ),
         },
     ];
 
-    const demoFunction = (driver) => {
-        alert("You clicked on Driver: " + driver.id)
-    }
+    const activateDriver = (driverId) => {
+        request("post", `/drivers/${driverId}/activate`, (res) => {
+            // Xử lý phản hồi từ API nếu cần
+            // Sau khi kích hoạt thành công, cập nhật lại thông tin của tài xế đã được kích hoạt
+            const activatedDriver = res.data;
+            setDrivers(prevDrivers => {
+                return prevDrivers.filter(driver => {
+                    return driver.id !== activatedDriver.id;
+                });
+            });
+        });
+    };
 
     return (
         <div>
             <StandardTable
-                title="Driver List"
+                title="List of drivers waiting for activation"
                 columns={columns}
                 data={drivers}
                 // hideCommandBar
@@ -76,5 +97,5 @@ const ListDrivers = () => {
     );
 }
 
-const SCR_ID = "SCR_SAR_LIST_DRIVERS";
-export default withScreenSecurity(ListDrivers, SCR_ID, true);
+const SCR_ID = "SCR_SAR_DEFAULT";
+export default withScreenSecurity(ActivateDriver, SCR_ID, true);

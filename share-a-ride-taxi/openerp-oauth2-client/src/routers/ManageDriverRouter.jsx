@@ -1,8 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router";
 import ListDrivers from "../screens/manage-drivers/ListDrivers";
-import SelectDriver from "screens/manage-route/SelectDriver";
-import AddRequestToRoute from "screens/manage-route/AddRequestToRoute";
-import ListRouteOfDriver from "screens/manage-route/ListRouteOfDriver";
+import ActivateDriver from "screens/manage-drivers/ActivateDriver";
 
 export default function ManageDriverRouter() {
     let { path } = useRouteMatch();
@@ -13,6 +11,11 @@ export default function ManageDriverRouter() {
                     component={ListDrivers}
                     exact
                     path={`${path}/list-drivers`}
+                ></Route>
+                <Route
+                    component={ActivateDriver}
+                    exact
+                    path={`${path}/active-driver`}
                 ></Route>
             </Switch>
         </div>

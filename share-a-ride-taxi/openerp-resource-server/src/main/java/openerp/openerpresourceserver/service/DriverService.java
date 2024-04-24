@@ -12,4 +12,6 @@ public interface DriverService {
     Driver saveDriver(Driver driver);
     void deleteDriver(UUID id);
     Driver updateDriver(UUID id, Driver driverRequest);
+
+    Driver activateDriver(UUID id);
 }
