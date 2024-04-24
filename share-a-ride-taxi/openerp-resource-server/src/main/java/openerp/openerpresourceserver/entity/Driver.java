@@ -66,4 +66,7 @@ public class Driver {
 
     @Column(name = "status_id")
     private Integer statusId;
+
+    @Column(name = "user_id")
+    private String userId;
 }
