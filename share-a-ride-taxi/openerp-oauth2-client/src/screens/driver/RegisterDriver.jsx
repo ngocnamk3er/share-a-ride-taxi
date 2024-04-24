@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const ListDrivers = () => {
+const RegisterDriver = () => {
 
     const [drivers, setDrivers] = useState([]);
 
@@ -76,5 +76,5 @@ const ListDrivers = () => {
     );
 }
 
-const SCR_ID = "SCR_SAR_LIST_DRIVERS";
-export default withScreenSecurity(ListDrivers, SCR_ID, true);
+const SCR_ID = "SCR_SAR_DEFAULT";
+export default withScreenSecurity(RegisterDriver, SCR_ID, true);

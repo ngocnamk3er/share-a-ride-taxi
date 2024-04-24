@@ -27,7 +27,7 @@ import { general } from "./menuconfig/general";
 import { student } from "./menuconfig/student";
 import { teacher } from "./menuconfig/teacher";
 import { user } from "./menuconfig/user";
-import { demo } from "./menuconfig/demo";
+import { DRIVER } from "./menuconfig/driver";
 import { PASSENGER_REQUEST } from "./menuconfig/passenger-request";
 import { PARCEL_REQUEST } from "./menuconfig/parcel-request";
 import { MANAGE_DRIVE } from "./menuconfig/manage-drive";
@@ -43,6 +43,7 @@ MENUS.push(PASSENGER_REQUEST);
 MENUS.push(PARCEL_REQUEST);
 MENUS.push(MANAGE_DRIVE)
 MENUS.push(MANAGE_ROUTE)
+MENUS.push(DRIVER)
 
 export const menuIconMap = new Map();
 
