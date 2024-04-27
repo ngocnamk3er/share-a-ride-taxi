@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.PassengerRequest;
 import openerp.openerpresourceserver.enums.RequestStatus;
 import openerp.openerpresourceserver.service.PassengerRequestService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/recommend")
+@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
 @RequiredArgsConstructor
 public class RecommendController {
     private final PassengerRequestService passengerRequestService;

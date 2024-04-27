@@ -7,6 +7,7 @@ import openerp.openerpresourceserver.service.PassengerRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import openerp.openerpresourceserver.entity.RouteDetail;
 import openerp.openerpresourceserver.service.RouteDetailService;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/route-details")
+@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
 public class RouteDetailController {
 
     private final ParcelRequestService parcelRequestService;

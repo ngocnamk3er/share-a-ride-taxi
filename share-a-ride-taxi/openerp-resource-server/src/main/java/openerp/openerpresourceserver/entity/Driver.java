@@ -23,8 +23,7 @@ import java.util.UUID;
 public class Driver {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "driver_id", columnDefinition = "uuid")
     private UUID id;
 
@@ -40,14 +39,11 @@ public class Driver {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "vehicle_type")
-    private String vehicleType;
+    @Column(name = "vehicle_type_id")
+    private Integer vehicleTypeId;
 
     @Column(name = "vehicle_license_plate")
     private String vehicleLicensePlate;
-
-    @Column(name = "active")
-    private boolean active;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -69,4 +65,16 @@ public class Driver {
 
     @Column(name = "user_id")
     private String userId;
+
+    @Column(name = "avatar_url")
+    private String avatarUrl;
+
+    @Column(name = "vehicle_photo_url")
+    private String vehiclePhotoUrl;
+
+    @Column(name = "license_photo_url")
+    private String licensePhotoUrl;
+
+    @Column(name = "license_plate_photo_url")
+    private String licensePlatePhotoUrl;
 }
