@@ -40,7 +40,6 @@ public class DriverController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
     public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
         Driver savedDriver = driverService.saveDriver(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDriver);
