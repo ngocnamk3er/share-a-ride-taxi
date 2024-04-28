@@ -1,11 +1,13 @@
 package openerp.openerpresourceserver.controller;
 
 
+import com.nimbusds.jose.shaded.gson.Gson;
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.Driver;
 import openerp.openerpresourceserver.model.request.DriverRequest;
 import openerp.openerpresourceserver.service.DriverService;
 import openerp.openerpresourceserver.service.Impl.S3Service;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,8 @@ public class DriverController {
     }
 
     @PostMapping
-    public ResponseEntity<Driver> createDriver(@RequestPart("avatarFile") MultipartFile avatarFile,
+    public ResponseEntity<Driver> createDriver(@RequestPart("driverInfo") String driverInfo,
+                                                @RequestPart("avatarFile") MultipartFile avatarFile,
                                                @RequestPart("licensePhotoFile") MultipartFile licensePhotoFile,
                                                @RequestPart("vehiclePhotoFile") MultipartFile vehiclePhotoFile,
                                                @RequestPart("licensePlatePhotoFile") MultipartFile licensePlatePhotoFile) {
@@ -52,17 +55,22 @@ public class DriverController {
         String licensePhotoUrl = s3Service.uploadFile(licensePhotoFile);
         String vehiclePhotoUrl = s3Service.uploadFile(vehiclePhotoFile);
         String licensePlatePhotoUrl =  s3Service.uploadFile(licensePlatePhotoFile);
+        Gson g = new Gson();
+        DriverRequest driverRequest = g.fromJson(driverInfo, DriverRequest.class);
 
         Driver driver = Driver.builder()
                 .avatarUrl(avatarImageUrl)
                 .licensePhotoUrl(licensePhotoUrl)
                 .vehiclePhotoUrl(vehiclePhotoUrl)
                 .licensePlatePhotoUrl(licensePlatePhotoUrl)
-                .fullName("Xuân Thành")
-                .address("Bắc Giang")
-                .lat(BigDecimal.valueOf(21.3169625))
-                .lon(BigDecimal.valueOf(106.437985))
-                .phoneNumber(String.valueOf(123456789))
+                .fullName(driverRequest.getFullName())
+                .address(driverRequest.getAddress())
+                .lat(driverRequest.getLat())
+                .lon(driverRequest.getLon())
+                .phoneNumber(driverRequest.getPhoneNumber())
+                .gender(driverRequest.getGender())
+                .vehicleTypeId(driverRequest.getVehicleTypeId())
+                .vehicleLicensePlate(driverRequest.getVehicleLicensePlate())
                 .build();
 
         Driver savedDriver = driverService.saveDriver(driver);
