@@ -15,9 +15,9 @@ public class UploadImageController {
     private final S3Service s3Service;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+    public String uploadImage(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please select a file to upload");
+            return "Please select a file to upload";
         }
         return s3Service.uploadFile(file);
     }

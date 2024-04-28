@@ -36,7 +36,7 @@ public class S3Service {
     @Value("${aws.s3.bucketName}")
     private String BUCKET_NAME;
 
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public String uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             // Khởi tạo Amazon S3 client
             BasicAWSCredentials awsCredentials = new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY);
@@ -57,13 +57,13 @@ public class S3Service {
 
             // Trả về URL của file đã upload
             String fileUrl = s3Client.getUrl(BUCKET_NAME, fileName).toString();
-            return ResponseEntity.status(HttpStatus.OK).body("File uploaded successfully. URL: " + fileUrl);
+            return fileUrl;
         } catch (AmazonServiceException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Amazon service error occurred: " + e.getMessage());
+            return  e.getMessage();
         } catch (SdkClientException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("SDK client error occurred: " + e.getMessage());
+            return e.getMessage();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("IO error occurred: " + e.getMessage());
+            return e.getMessage();
         }
     }
 

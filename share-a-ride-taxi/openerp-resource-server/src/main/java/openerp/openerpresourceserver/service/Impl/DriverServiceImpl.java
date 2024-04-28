@@ -34,6 +34,8 @@ public class DriverServiceImpl implements DriverService {
     public Driver saveDriver(Driver driver) {
         LocalDateTime currentTime = LocalDateTime.now();
         driver.setCreatedAt(currentTime);
+        driver.setUpdatedAt(currentTime);
+        driver.setStatusId(DriverStatus.WAITING.ordinal());
         return driverRepository.save(driver);
     }
 

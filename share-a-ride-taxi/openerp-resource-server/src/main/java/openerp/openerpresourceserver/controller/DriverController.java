@@ -3,14 +3,18 @@ package openerp.openerpresourceserver.controller;
 
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.Driver;
+import openerp.openerpresourceserver.model.request.DriverRequest;
 import openerp.openerpresourceserver.service.DriverService;
+import openerp.openerpresourceserver.service.Impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +25,7 @@ import java.util.UUID;
 public class DriverController {
 
     private final DriverService driverService;
-
+    private final S3Service s3Service;
 
     @GetMapping
     public ResponseEntity<List<Driver>> getAllDrivers() {
@@ -40,7 +44,27 @@ public class DriverController {
     }
 
     @PostMapping
-    public ResponseEntity<Driver> createDriver(@RequestBody Driver driver) {
+    public ResponseEntity<Driver> createDriver(@RequestPart("avatarFile") MultipartFile avatarFile,
+                                               @RequestPart("licensePhotoFile") MultipartFile licensePhotoFile,
+                                               @RequestPart("vehiclePhotoFile") MultipartFile vehiclePhotoFile,
+                                               @RequestPart("licensePlatePhotoFile") MultipartFile licensePlatePhotoFile) {
+        String avatarImageUrl = s3Service.uploadFile(avatarFile);
+        String licensePhotoUrl = s3Service.uploadFile(licensePhotoFile);
+        String vehiclePhotoUrl = s3Service.uploadFile(vehiclePhotoFile);
+        String licensePlatePhotoUrl =  s3Service.uploadFile(licensePlatePhotoFile);
+
+        Driver driver = Driver.builder()
+                .avatarUrl(avatarImageUrl)
+                .licensePhotoUrl(licensePhotoUrl)
+                .vehiclePhotoUrl(vehiclePhotoUrl)
+                .licensePlatePhotoUrl(licensePlatePhotoUrl)
+                .fullName("Xuân Thành")
+                .address("Bắc Giang")
+                .lat(BigDecimal.valueOf(21.3169625))
+                .lon(BigDecimal.valueOf(106.437985))
+                .phoneNumber(String.valueOf(123456789))
+                .build();
+
         Driver savedDriver = driverService.saveDriver(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDriver);
     }

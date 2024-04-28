@@ -33,9 +33,6 @@ public class Driver {
     @Column(name = "phone_number", nullable = false, unique = true)
     private String phoneNumber;
 
-    @Column(name = "email", unique = true)
-    private String email;
-
     @Column(name = "gender")
     private String gender;
 
