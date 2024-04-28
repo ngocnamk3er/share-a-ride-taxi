@@ -71,6 +71,7 @@ public class DriverController {
                 .gender(driverRequest.getGender())
                 .vehicleTypeId(driverRequest.getVehicleTypeId())
                 .vehicleLicensePlate(driverRequest.getVehicleLicensePlate())
+                .userId(driverRequest.getUserId())
                 .build();
 
         Driver savedDriver = driverService.saveDriver(driver);
