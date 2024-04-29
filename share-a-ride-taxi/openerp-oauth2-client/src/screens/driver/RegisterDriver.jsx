@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Typography, TextField, Button, Grid, Container } from "@mui/material";
+import { Typography, TextField, Button, Grid, Container, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { request } from "../../api";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import PreviewIcon from '@mui/icons-material/Preview';
 
 const RegisterDriver = () => {
     const [driverInfo, setDriverInfo] = useState({
@@ -28,6 +29,9 @@ const RegisterDriver = () => {
         licensePlatePhotoFileName: ""
     });
 
+    const [previewImage, setPreviewImage] = useState(null);
+    const [openPreview, setOpenPreview] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setDriverInfo({ ...driverInfo, [name]: value });
@@ -39,6 +43,16 @@ const RegisterDriver = () => {
 
         const fileName = files[0].name;
         setFileNames({ ...fileNames, [name + "Name"]: fileName });
+    };
+
+    const handlePreview = (image) => {
+        setPreviewImage(image);
+        setOpenPreview(true);
+    };
+
+    const handleClosePreview = () => {
+        setOpenPreview(false);
+        setPreviewImage(null);
     };
 
     const handleSubmit = async (e) => {
@@ -168,6 +182,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
+                        <Button onClick={() => handlePreview(driverInfo.avatarFile)}><PreviewIcon /></Button>
                     </Grid>
                     {/* Upload License Photo */}
                     <Grid item xs={12}>
@@ -186,6 +201,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
+                        <Button onClick={() => handlePreview(driverInfo.licensePhotoFile)}><PreviewIcon /></Button>
                     </Grid>
                     {/* Upload Vehicle Photo */}
                     <Grid item xs={12}>
@@ -204,6 +220,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
+                        <Button onClick={() => handlePreview(driverInfo.vehiclePhotoFile)}><PreviewIcon /></Button>
                     </Grid>
                     {/* Upload License Plate Photo */}
                     <Grid item xs={12}>
@@ -222,12 +239,19 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
+                        <Button onClick={() => handlePreview(driverInfo.licensePlatePhotoFile)}><PreviewIcon /></Button>
                     </Grid>
                     <Grid item xs={12}>
                         <Button variant="contained" color="primary" type="submit">Register</Button>
                     </Grid>
                 </Grid>
             </form>
+            <Dialog open={openPreview} onClose={handleClosePreview}>
+                <DialogTitle>Preview Image</DialogTitle>
+                <DialogContent>
+                    {previewImage && <img src={URL.createObjectURL(previewImage)} alt="Preview" style={{ maxWidth: "100%" }} />}
+                </DialogContent>
+            </Dialog>
         </Container>
     );
 }
