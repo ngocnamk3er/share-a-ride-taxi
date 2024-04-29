@@ -1,80 +1,183 @@
-import React, { useEffect, useState } from "react";
-import withScreenSecurity from 'components/common/withScreenSecurity';
-import { StandardTable } from "erp-hust/lib/StandardTable";
+import React, { useState } from "react";
+import { Typography, TextField, Button, Grid, Container } from "@mui/material";
 import { request } from "../../api";
-import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 const RegisterDriver = () => {
+    const [driverInfo, setDriverInfo] = useState({
+        userId: "",
+        fullName: "",
+        phoneNumber: "",
+        gender: "",
+        vehicleTypeId: "",
+        vehicleLicensePlate: "",
+        lat: "",
+        lon: "",
+        address: "",
+        avatarFile: null,
+        licensePhotoFile: null,
+        vehiclePhotoFile: null,
+        licensePlatePhotoFile: null
+    });
 
-    const [drivers, setDrivers] = useState([]);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setDriverInfo({ ...driverInfo, [name]: value });
+    };
 
-    useEffect(() => {
-        request("get", "/drivers", (res) => {
-            setDrivers(res.data);
-        }).then();
-    }, [])
+    const handleFileChange = (e) => {
+        const { name, files } = e.target;
+        setDriverInfo({ ...driverInfo, [name]: files[0] });
+    };
 
-    const columns = [
-        {
-            title: "Full name",
-            field: "fullName",
-        },
-        {
-            title: "Phone number",
-            field: "phoneNumber",
-        },
-        {
-            title: "Email",
-            field: "email",
-        },
-        {
-            title: "Gender",
-            field: "gender",
-        },
-        {
-            title: "Vehicle Type",
-            field: "vehicleType",
-        },
-        {
-            title: "Vehicle License Plate",
-            field: "vehicleLicensePlate",
-        },
-        {
-            title: "Status",
-            field: "statusId",
-            lookup: {
-                0: 'Waiting',
-                1: 'Active',
-                2: 'Inactive',
-            },
-            filter: true
-        },
-    ];
-
-    const demoFunction = (driver) => {
-        alert("You clicked on Driver: " + driver.id)
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const formData = new FormData();
+            for (const key in driverInfo) {
+                formData.append(key, driverInfo[key]);
+            }
+            await request.post("/drivers", formData);
+            alert("Driver registered successfully!");
+        } catch (error) {
+            console.error("Error registering driver:", error);
+            alert("Failed to register driver. Please try again.");
+        }
+    };
 
     return (
-        <div>
-            <StandardTable
-                title="Driver List"
-                columns={columns}
-                data={drivers}
-                // hideCommandBar
-                options={{
-                    selection: false,
-                    pageSize: 20,
-                    search: true,
-                    sorting: true,
-                }}
-            />
-        </div>
-
+        <Container maxWidth="md">
+            <Typography variant="h3" align="center" gutterBottom>Register Driver</Typography>
+            <form onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="userId"
+                            label="User ID"
+                            value={driverInfo.userId}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="fullName"
+                            label="Full Name"
+                            value={driverInfo.fullName}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="phoneNumber"
+                            label="Phone Number"
+                            value={driverInfo.phoneNumber}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="gender"
+                            label="Gender"
+                            value={driverInfo.gender}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="vehicleTypeId"
+                            label="Vehicle Type ID"
+                            value={driverInfo.vehicleTypeId}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="vehicleLicensePlate"
+                            label="Vehicle License Plate"
+                            value={driverInfo.vehicleLicensePlate}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            name="lat"
+                            label="Latitude"
+                            value={driverInfo.lat}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            name="lon"
+                            label="Longitude"
+                            value={driverInfo.lon}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            name="address"
+                            label="Address"
+                            value={driverInfo.address}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            type="file"
+                            name="avatarFile"
+                            onChange={handleFileChange}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            type="file"
+                            name="licensePhotoFile"
+                            onChange={handleFileChange}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            type="file"
+                            name="vehiclePhotoFile"
+                            onChange={handleFileChange}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <input
+                            type="file"
+                            name="licensePlatePhotoFile"
+                            onChange={handleFileChange}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary" type="submit">Register</Button>
+                    </Grid>
+                </Grid>
+            </form>
+        </Container>
     );
 }
 
-const SCR_ID = "SCR_SAR_DEFAULT";
-export default withScreenSecurity(RegisterDriver, SCR_ID, true);
+export default RegisterDriver;

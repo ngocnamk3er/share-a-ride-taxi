@@ -3,11 +3,14 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import { request } from "../../api";
 import IconButton from "@mui/material/IconButton";
+import Modal from "@mui/material/Modal";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DetailDriver from "components/detail-driver/DetailDriver";
 
 const ActivateDriver = () => {
-
     const [drivers, setDrivers] = useState([]);
+    const [selectedDriver, setSelectedDriver] = useState(null);
 
     useEffect(() => {
         request("get", "/drivers", (res) => {
@@ -15,6 +18,14 @@ const ActivateDriver = () => {
             setDrivers(filteredDrivers);
         }).then();
     }, [])
+
+    const handleViewClick = (rowData) => {
+        setSelectedDriver(rowData);
+    };
+
+    const handleModalClose = () => {
+        setSelectedDriver(null);
+    };
 
     const columns = [
         {
@@ -51,6 +62,21 @@ const ActivateDriver = () => {
             },
         },
         {
+            title: "View",
+            sorting: false,
+            render: (rowData) => (
+                <IconButton
+                    onClick={() => {
+                        handleViewClick(rowData);
+                    }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
+        },
+        {
             title: "Activate driver",
             sorting: false,
             render: (rowData) => (
@@ -67,8 +93,6 @@ const ActivateDriver = () => {
 
     const activateDriver = (driverId) => {
         request("post", `/drivers/${driverId}/activate`, (res) => {
-            // Xử lý phản hồi từ API nếu cần
-            // Sau khi kích hoạt thành công, cập nhật lại thông tin của tài xế đã được kích hoạt
             const activatedDriver = res.data;
             setDrivers(prevDrivers => {
                 return prevDrivers.filter(driver => {
@@ -84,7 +108,6 @@ const ActivateDriver = () => {
                 title="List of drivers waiting for activation"
                 columns={columns}
                 data={drivers}
-                // hideCommandBar
                 options={{
                     selection: false,
                     pageSize: 20,
@@ -92,8 +115,15 @@ const ActivateDriver = () => {
                     sorting: true,
                 }}
             />
+            <Modal
+                open={selectedDriver !== null} // Sử dụng open để điều khiển hiển thị của Modal
+                onClose={handleModalClose} // Xử lý sự kiện đóng Modal
+            >
+                <div>
+                    {selectedDriver && <DetailDriver driver={selectedDriver} onClose={handleModalClose} />} {/* Truyền props driver */}
+                </div>
+            </Modal>
         </div>
-
     );
 }
 

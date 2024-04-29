@@ -3,18 +3,29 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import { request } from "../../api";
 import IconButton from "@mui/material/IconButton";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import Modal from "@mui/material/Modal";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import DetailDriver from "components/detail-driver/DetailDriver";
+
 
 const ListDrivers = () => {
 
     const [drivers, setDrivers] = useState([]);
+    const [selectedDriver, setSelectedDriver] = useState(null);
 
     useEffect(() => {
         request("get", "/drivers", (res) => {
             setDrivers(res.data);
         }).then();
     }, [])
+
+    const handleViewClick = (rowData) => {
+        setSelectedDriver(rowData);
+    };
+
+    const handleModalClose = () => {
+        setSelectedDriver(null);
+    };
 
     const columns = [
         {
@@ -51,6 +62,21 @@ const ListDrivers = () => {
             },
             filter: true
         },
+        {
+            title: "View",
+            sorting: false,
+            render: (rowData) => (
+                <IconButton
+                    onClick={() => {
+                        handleViewClick(rowData);
+                    }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
+        },
     ];
 
     const demoFunction = (driver) => {
@@ -71,6 +97,14 @@ const ListDrivers = () => {
                     sorting: true,
                 }}
             />
+            <Modal
+                open={selectedDriver !== null} // Sử dụng open để điều khiển hiển thị của Modal
+                onClose={handleModalClose} // Xử lý sự kiện đóng Modal
+            >
+                <div>
+                    {selectedDriver && <DetailDriver driver={selectedDriver} onClose={handleModalClose} />} {/* Truyền props driver */}
+                </div>
+            </Modal>
         </div>
 
     );
