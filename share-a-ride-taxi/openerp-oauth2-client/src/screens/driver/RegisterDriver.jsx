@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Typography, TextField, Button, Grid, Container } from "@mui/material";
 import { request } from "../../api";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const RegisterDriver = () => {
     const [driverInfo, setDriverInfo] = useState({
@@ -19,6 +20,14 @@ const RegisterDriver = () => {
         licensePlatePhotoFile: null
     });
 
+
+    const [fileNames, setFileNames] = useState({
+        avatarFileName: "",
+        licensePhotoFileName: "",
+        vehiclePhotoFileName: "",
+        licensePlatePhotoFileName: ""
+    });
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setDriverInfo({ ...driverInfo, [name]: value });
@@ -27,6 +36,9 @@ const RegisterDriver = () => {
     const handleFileChange = (e) => {
         const { name, files } = e.target;
         setDriverInfo({ ...driverInfo, [name]: files[0] });
+
+        const fileName = files[0].name;
+        setFileNames({ ...fileNames, [name + "Name"]: fileName });
     };
 
     const handleSubmit = async (e) => {
@@ -139,37 +151,77 @@ const RegisterDriver = () => {
                             required
                         />
                     </Grid>
+                    {/* Upload Avatar */}
                     <Grid item xs={12}>
-                        <input
-                            type="file"
-                            name="avatarFile"
-                            onChange={handleFileChange}
-                            required
-                        />
+                        <Typography variant="body1" gutterBottom>{fileNames.avatarFileName}</Typography>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            startIcon={<CloudUploadIcon />}
+                        >
+                            Upload Avatar
+                            <input
+                                type="file"
+                                name="avatarFile"
+                                onChange={handleFileChange}
+                                hidden
+                                required
+                            />
+                        </Button>
                     </Grid>
+                    {/* Upload License Photo */}
                     <Grid item xs={12}>
-                        <input
-                            type="file"
-                            name="licensePhotoFile"
-                            onChange={handleFileChange}
-                            required
-                        />
+                        <Typography variant="body1" gutterBottom>{fileNames.licensePhotoFileName}</Typography>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            startIcon={<CloudUploadIcon />}
+                        >
+                            Upload License Photo
+                            <input
+                                type="file"
+                                name="licensePhotoFile"
+                                onChange={handleFileChange}
+                                hidden
+                                required
+                            />
+                        </Button>
                     </Grid>
+                    {/* Upload Vehicle Photo */}
                     <Grid item xs={12}>
-                        <input
-                            type="file"
-                            name="vehiclePhotoFile"
-                            onChange={handleFileChange}
-                            required
-                        />
+                        <Typography variant="body1" gutterBottom>{fileNames.vehiclePhotoFileName}</Typography>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            startIcon={<CloudUploadIcon />}
+                        >
+                            Upload Vehicle Photo
+                            <input
+                                type="file"
+                                name="vehiclePhotoFile"
+                                onChange={handleFileChange}
+                                hidden
+                                required
+                            />
+                        </Button>
                     </Grid>
+                    {/* Upload License Plate Photo */}
                     <Grid item xs={12}>
-                        <input
-                            type="file"
-                            name="licensePlatePhotoFile"
-                            onChange={handleFileChange}
-                            required
-                        />
+                        <Typography variant="body1" gutterBottom>{fileNames.licensePlatePhotoFileName}</Typography>
+                        <Button
+                            variant="contained"
+                            component="label"
+                            startIcon={<CloudUploadIcon />}
+                        >
+                            Upload License Plate Photo
+                            <input
+                                type="file"
+                                name="licensePlatePhotoFile"
+                                onChange={handleFileChange}
+                                hidden
+                                required
+                            />
+                        </Button>
                     </Grid>
                     <Grid item xs={12}>
                         <Button variant="contained" color="primary" type="submit">Register</Button>
