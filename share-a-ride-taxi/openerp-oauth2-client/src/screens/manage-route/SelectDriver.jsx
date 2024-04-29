@@ -10,11 +10,13 @@ const SelectDriver = () => {
     const [drivers, setDrivers] = useState([]);
 
     let { path } = useRouteMatch();
+
     useEffect(() => {
         request("get", "/drivers", (res) => {
-            setDrivers(res.data);
+            const filteredDrivers = res.data.filter(driver => driver.statusId === 1);
+            setDrivers(filteredDrivers);
         }).then();
-    }, []);
+    }, [])
 
     const columns = [
         {
