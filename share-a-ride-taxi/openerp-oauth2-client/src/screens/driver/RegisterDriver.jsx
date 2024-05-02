@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Typography, TextField, Button, Grid, Container, Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { request } from "../../api";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PreviewIcon from '@mui/icons-material/Preview';
+import keycloak from "config/keycloak";
+import { jwtDecode } from "jwt-decode";
 
 const RegisterDriver = () => {
     const [driverInfo, setDriverInfo] = useState({
@@ -31,6 +33,21 @@ const RegisterDriver = () => {
 
     const [previewImage, setPreviewImage] = useState(null);
     const [openPreview, setOpenPreview] = useState(false);
+
+    useEffect(() => {
+        const token = keycloak.token
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            const { preferred_username, given_name, family_name } = decodedToken;
+            const fullName = given_name + " " + family_name
+            const userId = preferred_username
+            setDriverInfo(prevState => ({
+                ...prevState,
+                userId,
+                fullName
+            }));
+        }
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -83,6 +100,9 @@ const RegisterDriver = () => {
                             onChange={handleChange}
                             fullWidth
                             required
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -93,6 +113,9 @@ const RegisterDriver = () => {
                             onChange={handleChange}
                             fullWidth
                             required
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
