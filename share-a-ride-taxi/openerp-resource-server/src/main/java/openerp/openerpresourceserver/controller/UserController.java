@@ -5,6 +5,7 @@ import openerp.openerpresourceserver.entity.User;
 import openerp.openerpresourceserver.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,5 +48,11 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok().body(users);
+    }
+
+    @GetMapping("/isDriver")
+    @PreAuthorize("hasRole('DRIVER')")
+    public ResponseEntity<?> isDriver() {
+        return ResponseEntity.ok().body("OK");
     }
 }

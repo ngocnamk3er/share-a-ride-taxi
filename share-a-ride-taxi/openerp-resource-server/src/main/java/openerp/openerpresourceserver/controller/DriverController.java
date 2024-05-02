@@ -51,6 +51,7 @@ public class DriverController {
                                                @RequestPart("licensePhotoFile") MultipartFile licensePhotoFile,
                                                @RequestPart("vehiclePhotoFile") MultipartFile vehiclePhotoFile,
                                                @RequestPart("licensePlatePhotoFile") MultipartFile licensePlatePhotoFile) {
+        System.out.println("driver");
         String avatarImageUrl = s3Service.uploadFile(avatarFile);
         String licensePhotoUrl = s3Service.uploadFile(licensePhotoFile);
         String vehiclePhotoUrl = s3Service.uploadFile(vehiclePhotoFile);
@@ -73,6 +74,8 @@ public class DriverController {
                 .vehicleLicensePlate(driverRequest.getVehicleLicensePlate())
                 .userId(driverRequest.getUserId())
                 .build();
+
+        System.out.println(driver);
 
         Driver savedDriver = driverService.saveDriver(driver);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedDriver);

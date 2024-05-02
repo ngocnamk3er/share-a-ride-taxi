@@ -18,10 +18,4 @@ public class DriverRequest {
     private BigDecimal lat;
     private BigDecimal lon;
     private String address;
-//    private MultipartFile avatarImage;
-//    private MultipartFile vehiclePhoto;
-//    private MultipartFile licensePhoto;
-//    private MultipartFile licensePlatePhoto;
-
-
 }

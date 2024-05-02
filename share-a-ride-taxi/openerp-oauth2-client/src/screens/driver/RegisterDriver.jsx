@@ -6,7 +6,6 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import keycloak from "config/keycloak";
 import { jwtDecode } from "jwt-decode";
 
-
 const RegisterDriver = () => {
     const [driverInfo, setDriverInfo] = useState({
         userId: "",
@@ -17,13 +16,15 @@ const RegisterDriver = () => {
         vehicleLicensePlate: "",
         lat: "",
         lon: "",
-        address: "",
+        address: ""
+    });
+
+    const [fileData, setFileData] = useState({
         avatarFile: null,
         licensePhotoFile: null,
         vehiclePhotoFile: null,
         licensePlatePhotoFile: null
     });
-
 
     const [fileNames, setFileNames] = useState({
         avatarFileName: "",
@@ -40,8 +41,8 @@ const RegisterDriver = () => {
         if (token) {
             const decodedToken = jwtDecode(token);
             const { preferred_username, given_name, family_name } = decodedToken;
-            const fullName = given_name + " " + family_name
-            const userId = preferred_username
+            const fullName = given_name + " " + family_name;
+            const userId = preferred_username;
             setDriverInfo(prevState => ({
                 ...prevState,
                 userId,
@@ -57,7 +58,7 @@ const RegisterDriver = () => {
 
     const handleFileChange = (e) => {
         const { name, files } = e.target;
-        setDriverInfo({ ...driverInfo, [name]: files[0] });
+        setFileData({ ...fileData, [name]: files[0] });
 
         const fileName = files[0].name;
         setFileNames({ ...fileNames, [name + "Name"]: fileName });
@@ -77,14 +78,27 @@ const RegisterDriver = () => {
         e.preventDefault();
         try {
             const formData = new FormData();
-            for (const key in driverInfo) {
-                formData.append(key, driverInfo[key]);
+
+            // Add driver info to formData under "driverInfo" key
+            formData.append("driverInfo", JSON.stringify(driverInfo));
+
+            // Add files to formData
+            formData.append("avatarFile", fileData.avatarFile);
+            formData.append("licensePhotoFile", fileData.licensePhotoFile);
+            formData.append("vehiclePhotoFile", fileData.vehiclePhotoFile);
+            formData.append("licensePlatePhotoFile", fileData.licensePlatePhotoFile);
+
+            console.log("formData:");
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
             }
-            await request.post("/drivers", formData);
-            alert("Driver registered successfully!");
+
+            await request("post", "/drivers", (res) => {
+                console.log("Request created successfully:", res.data);
+            }, null, formData);
         } catch (error) {
             console.error("Error registering driver:", error);
-            alert("Failed to register driver. Please try again.");
+            // alert("Failed to register driver. Please try again.");
         }
     };
 
@@ -93,19 +107,6 @@ const RegisterDriver = () => {
             <Typography variant="h3" align="center" gutterBottom>Register Driver</Typography>
             <form onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            name="userId"
-                            label="User ID"
-                            value={driverInfo.userId}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                        />
-                    </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
                             name="fullName"
@@ -120,22 +121,27 @@ const RegisterDriver = () => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="vehicle-type-label">Vehicle Type</InputLabel>
-                            <Select
-                                labelId="vehicle-type-label"
-                                id="vehicle-type"
-                                value={driverInfo.vehicleTypeId}
-                                onChange={handleChange}
-                                label="Vehicle Type"
-                                required
-                                name="vehicleTypeId"
-                            >
-                                <MenuItem value={0}>Car</MenuItem>
-                                <MenuItem value={1}>Mini Truck</MenuItem>
-                                <MenuItem value={2}>Truck</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <TextField
+                            name="userId"
+                            label="User Id"
+                            value={driverInfo.userId}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="phoneNumber"
+                            label="Phone Number"
+                            value={driverInfo.phoneNumber}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
@@ -155,14 +161,22 @@ const RegisterDriver = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField
-                            name="phoneNumber"
-                            label="Phone Number"
-                            value={driverInfo.phoneNumber}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="vehicle-type-label">Vehicle Type</InputLabel>
+                            <Select
+                                labelId="vehicle-type-label"
+                                id="vehicle-type"
+                                value={driverInfo.vehicleTypeId}
+                                onChange={handleChange}
+                                label="Vehicle Type"
+                                required
+                                name="vehicleTypeId"
+                            >
+                                <MenuItem value={0}>Car</MenuItem>
+                                <MenuItem value={1}>Mini Truck</MenuItem>
+                                <MenuItem value={2}>Truck</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -221,7 +235,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
-                        <Button onClick={() => handlePreview(driverInfo.avatarFile)}><PreviewIcon /></Button>
+                        <Button onClick={() => handlePreview(fileData.avatarFile)}><PreviewIcon /></Button>
                     </Grid>
                     {/* Upload License Photo */}
                     <Grid item xs={12}>
@@ -240,7 +254,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
-                        <Button onClick={() => handlePreview(driverInfo.licensePhotoFile)}><PreviewIcon /></Button>
+                        <Button onClick={() => handlePreview(fileData.licensePhotoFile)}><PreviewIcon /></Button>
                     </Grid>
                     {/* Upload Vehicle Photo */}
                     <Grid item xs={12}>
@@ -259,7 +273,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
-                        <Button onClick={() => handlePreview(driverInfo.vehiclePhotoFile)}><PreviewIcon /></Button>
+                        <Button onClick={() => handlePreview(fileData.vehiclePhotoFile)}><PreviewIcon /></Button>
                     </Grid>
                     {/* Upload License Plate Photo */}
                     <Grid item xs={12}>
@@ -278,7 +292,7 @@ const RegisterDriver = () => {
                                 required
                             />
                         </Button>
-                        <Button onClick={() => handlePreview(driverInfo.licensePlatePhotoFile)}><PreviewIcon /></Button>
+                        <Button onClick={() => handlePreview(fileData.licensePlatePhotoFile)}><PreviewIcon /></Button>
                     </Grid>
                     <Grid item xs={12}>
                         <Button variant="contained" color="primary" type="submit">Register</Button>

@@ -9,4 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface DriverRepository extends JpaRepository<Driver, UUID> {
+    Driver findByUserId(String userId);
+
+    boolean existsByUserId(String userId);
 }

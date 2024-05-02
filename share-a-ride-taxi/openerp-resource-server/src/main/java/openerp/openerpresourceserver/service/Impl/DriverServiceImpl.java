@@ -73,4 +73,13 @@ public class DriverServiceImpl implements DriverService {
             throw new IllegalStateException("Driver with ID " + id + " is not in waiting state");
         }
     }
+
+    @Override
+    public Driver getDriverByUserId(String userId) {
+        return driverRepository.findByUserId(userId);
+    }
+
+    public boolean existsDriverByUserId(String userId) {
+        return driverRepository.existsByUserId(userId);
+    }
 }
