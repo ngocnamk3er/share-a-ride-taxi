@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField, Button, Grid, Container, Dialog, DialogContent, DialogTitle } from "@mui/material";
+import { Typography, TextField, Button, Grid, Container, Dialog, DialogContent, DialogTitle, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { request } from "../../api";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PreviewIcon from '@mui/icons-material/Preview';
 import keycloak from "config/keycloak";
 import { jwtDecode } from "jwt-decode";
+
 
 const RegisterDriver = () => {
     const [driverInfo, setDriverInfo] = useState({
@@ -119,30 +120,45 @@ const RegisterDriver = () => {
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="vehicle-type-label">Vehicle Type</InputLabel>
+                            <Select
+                                labelId="vehicle-type-label"
+                                id="vehicle-type"
+                                value={driverInfo.vehicleTypeId}
+                                onChange={handleChange}
+                                label="Vehicle Type"
+                                required
+                                name="vehicleTypeId"
+                            >
+                                <MenuItem value={0}>Car</MenuItem>
+                                <MenuItem value={1}>Mini Truck</MenuItem>
+                                <MenuItem value={2}>Truck</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <FormControl fullWidth>
+                            <InputLabel id="gender-label">Gender</InputLabel>
+                            <Select
+                                labelId="gender-label"
+                                id="gender"
+                                onChange={handleChange}
+                                value={driverInfo.gender}
+                                name="gender"
+                                label="Gender"
+                                required
+                            >
+                                <MenuItem value={"Male"}>Male</MenuItem>
+                                <MenuItem value={"Female"}>Female</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             name="phoneNumber"
                             label="Phone Number"
                             value={driverInfo.phoneNumber}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            name="gender"
-                            label="Gender"
-                            value={driverInfo.gender}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            name="vehicleTypeId"
-                            label="Vehicle Type ID"
-                            value={driverInfo.vehicleTypeId}
                             onChange={handleChange}
                             fullWidth
                             required

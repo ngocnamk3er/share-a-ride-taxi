@@ -5,13 +5,33 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const DetailDriver = ({ driver }) => {
-    const [settings, setSettings] = useState({
+    if (!driver) {
+        return (
+            <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+                <CircularProgress />
+            </div>
+        );
+    }
+
+    const statusLookup = {
+        0: "Waiting",
+        1: "Active",
+        2: "Inactive",
+    };
+
+    const vehicleTypeLookup = {
+        0: "Car",
+        1: "Small Truck",
+        2: "Truck",
+    };
+
+    const settings = {
         dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
         slidesToScroll: 1,
-    });
+    };
 
     return (
         <div
@@ -50,11 +70,11 @@ const DetailDriver = ({ driver }) => {
                     </Typography>
                     <br />
                     <Typography variant="h6" gutterBottom>
-                        Status : {driver.statusId}
+                        Status : {statusLookup[driver.statusId]}
                     </Typography>
                     <br />
                     <Typography variant="h6" gutterBottom>
-                        Vehicel type : {driver.vehicleTypeId}
+                        Vehicle type : {vehicleTypeLookup[driver.vehicleTypeId]}
                     </Typography>
                 </Grid>
                 <Grid item xs={8}>

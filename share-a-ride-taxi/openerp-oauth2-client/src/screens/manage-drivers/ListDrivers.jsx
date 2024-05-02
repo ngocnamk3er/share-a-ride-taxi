@@ -36,17 +36,22 @@ const ListDrivers = () => {
             title: "Phone number",
             field: "phoneNumber",
         },
-        {
-            title: "Email",
-            field: "email",
-        },
+        // {
+        //     title: "Email",
+        //     field: "email",
+        // },
         {
             title: "Gender",
             field: "gender",
         },
         {
             title: "Vehicle Type",
-            field: "vehicleType",
+            field: "vehicleTypeId",
+            lookup: {
+                0: 'Car',
+                1: 'Mini Truck',
+                2: 'Truck',
+            },
         },
         {
             title: "Vehicle License Plate",
