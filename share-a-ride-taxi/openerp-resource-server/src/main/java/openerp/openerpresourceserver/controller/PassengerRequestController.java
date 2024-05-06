@@ -23,7 +23,7 @@ import java.util.UUID;
 @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
 public class PassengerRequestController {
     private final PassengerRequestService passengerRequestService;
-
+    private final GraphhopperService graphhopperService;
     @GetMapping
     public List<PassengerRequest> getAllPassengerRequests() {
         return passengerRequestService.getAllPassengerRequests();
@@ -37,9 +37,12 @@ public class PassengerRequestController {
 
     @PostMapping
     public ResponseEntity<PassengerRequest> createPassengerRequest(@RequestBody PassengerRequest passengerRequest) {
+        Coordinate pickup = new Coordinate(passengerRequest.getPickupLatitude(), passengerRequest.getDropoffLongitude());
+        Coordinate dropoff =  new Coordinate(passengerRequest.getDropoffLatitude(), passengerRequest.getDropoffLongitude());
+        RoutingEstimate routingEstimate = graphhopperService.getRoutingEstimate(pickup, dropoff);
+        passengerRequest.setDistance(routingEstimate.getDistance());
+        passengerRequest.setEndTime(passengerRequest.getRequestTime().plusSeconds(routingEstimate.getTime()/1000));
         PassengerRequest createdPassengerRequest = passengerRequestService.savePassengerRequest(passengerRequest);
-        System.out.println("passengerRequest");
-        System.out.println(passengerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPassengerRequest);
     }
 
@@ -48,6 +51,11 @@ public class PassengerRequestController {
         if (!passengerRequestService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        Coordinate pickup = new Coordinate(passengerRequest.getPickupLatitude(), passengerRequest.getDropoffLongitude());
+        Coordinate dropoff =  new Coordinate(passengerRequest.getDropoffLatitude(), passengerRequest.getDropoffLongitude());
+        RoutingEstimate routingEstimate = graphhopperService.getRoutingEstimate(pickup, dropoff);
+        passengerRequest.setDistance(routingEstimate.getDistance());
+        passengerRequest.setEndTime(passengerRequest.getRequestTime().plusSeconds(routingEstimate.getTime()/1000));
         passengerRequest.setRequestId(id);
         PassengerRequest updatedPassengerRequest = passengerRequestService.savePassengerRequest(passengerRequest);
         return ResponseEntity.ok(updatedPassengerRequest);

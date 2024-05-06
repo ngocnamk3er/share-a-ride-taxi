@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Grid, TextField, Button, Modal } from "@mui/material";
 import SearchLocation from '../../components/searchLocation/SearchLocation';
 import { request } from "../../api";
 import withScreenSecurity from 'components/common/withScreenSecurity';
 import { useHistory } from "react-router-dom";
+import keycloak from "config/keycloak";
+import { jwtDecode } from "jwt-decode";
 
 const CreateParcelRequest = () => {
 
@@ -26,10 +28,22 @@ const CreateParcelRequest = () => {
         dropoffAddress: "",
         requestTime: "",
         statusId: RECEIVED, // Default status ID
+        createdByUserLoginId: "",
     });
 
     const [showPickupModal, setShowPickupModal] = useState(false);
     const [showDropoffModal, setShowDropoffModal] = useState(false);
+
+    useEffect(() => {
+        const token = keycloak.token;
+        const decodedToken = jwtDecode(token);
+        const { preferred_username } = decodedToken;
+        const userId = preferred_username;
+        setParcelData(prevParcelData => {
+            return { ...prevParcelData, 'createdByUserLoginId': userId };
+        });
+    }, [])
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

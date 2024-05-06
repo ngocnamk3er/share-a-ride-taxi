@@ -50,6 +50,9 @@ public class GraphhopperService {
         // Lấy giá trị time từ đối tượng firstPathObject
         int time = firstPathObject.getInt("time");
 
+        System.out.println("Distance");
+        System.out.println(distance);
+
         // Trả về đối tượng DistanceResult
         return new RoutingEstimate(distance, time);
     }

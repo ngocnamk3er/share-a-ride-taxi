@@ -2,6 +2,9 @@ package openerp.openerpresourceserver.controller;
 
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.ParcelRequest;
+import openerp.openerpresourceserver.service.Impl.GraphhopperService;
+import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
+import openerp.openerpresourceserver.service.Impl.Object.RoutingEstimate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import openerp.openerpresourceserver.service.ParcelRequestService;
@@ -18,7 +21,7 @@ import java.util.UUID;
 @PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
 public class ParcelRequestController {
     private final ParcelRequestService parcelRequestService;
-
+    private final GraphhopperService graphhopperService;
     @GetMapping
     public List<ParcelRequest> getAllParcelRequests() {
         return parcelRequestService.getAllParcelRequests();
@@ -32,6 +35,11 @@ public class ParcelRequestController {
 
     @PostMapping
     public ResponseEntity<ParcelRequest> createParcelRequest(@RequestBody ParcelRequest parcelRequest) {
+        Coordinate pickup = new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getDropoffLongitude());
+        Coordinate dropoff =  new Coordinate(parcelRequest.getDropoffLatitude(), parcelRequest.getDropoffLongitude());
+        RoutingEstimate routingEstimate = graphhopperService.getRoutingEstimate(pickup, dropoff);
+        parcelRequest.setDistance(routingEstimate.getDistance());
+        parcelRequest.setEndTime(parcelRequest.getRequestTime().plusSeconds(routingEstimate.getTime()/1000));
         ParcelRequest createdParcelRequest = parcelRequestService.createParcelRequest(parcelRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParcelRequest);
     }
@@ -41,6 +49,12 @@ public class ParcelRequestController {
         if (!parcelRequestService.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
+        Coordinate pickup = new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getDropoffLongitude());
+        Coordinate dropoff =  new Coordinate(parcelRequest.getDropoffLatitude(), parcelRequest.getDropoffLongitude());
+        RoutingEstimate routingEstimate = graphhopperService.getRoutingEstimate(pickup, dropoff);
+        parcelRequest.setDistance(routingEstimate.getDistance());
+        parcelRequest.setEndTime(parcelRequest.getRequestTime().plusSeconds(routingEstimate.getTime()/1000));
+        ParcelRequest createdParcelRequest = parcelRequestService.createParcelRequest(parcelRequest);
         parcelRequest.setRequestId(id);
         ParcelRequest updatedParcelRequest = parcelRequestService.createParcelRequest(parcelRequest);
         return ResponseEntity.ok(updatedParcelRequest);
