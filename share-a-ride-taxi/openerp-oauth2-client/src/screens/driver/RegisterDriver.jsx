@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Typography, TextField, Button, Grid, Container, Dialog, DialogContent, DialogTitle, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Typography, TextField, Button, Grid, Container, Dialog, DialogContent, DialogTitle, Select, MenuItem, FormControl, InputLabel, Modal } from "@mui/material";
+import SearchLocation from '../../components/searchLocation/SearchLocation';
 import { request } from "../../api";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PreviewIcon from '@mui/icons-material/Preview';
@@ -19,6 +20,8 @@ const RegisterDriver = () => {
         lon: "",
         address: ""
     });
+
+    const [showModal, setShowModal] = useState(false);
 
     const [fileData, setFileData] = useState({
         avatarFile: null,
@@ -67,6 +70,15 @@ const RegisterDriver = () => {
         checkDriverExists();
     }, [driverInfo.userId, history]);
 
+    const handleSetPosition = (position) => {
+        setDriverInfo(prevDriverInfo => ({
+            ...prevDriverInfo,
+            lat: position.lat,
+            lon: position.lon,
+            address: position.display_name
+        }));
+    };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setDriverInfo({ ...driverInfo, [name]: value });
@@ -111,10 +123,10 @@ const RegisterDriver = () => {
 
             await request("post", "/drivers", (res) => {
                 console.log("Request created successfully:", res.data);
+                history.push("/for-driver/info");
             }, null, formData);
         } catch (error) {
             console.error("Error registering driver:", error);
-            // alert("Failed to register driver. Please try again.");
         }
     };
 
@@ -204,35 +216,33 @@ const RegisterDriver = () => {
                             required
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={6}>
                         <TextField
-                            name="lat"
-                            label="Latitude"
-                            value={driverInfo.lat}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            name="lon"
-                            label="Longitude"
-                            value={driverInfo.lon}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            name="address"
+                            name="dropoffAddress"
                             label="Address"
                             value={driverInfo.address}
-                            onChange={handleChange}
+                            onClick={() => setShowModal(true)}
                             fullWidth
                             required
+                            InputProps={{ readOnly: true }}
+                            InputLabelProps={{ shrink: true }}
                         />
+                        <Modal
+                            open={showModal}
+                            onClose={() => setShowModal(false)}
+                            aria-labelledby="dropoff-location-modal"
+                            aria-describedby="select-dropoff-location"
+                        >
+                            <div>
+                                <SearchLocation
+                                    centerPos={driverInfo.lat ? [driverInfo.lat, driverInfo.lon] : null}
+                                    setPosition={(position) => handleSetPosition(position)}
+                                    onClose={() => {
+                                        setShowModal(false)
+                                    }}
+                                />
+                            </div>
+                        </Modal>
                     </Grid>
                     {/* Upload Avatar */}
                     <Grid item xs={12}>
