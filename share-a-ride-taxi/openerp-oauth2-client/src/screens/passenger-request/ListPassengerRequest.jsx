@@ -14,6 +14,15 @@ const ListPassengerRequest = () => {
     const history = useHistory(); // Initialize useHistory hook
     let { path } = useRouteMatch();
 
+    const statusLookup = {
+        0: "None",
+        1: "Received",
+        2: "Driver Assigned",
+        3: "In Transit",
+        4: "Delivered",
+        5: "Cancelled"
+    };
+
     useEffect(() => {
         request("get", "/passenger-requests", (res) => {
             setPassengerRequests(res.data.reverse());
@@ -72,6 +81,7 @@ const ListPassengerRequest = () => {
         {
             title: "Status",
             field: "statusId",
+            render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
         },
         {
             title: "View",

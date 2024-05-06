@@ -5,6 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PreviewIcon from '@mui/icons-material/Preview';
 import keycloak from "config/keycloak";
 import { jwtDecode } from "jwt-decode";
+import { useHistory } from "react-router-dom";
 
 const RegisterDriver = () => {
     const [driverInfo, setDriverInfo] = useState({
@@ -35,6 +36,7 @@ const RegisterDriver = () => {
 
     const [previewImage, setPreviewImage] = useState(null);
     const [openPreview, setOpenPreview] = useState(false);
+    const history = useHistory();
 
     useEffect(() => {
         const token = keycloak.token
@@ -48,8 +50,22 @@ const RegisterDriver = () => {
                 userId,
                 fullName
             }));
+
+
         }
-    }, []);
+        const checkDriverExists = async () => {
+            try {
+                const response = await request("get", `/drivers/user/${driverInfo.userId}`);
+                if (response.data) {
+                    history.push("/for-driver/info"); // Chuyển hướng đến màn hình DriverInfo nếu tài xế đã tồn tại
+                }
+            } catch (error) {
+                console.error("Error checking driver existence:", error);
+            }
+        };
+
+        checkDriverExists();
+    }, [driverInfo.userId, history]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

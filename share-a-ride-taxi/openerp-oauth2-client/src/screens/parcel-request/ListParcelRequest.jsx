@@ -53,6 +53,16 @@ const ListParcelRequest = () => {
         history.push(`${path}/${rowData.requestId}`);
     }
 
+    // Lookup object for status
+    const statusLookup = {
+        0: "None",
+        1: "Received",
+        2: "Driver Assigned",
+        3: "In Transit",
+        4: "Delivered",
+        5: "Cancelled"
+    };
+
     const columns = [
         {
             title: "Sender Name",
@@ -81,6 +91,7 @@ const ListParcelRequest = () => {
         {
             title: "Status",
             field: "statusId",
+            render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
         },
         {
             title: "View",
