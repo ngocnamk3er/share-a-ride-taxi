@@ -1,5 +1,6 @@
 import { Route, Switch, useRouteMatch } from "react-router";
 import RegisterDriver from "screens/driver/RegisterDriver";
+import DriverInfo from "screens/driver/DriverInfo";
 
 export default function DriverRouter() {
     let { path } = useRouteMatch();
@@ -10,6 +11,11 @@ export default function DriverRouter() {
                     component={RegisterDriver}
                     exact
                     path={`${path}/register`}
+                ></Route>
+                <Route
+                    component={DriverInfo}
+                    exact
+                    path={`${path}/info`}
                 ></Route>
             </Switch>
         </div>

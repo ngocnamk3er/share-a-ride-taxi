@@ -45,6 +45,8 @@ public class DriverController {
         }
     }
 
+
+
     @PostMapping
     public ResponseEntity<Driver> createDriver(@RequestPart("driverInfo") String driverInfo,
                                                 @RequestPart("avatarFile") MultipartFile avatarFile,
@@ -97,6 +99,17 @@ public class DriverController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete driver", e);
         }
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Driver> getDriverByUserId(@PathVariable String userId) {
+        Driver driver = driverService.getDriverByUserId(userId);
+        if (driver != null) {
+            return ResponseEntity.ok().body(driver);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PostMapping("/{id}/activate")
     public ResponseEntity<Driver> activateDriver(@PathVariable UUID id) {
