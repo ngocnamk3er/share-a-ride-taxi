@@ -7,7 +7,7 @@ export const DRIVER = {
             id: "MENU_SAR_FOR_DRIVER.REGISTER",
             path: "/for-driver/register",
             isPublic: false,
-            text: "Register as a driver",
+            text: "Driver's info",
             child: [],
         },
         {

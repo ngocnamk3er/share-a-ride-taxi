@@ -67,5 +67,7 @@ public class ParcelRequest {
     @Column(name = "dropoff_address")
     private String dropoffAddress;
 
+    @Column(name = "created_by_user_login_id")
+    private String createdByUserLoginId;
     // Getters and setters
 }
