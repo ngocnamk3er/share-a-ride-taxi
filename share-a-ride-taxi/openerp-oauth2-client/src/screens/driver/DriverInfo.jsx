@@ -71,6 +71,12 @@ const DriverInfo = () => {
                         <strong>Vehicle Type:</strong> {vehicleTypeLookup[driverInfo.vehicleTypeId]}
                     </Typography>
                     <Typography>
+                        <strong>Payload Capacity:</strong> {driverInfo.payloadCapacity}
+                    </Typography>
+                    <Typography>
+                        <strong>Volume:</strong> {driverInfo.seatingCapacity}
+                    </Typography>
+                    <Typography>
                         <strong>Vehicle License Plate:</strong> {driverInfo.vehicleLicensePlate}
                     </Typography>
                     <Typography>

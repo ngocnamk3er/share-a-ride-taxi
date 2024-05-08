@@ -25,6 +25,8 @@ const CreatePassengerRequest = () => {
         dropoffAddress: "",
         requestTime: "",
         statusId: RECEIVED,
+        pickupAddressNote: "",
+        dropoffAddressNote: "",
         createdByUserLoginId: "",
     });
 
@@ -184,6 +186,26 @@ const CreatePassengerRequest = () => {
                         />
                     </div>
                 </Modal>
+            </Grid>
+            <Grid item xs={6}>
+                <TextField
+                    name="pickupAddressNote"
+                    label="Pickup Address Note"
+                    value={passengerData.pickupAddressNote}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <TextField
+                    name="dropoffAddressNote"
+                    label="Drop off Address Note"
+                    value={passengerData.dropoffAddressNote}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                />
             </Grid>
             <Grid item xs={12}>
                 <TextField

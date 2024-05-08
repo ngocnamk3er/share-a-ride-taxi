@@ -40,7 +40,7 @@ const DetailDriver = ({ driver }) => {
                 inset: 0,
                 margin: "auto",
                 width: "80vw",
-                height: "80vh",
+                height: "85vh",
                 backgroundColor: "#fff",
                 boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                 padding: "20px",
@@ -75,6 +75,14 @@ const DetailDriver = ({ driver }) => {
                     <br />
                     <Typography variant="h6" gutterBottom>
                         Vehicle type : {vehicleTypeLookup[driver.vehicleTypeId]}
+                    </Typography>
+                    <br />
+                    <Typography variant="h6" gutterBottom>
+                        Payload Capacity:{driver.payloadCapacity}
+                    </Typography>
+                    <br />
+                    <Typography variant="h6" gutterBottom>
+                        Volume:{driver.seatingCapacity}
                     </Typography>
                 </Grid>
                 <Grid item xs={8}>

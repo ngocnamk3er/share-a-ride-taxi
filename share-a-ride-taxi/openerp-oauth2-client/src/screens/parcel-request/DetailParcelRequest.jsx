@@ -48,6 +48,9 @@ const DetailParcelRequest = () => {
                     <Typography>
                         <strong>Pickup Location:</strong> {parcelRequest.pickupAddress}
                     </Typography>
+                    <Typography>
+                        <strong>Pickup Location Note:</strong> {parcelRequest.pickupAddressNote}
+                    </Typography>
                 </Grid>
                 <Grid item xs={6}>
                     <Typography>
@@ -67,6 +70,9 @@ const DetailParcelRequest = () => {
                     </Typography>
                     <Typography>
                         <strong>Dropoff Location:</strong> {parcelRequest.dropoffAddress}
+                    </Typography>
+                    <Typography>
+                        <strong>Dropoff Location Note:</strong> {parcelRequest.dropoffAddressNote}
                     </Typography>
                 </Grid>
             </Grid>

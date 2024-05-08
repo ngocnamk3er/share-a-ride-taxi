@@ -63,6 +63,12 @@ public class Driver {
     @Column(name = "user_id")
     private String userId;
 
+    @Column(name = "payload_capacity")
+    private BigDecimal payloadCapacity;
+
+    @Column(name = "seating_capacity")
+    private BigDecimal seatingCapacity;
+
     @Column(name = "avatar_url")
     private String avatarUrl;
 

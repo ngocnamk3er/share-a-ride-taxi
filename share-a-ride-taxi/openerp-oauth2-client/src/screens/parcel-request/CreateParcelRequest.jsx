@@ -23,9 +23,11 @@ const CreateParcelRequest = () => {
         pickupLatitude: "",
         pickupLongitude: "",
         pickupAddress: "",
+        pickupAddressNote: "",
         dropoffLatitude: "",
         dropoffLongitude: "",
         dropoffAddress: "",
+        dropoffAddressNote: "",
         requestTime: "",
         statusId: RECEIVED, // Default status ID
         createdByUserLoginId: "",
@@ -230,6 +232,26 @@ const CreateParcelRequest = () => {
                         />
                     </div>
                 </Modal>
+            </Grid>
+            <Grid item xs={6}>
+                <TextField
+                    name="pickupAddressNote"
+                    label="Pickup Address Note"
+                    value={parcelData.pickupAddressNote}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <TextField
+                    name="dropoffAddressNote"
+                    label="Drop off Address Note"
+                    value={parcelData.dropoffAddressNote}
+                    onChange={handleInputChange}
+                    fullWidth
+                    required
+                />
             </Grid>
             <Grid item xs={12}>
                 <TextField

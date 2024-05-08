@@ -16,6 +16,8 @@ const RegisterDriver = () => {
         gender: "",
         vehicleTypeId: "",
         vehicleLicensePlate: "",
+        payloadCapacity: "",
+        seatingCapacity: "",
         lat: "",
         lon: "",
         address: ""
@@ -205,6 +207,26 @@ const RegisterDriver = () => {
                                 <MenuItem value={2}>Truck</MenuItem>
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="payloadCapacity"
+                            label="Payload Capacity"
+                            value={driverInfo.payloadCapacity}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="seatingCapacity"
+                            label="Volume"
+                            value={driverInfo.seatingCapacity}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField

@@ -60,7 +60,17 @@ const DetailPassengerRequest = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography>
+                    <strong>Pickup Location Address Note:</strong> {passengerRequest.pickupAddressNote || 'N/A'}
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography>
                     <strong>Dropoff Location Address:</strong> {passengerRequest.dropoffAddress || 'N/A'}
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography>
+                    <strong>Dropoff Location Address Note:</strong> {passengerRequest.dropoffAddressNote || 'N/A'}
                 </Typography>
             </Grid>
             <Grid item xs={12}>

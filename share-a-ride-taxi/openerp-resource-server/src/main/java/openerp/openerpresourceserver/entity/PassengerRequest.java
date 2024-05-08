@@ -61,8 +61,11 @@ public class PassengerRequest {
     @Column(name = "created_by_user_login_id")
     private String createdByUserLoginId;
 
-    @Column(name = "location_note")
-    private String locationNote;
+    @Column(name = "pickup_address_note")
+    private String pickupAddressNote;
+
+    @Column(name = "dropoff_address_note")
+    private String dropoffAddressNote;
     // Getters and setters
 }
 
