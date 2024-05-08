@@ -60,6 +60,9 @@ public class PassengerRequest {
 
     @Column(name = "created_by_user_login_id")
     private String createdByUserLoginId;
+
+    @Column(name = "location_note")
+    private String locationNote;
     // Getters and setters
 }
 
