@@ -80,8 +80,9 @@ const DriverInfo = () => {
                         <strong>Vehicle License Plate:</strong> {driverInfo.vehicleLicensePlate}
                     </Typography>
                     <Typography>
-                        <strong>Address:</strong> {driverInfo.address}
+                        <strong>Address:</strong> {driverInfo.address + " / " + driverInfo.addressNote}
                     </Typography>
+
                     <Typography>
                         <strong>Status:</strong>{" "}
                         <div style={{ border: "1px solid", borderColor: statusLookup[driverInfo.statusId].color, borderRadius: "5px", padding: "2px", display: "inline-block" }}>

@@ -57,6 +57,9 @@ public class Driver {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "address_note")
+    private String addressNote;
+
     @Column(name = "status_id")
     private Integer statusId;
 
@@ -80,4 +83,5 @@ public class Driver {
 
     @Column(name = "license_plate_photo_url")
     private String licensePlatePhotoUrl;
+
 }

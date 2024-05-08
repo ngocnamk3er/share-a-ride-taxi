@@ -20,7 +20,8 @@ const RegisterDriver = () => {
         seatingCapacity: "",
         lat: "",
         lon: "",
-        address: ""
+        address: "",
+        addressNote: ""
     });
 
     const [showModal, setShowModal] = useState(false);
@@ -210,6 +211,16 @@ const RegisterDriver = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
+                            name="vehicleLicensePlate"
+                            label="Vehicle License Plate"
+                            value={driverInfo.vehicleLicensePlate}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
                             name="payloadCapacity"
                             label="Payload Capacity"
                             value={driverInfo.payloadCapacity}
@@ -228,19 +239,9 @@ const RegisterDriver = () => {
                             required
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            name="vehicleLicensePlate"
-                            label="Vehicle License Plate"
-                            value={driverInfo.vehicleLicensePlate}
-                            onChange={handleChange}
-                            fullWidth
-                            required
-                        />
-                    </Grid>
                     <Grid item xs={6}>
                         <TextField
-                            name="dropoffAddress"
+                            name="address"
                             label="Address"
                             value={driverInfo.address}
                             onClick={() => setShowModal(true)}
@@ -252,8 +253,8 @@ const RegisterDriver = () => {
                         <Modal
                             open={showModal}
                             onClose={() => setShowModal(false)}
-                            aria-labelledby="dropoff-location-modal"
-                            aria-describedby="select-dropoff-location"
+                            aria-labelledby="address-modal"
+                            aria-describedby="address"
                         >
                             <div>
                                 <SearchLocation
@@ -265,6 +266,16 @@ const RegisterDriver = () => {
                                 />
                             </div>
                         </Modal>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            name="addressNote"
+                            label="Address Note"
+                            value={driverInfo.addressNote}
+                            onChange={handleChange}
+                            fullWidth
+                            required
+                        />
                     </Grid>
                     {/* Upload Avatar */}
                     <Grid item xs={12}>

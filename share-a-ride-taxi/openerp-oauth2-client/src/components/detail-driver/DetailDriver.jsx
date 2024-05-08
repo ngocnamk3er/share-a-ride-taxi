@@ -66,7 +66,7 @@ const DetailDriver = ({ driver }) => {
                     </Typography>
                     <br />
                     <Typography variant="h6" gutterBottom>
-                        Address : {driver.address}
+                        Address : {driver.address + " / " + driver.addressNote}
                     </Typography>
                     <br />
                     <Typography variant="h6" gutterBottom>
