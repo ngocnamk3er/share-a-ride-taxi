@@ -5,14 +5,14 @@ export const WAREHOUSE = {
     child: [
         {
             id: "MENU_SAR_WAREHOUSE.LIST",
-            path: "/ware-house/list",
+            path: "/warehouse/list",
             isPublic: false,
             text: "Warehouse list",
             child: [],
         },
         {
             id: "MENU_SAR_WAREHOUSE.CREATE",
-            path: "/ware-house/create",
+            path: "/warehouse/create",
             isPublic: false,
             text: "Create warehouse",
             child: [],

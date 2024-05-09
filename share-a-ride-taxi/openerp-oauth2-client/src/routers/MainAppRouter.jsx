@@ -13,6 +13,7 @@ import ParcelRequestRouter from "./ParcelRequestRouter";
 import ManageDriverRouter from "./ManageDriverRouter";
 import ManageRouteRouter from "./ManageRouteRouter";
 import DriverRouter from "./DriverRouter";
+import WarehouseRouter from "./WarehouseRouter";
 
 const styles = {
   loadingProgress: {
@@ -47,6 +48,7 @@ function MainAppRouter(props) {
           <PrivateRoute component={ManageDriverRouter} path="/manage-drivers" />
           <PrivateRoute component={ManageRouteRouter} path="/manage-routes" />
           <PrivateRoute component={DriverRouter} path="/for-driver" />
+          <PrivateRoute component={WarehouseRouter} path="/warehouse" />
           {/* <Route component={error} path="*" /> */}
           <Route component={NotFound} />
         </Switch>
