@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.controller;
 
+import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Warehouse;
 import openerp.openerpresourceserver.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/warehouses")
+@RequiredArgsConstructor
 public class WarehouseController {
 
     @Autowired
-    private WarehouseService warehouseService;
+    private final WarehouseService warehouseService;
 
     @GetMapping
     public List<Warehouse> getAllWarehouses() {
