@@ -26,7 +26,12 @@ const CreateWarehouse = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setWarehouseInfo({ ...warehouseInfo, [name]: value });
+        if (name === "warehouseName") {
+            const formattedId = generateWarehouseId(value);
+            setWarehouseInfo({ ...warehouseInfo, [name]: value, warehouseId: formattedId });
+        } else {
+            setWarehouseInfo({ ...warehouseInfo, [name]: value });
+        }
     };
 
     const handleSetPosition = (position) => {
@@ -50,6 +55,35 @@ const CreateWarehouse = () => {
             console.error("Error creating warehouse:", error);
         }
     };
+
+    const generateWarehouseId = (name) => {
+        name = removeAccents(name);
+        return name.replace(/\s+/g, '-').toLowerCase();
+    };
+
+    function removeAccents(str) {
+        var AccentsMap = [
+            "aàảãáạăằẳẵắặâầẩẫấậ",
+            "AÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬ",
+            "dđ", "DĐ",
+            "eèẻẽéẹêềểễếệ",
+            "EÈẺẼÉẸÊỀỂỄẾỆ",
+            "iìỉĩíị",
+            "IÌỈĨÍỊ",
+            "oòỏõóọôồổỗốộơờởỡớợ",
+            "OÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢ",
+            "uùủũúụưừửữứự",
+            "UÙỦŨÚỤƯỪỬỮỨỰ",
+            "yỳỷỹýỵ",
+            "YỲỶỸÝỴ"
+        ];
+        for (var i = 0; i < AccentsMap.length; i++) {
+            var re = new RegExp('[' + AccentsMap[i].substr(1) + ']', 'g');
+            var char = AccentsMap[i][0];
+            str = str.replace(re, char);
+        }
+        return str;
+    }
 
     useEffect(() => {
         const token = keycloak.token;
@@ -92,6 +126,9 @@ const CreateWarehouse = () => {
                             onChange={handleChange}
                             fullWidth
                             required
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={12}>
