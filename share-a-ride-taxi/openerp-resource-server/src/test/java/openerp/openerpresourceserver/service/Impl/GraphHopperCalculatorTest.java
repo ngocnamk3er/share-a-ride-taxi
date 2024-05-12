@@ -1,0 +1,39 @@
+package openerp.openerpresourceserver.service.Impl;
+
+import com.graphhopper.ResponsePath;
+import openerp.openerpresourceserver.service.Impl.GraphHopperCalculatorImpl;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.math.BigDecimal;
+
+@SpringBootTest
+public class GraphHopperCalculatorTest {
+
+    @Autowired
+    GraphHopperCalculatorImpl graphHopperCalculator;
+
+    @Test
+    public void calculateTest() {
+        BigDecimal startLat = BigDecimal.valueOf(21.0283334);
+        BigDecimal startLon = BigDecimal.valueOf(105.854041);
+        BigDecimal endLat = BigDecimal.valueOf(19.9781573);
+        BigDecimal endLon = BigDecimal.valueOf(105.4816107);
+
+        ResponsePath path;
+        try {
+            path = graphHopperCalculator.calculate(startLat, startLon, endLat, endLon);
+            if (path == null) {
+                System.out.println("ResponsePath is null");
+            } else {
+//                System.out.println("ResponsePath: " + path.toString());
+                System.out.println("Time : " + path.getTime());
+                System.out.println("Distance : " + path.getDistance());
+            }
+        } catch (Exception e) {
+            System.out.println("Exception occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+}

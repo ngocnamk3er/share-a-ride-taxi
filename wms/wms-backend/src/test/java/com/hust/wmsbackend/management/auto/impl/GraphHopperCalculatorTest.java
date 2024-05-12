@@ -25,7 +25,7 @@ class GraphHopperCalculatorTest {
     public void calculateTest() {
         ResponsePath path = graphHopperCalculator.calculate(
                 BigDecimal.valueOf(21.10794210000000),
-                BigDecimal.valueOf(106.38573390000000),
+                BigDecimal.valueOf(105.854041),
                 BigDecimal.valueOf(21.69345523485924),
                 BigDecimal.valueOf(104.29547823476348));
     }

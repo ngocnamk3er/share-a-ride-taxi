@@ -77,6 +77,19 @@
             <version>2.2.6.RELEASE</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.graphhopper/graphhopper-core -->
+        <dependency>
+            <groupId>com.graphhopper</groupId>
+            <artifactId>graphhopper-core</artifactId>
+            <version>7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
