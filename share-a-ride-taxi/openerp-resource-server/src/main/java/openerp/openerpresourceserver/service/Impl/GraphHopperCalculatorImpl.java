@@ -6,6 +6,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.ResponsePath;
 import com.graphhopper.config.Profile;
 import openerp.openerpresourceserver.service.GraphHopperCalculator;
+import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -56,13 +57,31 @@ public class GraphHopperCalculatorImpl implements GraphHopperCalculator {
         return path;
     }
 
+    @Override
+    public ResponsePath calculate(Coordinate start, Coordinate end) throws Exception {
+        GHRequest request = new GHRequest(roundDouble(start.getLatitude()), roundDouble(start.getLongitude()),
+                roundDouble(end.getLatitude()), roundDouble(end.getLongitude()))
+                .setProfile("car").setLocale(Locale.US);
+        GHResponse response = graphHopper.route(request);
 
+        if (response == null) {
+            throw new Exception("GraphHopper response is null");
+        }
 
+        if (response.getAll().isEmpty()) {
+            throw new Exception("GraphHopper response does not contain any results");
+        }
+
+        ResponsePath path = response.getBest();
+        if (path == null) {
+            throw new Exception("Best path not found");
+        }
+        return path;
+    }
     private double roundBigDecimal(BigDecimal b) {
         return b.setScale(6, RoundingMode.HALF_UP).doubleValue();
     }
-
-    private double roundDouble(double b) {
+    private double roundDouble(Double b) {
         return Math.round(b * 1e6) / 1e6;
     }
 }

@@ -2,6 +2,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import com.graphhopper.ResponsePath;
 import openerp.openerpresourceserver.service.Impl.GraphHopperCalculatorImpl;
+import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +16,7 @@ public class GraphHopperCalculatorTest {
     GraphHopperCalculatorImpl graphHopperCalculator;
 
     @Test
-    public void calculateTest() {
+    public void calculateTest1() {
         BigDecimal startLat = BigDecimal.valueOf(21.0283334);
         BigDecimal startLon = BigDecimal.valueOf(105.854041);
         BigDecimal endLat = BigDecimal.valueOf(19.9781573);
@@ -24,6 +25,28 @@ public class GraphHopperCalculatorTest {
         ResponsePath path;
         try {
             path = graphHopperCalculator.calculate(startLat, startLon, endLat, endLon);
+            if (path == null) {
+                System.out.println("ResponsePath is null");
+            } else {
+//                System.out.println("ResponsePath: " + path.toString());
+                System.out.println("Time : " + path.getTime());
+                System.out.println("Distance : " + path.getDistance());
+            }
+        } catch (Exception e) {
+            System.out.println("Exception occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void calculateTest2() {
+        Coordinate start = new Coordinate(21.0283334, 105.854041);
+        Coordinate end = new Coordinate(19.9781573, 105.4816107);
+
+        ResponsePath path;
+        try {
+            path = graphHopperCalculator.calculate(start, end);
             if (path == null) {
                 System.out.println("ResponsePath is null");
             } else {
