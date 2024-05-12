@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { useRouteMatch } from 'react-router-dom';
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import { request } from "../../api";
 import IconButton from "@mui/material/IconButton";
@@ -8,6 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useHistory } from "react-router-dom";
+import { useRouteMatch } from 'react-router-dom';
 
 const ListPassengerRequest = () => {
     const [passengerRequests, setPassengerRequests] = useState([]);
@@ -39,10 +39,24 @@ const ListPassengerRequest = () => {
         history.push(`/passenger-request/update/${rowData.requestId}`);
     }
 
-    const handleDeleteClick = (rowData) => {
-        // Navigate to new URL without page reload
-        history.push(`${path}/${rowData.requestId}`);
+    const handleDeleteClick = async (rowData) => {
+        // Confirm with user before deleting
+        if (window.confirm("Are you sure you want to delete this passenger request?")) {
+            try {
+                // Send delete request to API
+                await request("delete", `/passenger-requests/${rowData.requestId}`);
+                // Handle success response
+                alert("Passenger request deleted successfully!");
+                // Remove deleted request from current data
+                setPassengerRequests(prevPassengerRequests => prevPassengerRequests.filter(request => request.requestId !== rowData.requestId));
+            } catch (error) {
+                // Handle error response
+                alert("Error deleting passenger request!");
+            }
+        }
     }
+    
+
 
     const handleViewClick = (rowData) => {
         // Navigate to new URL without page reload
@@ -119,7 +133,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        demoFunction(rowData)
+                        handleDeleteClick(rowData)
                     }}
                     variant="contained"
                     color="error"

@@ -66,6 +66,9 @@ public class PassengerRequest {
 
     @Column(name = "dropoff_address_note")
     private String dropoffAddressNote;
+
+    @Column(name = "assigned_warehouse_id")
+    private String assignedWarehouseId;
     // Getters and setters
 }
 
