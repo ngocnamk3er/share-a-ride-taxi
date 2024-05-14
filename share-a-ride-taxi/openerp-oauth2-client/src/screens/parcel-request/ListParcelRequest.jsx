@@ -108,36 +108,36 @@ const ListParcelRequest = () => {
                 </IconButton>
             ),
         },
-        {
-            title: "Edit",
-            sorting: false,
-            render: (rowData) => (
-                <IconButton
-                    onClick={() => {
-                        handleEditClick(rowData);
-                    }}
-                    variant="contained"
-                    color="success"
-                >
-                    <EditIcon />
-                </IconButton>
-            ),
-        },
-        {
-            title: "Delete",
-            sorting: false,
-            render: (rowData) => (
-                <IconButton
-                    onClick={() => {
-                        handleDeleteClick(rowData);
-                    }}
-                    variant="contained"
-                    color="error"
-                >
-                    <DeleteIcon />
-                </IconButton>
-            ),
-        },
+        // {
+        //     title: "Edit",
+        //     sorting: false,
+        //     render: (rowData) => (
+        //         <IconButton
+        //             onClick={() => {
+        //                 handleEditClick(rowData);
+        //             }}
+        //             variant="contained"
+        //             color="success"
+        //         >
+        //             <EditIcon />
+        //         </IconButton>
+        //     ),
+        // },
+        // {
+        //     title: "Delete",
+        //     sorting: false,
+        //     render: (rowData) => (
+        //         <IconButton
+        //             onClick={() => {
+        //                 handleDeleteClick(rowData);
+        //             }}
+        //             variant="contained"
+        //             color="error"
+        //         >
+        //             <DeleteIcon />
+        //         </IconButton>
+        //     ),
+        // },
     ];
 
     return (

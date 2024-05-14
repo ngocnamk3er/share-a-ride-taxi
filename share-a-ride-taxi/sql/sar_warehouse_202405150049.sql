@@ -1,0 +1,8 @@
+INSERT INTO public.sar_warehouse (warehouse_id,warehouse_name,address,latitude,longitude,created_at,updated_at,address_note,created_by_user_id) VALUES
+	 ('ben-store','Ben Store','Cửa Hàng Ben, 62, Phố Hàng Cót, Phường Hàng Mã, Khu phố cổ, Quận Hoàn Kiếm, Hà Nội, 11058, Việt Nam',21.036891,105.847035,'2024-05-13 00:00:18.175177+07','2024-05-13 00:00:18.177179+07','','ngocnamk3er'),
+	 ('my-anh-minimart','Mỹ Anh Minimart','Ngõ 84 Ngọc Khánh, Phường Giảng Võ, Quận Ba Đình, Hà Nội, 10289, Việt Nam',21.026998,105.817876,'2024-05-14 21:30:12.077252+07','2024-05-14 21:30:12.077252+07','Số 15','ngocnamk3er'),
+	 ('sieu-thi-euro-mart','Siêu thị Euro Mart','Ngõ 196 Đường Phú Diễn, Phường Phú Diễn, Quận Bắc Từ Liêm, Hà Nội, 10065, Việt Nam',21.047300,105.764148,'2024-05-14 21:31:01.85341+07','2024-05-14 21:31:01.85341+07','Số 116','ngocnamk3er'),
+	 ('nha-sach-tien-dung','Nhà Sách Tiến Dũng','Phố Trần Quang Diệu, Phường Quang Trung, Quận Đống Đa, Hà Nội, 10265, Việt Nam',21.014108,105.823243,'2024-05-14 21:33:25.296269+07','2024-05-14 21:33:25.296269+07','Ki ốt số 4','ngocnamk3er'),
+	 ('happy-mart','Happy Mart','Khu đô thị Dương Nội, Quận Hà Đông, Hà Nội, Việt Nam',20.980519,105.756132,'2024-05-14 21:34:27.347368+07','2024-05-14 21:34:27.347368+07','P1503 Toà CT7C','ngocnamk3er'),
+	 ('mk-mart','MK Mart','Phố Minh Khai, Phường Vĩnh Tuy, Quận Hai Bà Trưng, Hà Nội, 11622, Việt Nam',20.999868,105.870934,'2024-05-14 21:35:46.750163+07','2024-05-14 21:35:46.750163+07','Số 543','ngocnamk3er'),
+	 ('land-mart','Land Mart','Phường Thịnh Liệt, Quận Hoàng Mai, Hà Nội, Việt Nam',20.975919,105.850263,'2024-05-14 21:36:54.457254+07','2024-05-14 21:36:54.457254+07','Số 89','ngocnamk3er');
