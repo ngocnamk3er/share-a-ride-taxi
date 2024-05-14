@@ -32,7 +32,7 @@ import { PASSENGER_REQUEST } from "./menuconfig/passenger-request";
 import { PARCEL_REQUEST } from "./menuconfig/parcel-request";
 import { MANAGE_DRIVE } from "./menuconfig/manage-drive";
 import { MANAGE_ROUTE } from "./menuconfig/manage-route";
-import {WAREHOUSE} from "./menuconfig/warehouse";
+import { WAREHOUSE } from "./menuconfig/warehouse";
 
 export const MENUS = [];
 
@@ -41,10 +41,10 @@ MENUS.push(general);
 MENUS.push(user);
 MENUS.push(teacher);
 MENUS.push(student);
+MENUS.push(MANAGE_ROUTE)
 MENUS.push(PASSENGER_REQUEST);
 MENUS.push(PARCEL_REQUEST);
 MENUS.push(MANAGE_DRIVE)
-MENUS.push(MANAGE_ROUTE)
 MENUS.push(DRIVER)
 MENUS.push(WAREHOUSE)
 

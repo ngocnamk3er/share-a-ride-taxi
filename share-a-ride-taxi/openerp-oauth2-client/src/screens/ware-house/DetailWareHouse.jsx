@@ -3,6 +3,9 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import { Typography, CircularProgress, Grid } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { request } from "../../api";
+import MultiLocationMap from "../../components/multi-location-map/MultiLocationMap"; // Đảm bảo đường dẫn đến component MultiLocationMap là chính xác
+import { Height, WidthFull } from "@mui/icons-material";
+
 
 const DetailWareHouse = () => {
     const [warehouse, setWarehouse] = useState(null);
@@ -75,9 +78,21 @@ const DetailWareHouse = () => {
                     <strong>Created by: </strong> {warehouse.createdByUserId}
                 </Typography>
             </Grid>
-
-            
-
+            <Grid item xs={12}>
+                <div
+                    style={{
+                        inset: 0,
+                        margin: "auto",
+                        width: "100%",
+                        height: "80vh",
+                        backgroundColor: "#fff",
+                        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                        padding: "20px",
+                        display: "flex"
+                    }}>
+                    <MultiLocationMap locations={[warehouse]} />
+                </div>
+            </Grid>
         </Grid>
     );
 }
