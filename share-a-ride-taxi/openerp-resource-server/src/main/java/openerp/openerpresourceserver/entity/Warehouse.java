@@ -36,10 +36,10 @@ public class Warehouse {
     private String addressNote;
 
     @Column(name = "latitude")
-    private BigDecimal lat;
+    private Double lat;
 
     @Column(name = "longitude")
-    private BigDecimal lon;
+    private Double lon;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
