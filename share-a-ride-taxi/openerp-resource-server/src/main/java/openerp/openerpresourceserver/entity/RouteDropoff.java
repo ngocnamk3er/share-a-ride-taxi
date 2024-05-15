@@ -8,12 +8,10 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Builder
-@Table(name = "sar_route_pickup")
-public class RoutePickup {
-
+@Table(name = "route_dropoff")
+public class RouteDropoff{
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     private String id;
 
     @Column(name = "driver_id")
@@ -37,4 +35,5 @@ public class RoutePickup {
     @Column(name = "ware_house_id")
     private String wareHouseId;
 
+    // Getters and setters
 }

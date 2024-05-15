@@ -25,12 +25,16 @@ public class AutoAssignService {
     private final ParcelRequestService parcelRequestService;
     private final WarehouseService warehouseService;
     private final GraphHopperCalculator graphHopperCalculator;
+
+    //PickUp
     private final Vector<Pair<Warehouse, ParcelRequest>> vectorPickUp = new Vector<>();
-    private final Vector<Pair<Warehouse, ParcelRequest>> vectorDropOff = new Vector<>();
     private final Vector<RoutePickupDetail> routePickupDetailVector = new Vector<>();
     private final Vector<RoutePickup> vectorRoutePickup = new Vector<>();
     private List<ParcelRequest> parcelPassengers;
     private List<Warehouse> warehouses;
+
+    //DropOff
+
 
     public String autoAssign() throws Exception {
         parcelPassengers = parcelRequestService.getAllParcelRequests();
@@ -59,8 +63,6 @@ public class AutoAssignService {
             vectorPickUp.add(Pair.of(pickUpWarehouse, parcelRequest));
         }
         vectorPickUp.sort(Comparator.comparing(pair -> pair.getFirst().getWarehouseId()));
-
-        vectorDropOff.sort(Comparator.comparing(pair -> pair.getFirst().getWarehouseId()));
 
         Set<String> pickUpWareHouseName = new HashSet<>(); // Khởi tạo một Set rỗng để lưu trữ wareHouseId
 
