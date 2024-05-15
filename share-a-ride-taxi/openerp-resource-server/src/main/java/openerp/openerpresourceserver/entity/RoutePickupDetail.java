@@ -2,34 +2,30 @@ package openerp.openerpresourceserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import openerp.openerpresourceserver.enums.RequestType;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
-@Builder
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "sar_route_detail")
-public class RouteDetail {
+@Builder
+@Data
+@Table(name = "sar_route_pickup_detail")
+public class RoutePickupDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    private UUID id;
+    private String id;
 
     @Column(name = "route_id")
-    private UUID routeId;
-
-    @Column(name = "request_type")
-    private String requestType;
+    private String routeId;
 
     @Column(name = "request_id")
     private UUID requestId;
 
-    @Column(name = "is_pickup")
-    private Boolean isPickup;
+    @Column(name = "visited")
+    private boolean visited;
 
     @Column(name = "seq_index")
     private Integer seqIndex;
