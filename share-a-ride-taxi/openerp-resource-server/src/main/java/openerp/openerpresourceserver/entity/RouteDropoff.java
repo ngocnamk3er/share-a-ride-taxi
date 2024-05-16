@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Builder
 @Table(name = "route_dropoff")
 public class RouteDropoff{
     @Id
