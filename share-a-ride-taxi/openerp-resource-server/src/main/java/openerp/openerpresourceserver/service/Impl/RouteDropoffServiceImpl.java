@@ -6,6 +6,7 @@ import openerp.openerpresourceserver.service.RouteDropoffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,12 +28,17 @@ public class RouteDropoffServiceImpl implements RouteDropoffService {
 
     @Override
     public RouteDropoff createRouteDropoff(RouteDropoff routeDropoff) {
+        LocalDateTime now = LocalDateTime.now();
+        routeDropoff.setCreatedStamp(now);
+        routeDropoff.setLastUpdatedStamp(now);
         return routeDropoffRepository.save(routeDropoff);
     }
 
     @Override
     public RouteDropoff updateRouteDropoff(String id, RouteDropoff routeDropoff) {
         routeDropoff.setId(id);
+        LocalDateTime now = LocalDateTime.now();
+        routeDropoff.setLastUpdatedStamp(now);
         return routeDropoffRepository.save(routeDropoff);
     }
 

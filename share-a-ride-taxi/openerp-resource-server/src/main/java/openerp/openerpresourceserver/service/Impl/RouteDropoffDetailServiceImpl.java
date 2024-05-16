@@ -6,6 +6,7 @@ import openerp.openerpresourceserver.service.RouteDropoffDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,12 +30,17 @@ public class RouteDropoffDetailServiceImpl implements RouteDropoffDetailService 
 
     @Override
     public RouteDropoffDetail createRouteDropoffDetail(RouteDropoffDetail routeDropoffDetail) {
+        LocalDateTime now = LocalDateTime.now();
+        routeDropoffDetail.setCreatedStamp(now);
+        routeDropoffDetail.setLastUpdatedStamp(now);
         return routeDropoffDetailRepository.save(routeDropoffDetail);
     }
 
     @Override
     public RouteDropoffDetail updateRouteDropoffDetail(UUID id, RouteDropoffDetail routeDropoffDetail) {
         routeDropoffDetail.setId(id);
+        LocalDateTime now = LocalDateTime.now();
+        routeDropoffDetail.setLastUpdatedStamp(now);
         return routeDropoffDetailRepository.save(routeDropoffDetail);
     }
 

@@ -5,6 +5,8 @@ import openerp.openerpresourceserver.repo.RoutePickupRepository;
 import openerp.openerpresourceserver.service.RoutePickupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,6 +17,17 @@ public class RoutePickupServiceImpl implements RoutePickupService {
 
     @Override
     public RoutePickup save(RoutePickup routePickup) {
+        LocalDateTime now = LocalDateTime.now();
+        routePickup.setCreatedStamp(now);
+        routePickup.setLastUpdatedStamp(now);
+        return routePickupRepository.save(routePickup);
+    }
+
+    @Override
+    public RoutePickup update(String id, RoutePickup routePickup) {
+        routePickup.setId(id);
+        LocalDateTime now = LocalDateTime.now();
+        routePickup.setLastUpdatedStamp(now);
         return routePickupRepository.save(routePickup);
     }
 
