@@ -43,14 +43,27 @@ public class AutoAssignService {
         clusteringPickUp();
         clusteringDropoff();
 
-        return routePickupDetailVector.stream()
-                .map(routePickupDetail -> "RouteId : " + routePickupDetail.getRouteId() + " RequestId: " + routePickupDetail.getRequestId() + " SedIndex : " + routePickupDetail.getSeqIndex())
-                .collect(Collectors.joining("\n"));
+//        return routePickupDetailVector.stream()
+//                .map(routePickupDetail -> "RouteId : " + routePickupDetail.getRouteId() + " RequestId: " + routePickupDetail.getRequestId() + " SedIndex : " + routePickupDetail.getSeqIndex())
+//                .collect(Collectors.joining("\n"));
 
 //        return routeDropoffDetailVector.stream()
 //                .map(routeDropoffDetail -> "RouteId : " + routeDropoffDetail.getRouteId() + " RequestId: " + routeDropoffDetail.getRequestId() + " SedIndex : " + routeDropoffDetail.getSeqIndex())
 //                .collect(Collectors.joining("\n"));
 
+
+        String pickupDetails = routePickupDetailVector.stream()
+                .map(routePickupDetail -> "RouteId : " + routePickupDetail.getRouteId() + " RequestId: " + routePickupDetail.getRequestId() + " SeqIndex : " + routePickupDetail.getSeqIndex())
+                .collect(Collectors.joining("\n"));
+
+        String dropoffDetails = routeDropoffDetailVector.stream()
+                .map(routeDropoffDetail -> "RouteId : " + routeDropoffDetail.getRouteId() + " RequestId: " + routeDropoffDetail.getRequestId() + " SeqIndex : " + routeDropoffDetail.getSeqIndex())
+                .collect(Collectors.joining("\n"));
+
+// Nối hai kết quả lại
+        String combinedDetails = pickupDetails.concat("\n").concat(dropoffDetails);
+
+        return combinedDetails;
 
     }
 
@@ -150,6 +163,10 @@ public class AutoAssignService {
                     .build();
             routeDropoffDetailVector.add(routePickupDetail);
         }
+    }
+
+    private void clusteringWareHouse(){
+
     }
 
 }
