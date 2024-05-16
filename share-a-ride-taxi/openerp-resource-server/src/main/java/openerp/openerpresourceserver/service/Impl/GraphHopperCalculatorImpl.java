@@ -5,7 +5,7 @@ import com.graphhopper.GHResponse;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.ResponsePath;
 import com.graphhopper.config.Profile;
-import openerp.openerpresourceserver.service.GraphHopperCalculator;
+import openerp.openerpresourceserver.service.Interface.GraphHopperCalculator;
 import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class GraphHopperCalculatorImpl implements GraphHopperCalculator {

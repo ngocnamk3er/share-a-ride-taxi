@@ -2,7 +2,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import openerp.openerpresourceserver.entity.RouteWarehouse;
 import openerp.openerpresourceserver.repo.RouteWarehouseRepository;
-import openerp.openerpresourceserver.service.RouteWarehouseService;
+import openerp.openerpresourceserver.service.Interface.RouteWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,12 +39,13 @@ public class RouteWarehouseServiceImpl implements RouteWarehouseService {
 
     @Override
     public RouteWarehouse updateRoute(String id, RouteWarehouse route) {
+        route.setId(id); // Ensure the ID in the object matches the ID in the path
         LocalDateTime now = LocalDateTime.now();
         if (!repository.existsById(id)) {
+            System.out.println("not found");
             return null;
         }
         route.setLastUpdatedStamp(now);
-        route.setId(id); // Ensure the ID in the object matches the ID in the path
         return repository.save(route);
     }
 

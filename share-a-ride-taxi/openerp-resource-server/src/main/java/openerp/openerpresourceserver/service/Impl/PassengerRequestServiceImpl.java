@@ -1,11 +1,9 @@
 package openerp.openerpresourceserver.service.Impl;
 
 import lombok.RequiredArgsConstructor;
-import openerp.openerpresourceserver.entity.Location;
 import openerp.openerpresourceserver.entity.PassengerRequest;
 import openerp.openerpresourceserver.repo.PassengerRequestRepository;
-import openerp.openerpresourceserver.service.PassengerRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
+import openerp.openerpresourceserver.service.Interface.PassengerRequestService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

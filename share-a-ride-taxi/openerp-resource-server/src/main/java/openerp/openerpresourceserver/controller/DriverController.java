@@ -5,9 +5,8 @@ import com.nimbusds.jose.shaded.gson.Gson;
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.Driver;
 import openerp.openerpresourceserver.model.request.DriverRequest;
-import openerp.openerpresourceserver.service.DriverService;
+import openerp.openerpresourceserver.service.Interface.DriverService;
 import openerp.openerpresourceserver.service.Impl.S3Service;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 

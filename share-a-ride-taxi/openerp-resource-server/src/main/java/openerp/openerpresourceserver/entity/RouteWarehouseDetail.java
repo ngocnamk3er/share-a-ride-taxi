@@ -1,5 +1,4 @@
 package openerp.openerpresourceserver.entity;
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
@@ -8,27 +7,25 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Builder
 @Data
-@Table(name = "sar_route_pickup_detail")
-public class RoutePickupDetail {
-
+@Builder
+@Table(name = "route_warehouse_detail")
+public class RouteWarehouseDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     private UUID id;
 
     @Column(name = "route_id")
     private String routeId;
 
-    @Column(name = "request_id")
-    private UUID requestId;
+    @Column(name = "ware_house_id", nullable = false)
+    private UUID warehouseId;
 
     @Column(name = "visited")
     private boolean visited;
 
     @Column(name = "seq_index")
-    private Integer seqIndex;
+    private Integer sequenceIndex;
 
     @Column(name = "last_updated_stamp")
     private LocalDateTime lastUpdatedStamp;

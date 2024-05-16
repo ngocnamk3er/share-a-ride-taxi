@@ -1,4 +1,4 @@
-package openerp.openerpresourceserver.service;
+package openerp.openerpresourceserver.service.Interface;
 
 import openerp.openerpresourceserver.entity.RoutePickup;
 import openerp.openerpresourceserver.entity.RoutePickupDetail;

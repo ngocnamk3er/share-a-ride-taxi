@@ -2,7 +2,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import openerp.openerpresourceserver.entity.RoutePickup;
 import openerp.openerpresourceserver.repo.RoutePickupRepository;
-import openerp.openerpresourceserver.service.RoutePickupService;
+import openerp.openerpresourceserver.service.Interface.RoutePickupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

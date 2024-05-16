@@ -1,4 +1,4 @@
-package openerp.openerpresourceserver.service;
+package openerp.openerpresourceserver.service.Interface;
 
 import com.graphhopper.ResponsePath;
 import openerp.openerpresourceserver.service.Impl.Object.Coordinate;

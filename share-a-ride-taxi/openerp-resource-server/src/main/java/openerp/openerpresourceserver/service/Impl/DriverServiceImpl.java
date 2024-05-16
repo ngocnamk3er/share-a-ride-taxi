@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.Driver;
 import openerp.openerpresourceserver.enums.DriverStatus;
 import openerp.openerpresourceserver.repo.DriverRepository;
-import openerp.openerpresourceserver.service.DriverService;
+import openerp.openerpresourceserver.service.Interface.DriverService;
 import org.springframework.stereotype.Service;
 
 

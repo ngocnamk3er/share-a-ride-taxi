@@ -2,8 +2,7 @@ package openerp.openerpresourceserver.controller;
 
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.Location;
-import openerp.openerpresourceserver.service.LocationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import openerp.openerpresourceserver.service.Interface.LocationService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import openerp.openerpresourceserver.entity.RouteDropoff;
 import openerp.openerpresourceserver.repo.RouteDropoffRepository;
-import openerp.openerpresourceserver.service.RouteDropoffService;
+import openerp.openerpresourceserver.service.Interface.RouteDropoffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

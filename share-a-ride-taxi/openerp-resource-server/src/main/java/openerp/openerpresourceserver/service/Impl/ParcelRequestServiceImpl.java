@@ -4,8 +4,7 @@ package openerp.openerpresourceserver.service.Impl;
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.ParcelRequest;
 import openerp.openerpresourceserver.repo.ParcelRequestRepository;
-import openerp.openerpresourceserver.service.ParcelRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
+import openerp.openerpresourceserver.service.Interface.ParcelRequestService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

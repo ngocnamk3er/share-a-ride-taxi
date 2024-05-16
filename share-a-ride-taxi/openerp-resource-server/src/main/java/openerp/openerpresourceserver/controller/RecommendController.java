@@ -3,7 +3,7 @@ package openerp.openerpresourceserver.controller;
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.PassengerRequest;
 import openerp.openerpresourceserver.enums.RequestStatus;
-import openerp.openerpresourceserver.service.PassengerRequestService;
+import openerp.openerpresourceserver.service.Interface.PassengerRequestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -2,7 +2,7 @@ package openerp.openerpresourceserver.service.Impl;
 
 import openerp.openerpresourceserver.entity.Warehouse;
 import openerp.openerpresourceserver.repo.WarehouseRepository;
-import openerp.openerpresourceserver.service.WarehouseService;
+import openerp.openerpresourceserver.service.Interface.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

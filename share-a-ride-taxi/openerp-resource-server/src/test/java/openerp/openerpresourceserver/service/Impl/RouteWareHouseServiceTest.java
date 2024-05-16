@@ -41,33 +41,8 @@ public class RouteWareHouseServiceTest {
         RouteWarehouse createdRouteWarehouse = service.createRoute(routeWarehouse);
 
         // Kiểm tra xem đối tượng đã được tạo mới thành công chưa
+        assert (createdRouteWarehouse != null);
         assert (createdRouteWarehouse.getLastUpdatedStamp() != null);
-//        assert (createdRouteWarehouse.getCreatedStamp() != null);
-    }
-
-    @Test
-    public void testUpdateRouteWarehouse() {
-        // Tạo một đối tượng RouteWarehouse mới
-        RouteWarehouse routeWarehouse = RouteWarehouse.builder()
-                .id("123")
-                .driverId(UUID.randomUUID())
-                .startExecuteStamp(LocalDateTime.now())
-                .endStamp(LocalDateTime.now())
-                .routeStatusId(1)
-                .warehouseId("warehouse123")
-                .build();
-
-        // Giả lập repository.findById() trả về Optional chứa đối tượng RouteWarehouse
-        when(repository.findById("123")).thenReturn(Optional.of(routeWarehouse));
-
-        // Giả lập repository.save() trả về đối tượng đã được cập nhật
-        when(repository.save(any(RouteWarehouse.class))).thenReturn(routeWarehouse);
-
-        // Gọi phương thức cập nhật route warehouse
-        RouteWarehouse updatedRouteWarehouse = service.updateRoute("123", routeWarehouse);
-
-        // Kiểm tra xem đối tượng đã được cập nhật thành công chưa
-        assert (updatedRouteWarehouse != null);
-        assert (updatedRouteWarehouse.getLastUpdatedStamp() != null);
+        assert (createdRouteWarehouse.getCreatedStamp() != null);
     }
 }

@@ -2,12 +2,13 @@ package openerp.openerpresourceserver.service.Impl;
 
 import openerp.openerpresourceserver.entity.RoutePickupDetail;
 import openerp.openerpresourceserver.repo.RoutePickupDetailRepository;
-import openerp.openerpresourceserver.service.RoutePickupDetailService;
+import openerp.openerpresourceserver.service.Interface.RoutePickupDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RoutePickupDetailServiceImpl implements RoutePickupDetailService {
@@ -24,7 +25,7 @@ public class RoutePickupDetailServiceImpl implements RoutePickupDetailService {
     }
 
     @Override
-    public RoutePickupDetail update(String id, RoutePickupDetail routePickupDetail) {
+    public RoutePickupDetail update(UUID id, RoutePickupDetail routePickupDetail) {
         routePickupDetail.setId(id);
         LocalDateTime now = LocalDateTime.now();
         routePickupDetail.setLastUpdatedStamp(now);

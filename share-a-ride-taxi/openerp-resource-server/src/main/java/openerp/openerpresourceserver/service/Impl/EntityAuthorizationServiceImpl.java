@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import openerp.openerpresourceserver.entity.EntityAuthorization;
 import openerp.openerpresourceserver.repo.EntityAuthorizationRepo;
-import openerp.openerpresourceserver.service.EntityAuthorizationService;
+import openerp.openerpresourceserver.service.Interface.EntityAuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
