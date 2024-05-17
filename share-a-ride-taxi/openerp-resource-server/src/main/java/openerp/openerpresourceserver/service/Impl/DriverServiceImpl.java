@@ -45,13 +45,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver updateDriver(UUID id, Driver driverRequest) {
-        Driver driver = driverRepository.findById(id).orElseThrow();
-        if(driverRepository.existsById(id)){
+    public Driver updateDriver(String id, Driver driverRequest) {
+        Driver driver = driverRepository.findByUserId(id);
+        if(driverRepository.existsByUserId(id)){
             LocalDateTime currentTime = LocalDateTime.now();
             driverRequest.setUpdatedAt(currentTime);
             driverRequest.setCreatedAt(driver.getCreatedAt());
-            driverRequest.setId(id);
+            driverRequest.setUserId(id);
             System.out.println("driverRequest");
             System.out.println(driverRequest);
             return driverRepository.save(driverRequest);

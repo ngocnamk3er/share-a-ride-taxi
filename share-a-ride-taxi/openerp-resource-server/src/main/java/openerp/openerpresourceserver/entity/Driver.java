@@ -21,12 +21,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "sar_drivers")
 public class Driver {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "driver_id", columnDefinition = "uuid")
-    private UUID id;
-
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
@@ -63,6 +57,7 @@ public class Driver {
     @Column(name = "status_id")
     private Integer statusId;
 
+    @Id
     @Column(name = "user_id")
     private String userId;
 

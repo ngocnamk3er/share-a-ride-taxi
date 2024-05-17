@@ -27,7 +27,7 @@ public class RouteWareHouseServiceTest {
         // Tạo một đối tượng RouteWarehouse mới
         RouteWarehouse routeWarehouse = RouteWarehouse.builder()
                 .id("123")
-                .driverId(UUID.randomUUID())
+                .driverId("ngocnamk3er")
                 .startExecuteStamp(LocalDateTime.now())
                 .endStamp(LocalDateTime.now())
                 .routeStatusId(1)

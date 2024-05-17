@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping("/drivers")
-@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+@PreAuthorize("hasRole('default-roles-openerp-dev')")
 public class DriverController {
 
     private final DriverService driverService;
@@ -82,7 +82,7 @@ public class DriverController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Driver> updateDriver(@PathVariable UUID id, @RequestBody Driver driverRequest) {
+    public ResponseEntity<Driver> updateDriver(@PathVariable String id, @RequestBody Driver driverRequest) {
         Driver updatedDriver = driverService.updateDriver(id, driverRequest);
         return ResponseEntity.ok().body(updatedDriver);
     }

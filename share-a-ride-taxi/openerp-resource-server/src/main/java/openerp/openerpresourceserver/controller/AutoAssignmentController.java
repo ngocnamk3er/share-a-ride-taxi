@@ -21,7 +21,7 @@ import java.util.*;
 @RestController
 @AllArgsConstructor(onConstructor_ = @Autowired)
 @RequestMapping("/auto-assign")
-@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+@PreAuthorize("hasRole('default-roles-openerp-dev')")
 public class AutoAssignmentController {
 
     private final AutoAssignService autoAssignService;
@@ -40,7 +40,7 @@ public class AutoAssignmentController {
     public ResponseEntity<String> hello1() throws Exception {
         RouteWarehouse routeWarehouse = RouteWarehouse.builder()
                 .id("123")
-                .driverId(UUID.randomUUID())
+                .driverId("ngocnamk3er")
                 .startExecuteStamp(LocalDateTime.now())
                 .endStamp(LocalDateTime.now())
                 .routeStatusId(1)

@@ -15,7 +15,7 @@ import java.util.Random;
 
 @RestController
 @RequestMapping("/recommend")
-@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+@PreAuthorize("hasRole('default-roles-openerp-dev')")
 @RequiredArgsConstructor
 public class RecommendController {
     private final PassengerRequestService passengerRequestService;

@@ -34,12 +34,15 @@ public class AutoAssignService {
     private final Vector<RouteDropoffDetail> routeDropoffDetailVector = new Vector<>();
     private final Vector<RouteDropoff> vectorRouteDropoff = new Vector<>();
 
+    //Warehouse
+    private final HashMap<String, Set<String>> pickUpWareHouseToDropOffWareHouse = new HashMap<>();
     public String autoAssign() throws Exception {
         parcelPassengers = parcelRequestService.getAllParcelRequests();
         warehouses = warehouseService.getAllWarehouses();
 
         clusteringPickUp();
         clusteringDropoff();
+        clusteringWareHouse();
 
 //        return routePickupDetailVector.stream()
 //                .map(routePickupDetail -> "RouteId : " + routePickupDetail.getRouteId() + " RequestId: " + routePickupDetail.getRequestId() + " SedIndex : " + routePickupDetail.getSeqIndex())
@@ -58,8 +61,25 @@ public class AutoAssignService {
                 .map(routeDropoffDetail -> "RouteId : " + routeDropoffDetail.getRouteId() + " RequestId: " + routeDropoffDetail.getRequestId() + " SeqIndex : " + routeDropoffDetail.getSeqIndex())
                 .collect(Collectors.joining("\n"));
 
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<String, Set<String>> entry : pickUpWareHouseToDropOffWareHouse.entrySet()) {
+            String wareHouseId = entry.getKey();
+            Set<String> dropOffWareHouseVector = entry.getValue();
+            result.append("Warehouse ID: ").append(wareHouseId).append("\n");
+            result.append("Dropoff Warehouses:\n");
+            for (String dropOffWareHouseId : dropOffWareHouseVector) {
+                result.append("- ").append(dropOffWareHouseId).append("\n");
+            }
+        }
+
+
 // Nối hai kết quả lại
-        String combinedDetails = pickupDetails.concat("\n").concat(dropoffDetails);
+        String combinedDetails = pickupDetails
+                .concat("\n-------------------\n")
+                .concat(result.toString())
+                .concat("-------------------\n")
+                .concat(dropoffDetails);
 
         return combinedDetails;
 
@@ -164,7 +184,66 @@ public class AutoAssignService {
     }
 
     private void clusteringWareHouse(){
+        for (RoutePickup routePickup : vectorRoutePickup){
+            String wareHouseId = routePickup.getWareHouseId();
+            if (pickUpWareHouseToDropOffWareHouse.get(routePickup.getWareHouseId())==null){
+                pickUpWareHouseToDropOffWareHouse.put(wareHouseId, new HashSet<>());
+            }
+        }
 
+        for (Map.Entry<String, Set<String>> entry : pickUpWareHouseToDropOffWareHouse.entrySet()) {
+            String wareHouseId = entry.getKey();
+            Set<String> dropOffWareHouseVector = entry.getValue();
+
+            //routePickUpDetail đi tới Warehouse này
+            Vector<RoutePickupDetail> routePickUpDetailOfThisWareHouse = new Vector<>();
+
+            //routeDropOffDetail đi ra từ Warehouse này
+            Vector<RouteDropoffDetail> routeDropOffDetailFromThisWareHouse = new Vector<>();//route detail co don hang chay ra tu day
+
+            //routePickUp đi tới Warehouse này
+            Vector<RoutePickup> routePickUpOfThisWareHouse = new Vector<>();
+
+            //routeDropOff đi ra từ Warehouse này
+            Vector<RouteDropoff> routeDropOffFromThisWareHouse = new Vector<>();
+
+            //Tìm các routePickup hướng tới wareHouse này
+            for (RoutePickup routePickup : vectorRoutePickup){
+                if (routePickup.getWareHouseId().equals(wareHouseId)){
+                    routePickUpOfThisWareHouse.add(routePickup);
+                }
+            }
+            //Tìm các routePickUpDetail hướng tới wareHouse này
+            for (RoutePickup routePickup : routePickUpOfThisWareHouse){
+                for (RoutePickupDetail routePickupDetail : routePickupDetailVector){
+                    if(routePickupDetail.getRouteId().equals(routePickup.getId())){
+                        routePickUpDetailOfThisWareHouse.add(routePickupDetail);
+                    }
+                }
+            }
+            // Tìm các routeDropOffDetail đi ra wareHouse này
+            for (RoutePickupDetail routePickupDetail : routePickUpDetailOfThisWareHouse){
+                for (RouteDropoffDetail routeDropoffDetail : routeDropoffDetailVector){
+                    if(routeDropoffDetail.getRequestId() == routePickupDetail.getRequestId()){
+                        routeDropOffDetailFromThisWareHouse.add(routeDropoffDetail);
+                    }
+                }
+            }
+
+            //Tìm các routeDropOff đi ra từ wareHouse này
+            for (RouteDropoff routeDropoff : vectorRouteDropoff){
+                for (RouteDropoffDetail routeDropoffDetail : routeDropOffDetailFromThisWareHouse){
+                    if(routeDropoffDetail.getRouteId().equals(routeDropoff.getId())){
+                        routeDropOffFromThisWareHouse.add(routeDropoff);
+                    }
+                }
+            }
+
+
+            for (RouteDropoff routeDropoff : vectorRouteDropoff){
+                dropOffWareHouseVector.add(routeDropoff.getWareHouseId());
+            }
+        }
     }
 
 }

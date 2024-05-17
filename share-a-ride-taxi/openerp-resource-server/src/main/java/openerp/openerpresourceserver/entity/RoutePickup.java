@@ -17,7 +17,7 @@ public class RoutePickup {
     private String id;
 
     @Column(name = "driver_id")
-    private UUID driverId;
+    private String driverId;
 
     @Column(name = "start_execute_stamp")
     private LocalDateTime startExecuteStamp;

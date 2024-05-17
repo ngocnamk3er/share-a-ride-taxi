@@ -19,7 +19,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/parcel-requests")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('WMS_ONLINE_CUSTOMER')")
+@PreAuthorize("hasRole('default-roles-openerp-dev')")
 public class ParcelRequestController {
     private final ParcelRequestService parcelRequestService;
     private final GraphhopperService graphhopperService;
