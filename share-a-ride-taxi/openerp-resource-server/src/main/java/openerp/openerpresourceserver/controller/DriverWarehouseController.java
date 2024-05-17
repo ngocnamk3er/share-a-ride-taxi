@@ -25,7 +25,7 @@ public class DriverWarehouseController {
 
     @GetMapping("/{driverId}/{warehouseId}")
     public ResponseEntity<DriverWarehouse> getDriverWarehouseById(
-            @PathVariable(value = "driverId") UUID driverId,
+            @PathVariable(value = "driverId") String driverId,
             @PathVariable(value = "warehouseId") String warehouseId) {
         DriverWarehouse warehouse = service.getDriverWarehouseById(driverId, warehouseId);
         if (warehouse == null) {
@@ -34,8 +34,20 @@ public class DriverWarehouseController {
         return ResponseEntity.ok().body(warehouse);
     }
 
+    @GetMapping("/{driverId}")
+    public ResponseEntity<List<DriverWarehouse>> getDriverWarehouseByDriverId(
+            @PathVariable(value = "driverId") String driverId) {
+        List<DriverWarehouse> warehouse = service.getDriverWarehouseByDriverId(driverId);
+        if (warehouse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(warehouse);
+    }
+
     @PostMapping
     public ResponseEntity<DriverWarehouse> createDriverWarehouse(@RequestBody DriverWarehouse driverWarehouse) {
+        System.out.println("driverWarehouse");
+        System.out.println(driverWarehouse);
         driverWarehouse.setJoiningDate(LocalDateTime.now());
         DriverWarehouse createdWarehouse = service.createDriverWarehouse(driverWarehouse);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdWarehouse);
@@ -43,7 +55,7 @@ public class DriverWarehouseController {
 
     @DeleteMapping("/{driverId}/{warehouseId}")
     public ResponseEntity<Void> deleteDriverWarehouse(
-            @PathVariable(value = "driverId") UUID driverId,
+            @PathVariable(value = "driverId") String driverId,
             @PathVariable(value = "warehouseId") String warehouseId) {
         service.deleteDriverWarehouse(driverId, warehouseId);
         return ResponseEntity.noContent().build();
@@ -51,7 +63,7 @@ public class DriverWarehouseController {
 
     @PostMapping("/{driverId}/{warehouseId}/activate")
     public ResponseEntity<DriverWarehouse> activateDriverWarehouse(
-            @PathVariable UUID driverId,
+            @PathVariable String driverId,
             @PathVariable String warehouseId) {
         DriverWarehouse activatedDriver = service.activateDriverWarehouse(driverId, warehouseId);
         return ResponseEntity.ok().body(activatedDriver);

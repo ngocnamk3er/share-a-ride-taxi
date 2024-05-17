@@ -9,11 +9,13 @@ public interface DriverWarehouseService {
 
     List<DriverWarehouse> getAllDriverWarehouses();
 
-    DriverWarehouse getDriverWarehouseById(UUID driverId, String warehouseId);
+    DriverWarehouse getDriverWarehouseById(String driverId, String warehouseId);
 
     DriverWarehouse createDriverWarehouse(DriverWarehouse driverWarehouse);
 
-    void deleteDriverWarehouse(UUID driverId, String warehouseId);
+    void deleteDriverWarehouse(String driverId, String warehouseId);
 
-    DriverWarehouse activateDriverWarehouse(UUID driverId, String warehouseId);
+    DriverWarehouse activateDriverWarehouse(String driverId, String warehouseId);
+
+    List<DriverWarehouse> getDriverWarehouseByDriverId(String driverId);
 }

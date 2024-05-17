@@ -27,7 +27,7 @@ public class DriverWarehouseServiceImpl implements DriverWarehouseService {
     }
 
     @Override
-    public DriverWarehouse getDriverWarehouseById(UUID driverId, String warehouseId) {
+    public DriverWarehouse getDriverWarehouseById(String driverId, String warehouseId) {
         Optional<DriverWarehouse> result = repository.findByDriverIdAndWarehouseId(driverId, warehouseId);
         return result.orElse(null);
     }
@@ -47,12 +47,12 @@ public class DriverWarehouseServiceImpl implements DriverWarehouseService {
     }
 
     @Override
-    public void deleteDriverWarehouse(UUID driverId, String warehouseId) {
+    public void deleteDriverWarehouse(String driverId, String warehouseId) {
         repository.deleteByDriverIdAndWarehouseId(driverId, warehouseId);
     }
 
     @Override
-    public DriverWarehouse activateDriverWarehouse(UUID driverId, String warehouseId) {
+    public DriverWarehouse activateDriverWarehouse(String driverId, String warehouseId) {
         Optional<DriverWarehouse> result = repository.findByDriverIdAndWarehouseId(driverId, warehouseId);
         if (!result.isPresent()) {
             throw new IllegalArgumentException("DriverWarehouse not found for driverId and warehouseId");
@@ -61,5 +61,10 @@ public class DriverWarehouseServiceImpl implements DriverWarehouseService {
         DriverWarehouse driverWarehouse = result.get();
         driverWarehouse.setActive(true);
         return repository.save(driverWarehouse);
+    }
+
+    @Override
+    public List<DriverWarehouse> getDriverWarehouseByDriverId(String driverId) {
+        return repository.findByDriverId(driverId);
     }
 }

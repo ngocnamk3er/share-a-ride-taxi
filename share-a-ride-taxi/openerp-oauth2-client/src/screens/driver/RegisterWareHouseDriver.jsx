@@ -30,7 +30,7 @@ const RegisterWareHouseDriver = () => {
             if (response) {
                 console.log("check response data: ", response.data)
                 setWarehouses(response.data);
-            }else{
+            } else {
                 console.log("Error : ", response)
             }
         } catch (error) {
@@ -46,7 +46,7 @@ const RegisterWareHouseDriver = () => {
         console.log("check warehouse: ", warehouses);
     }, [warehouses])
 
-    
+
     useEffect(() => {
         const token = keycloak.token;
         if (token) {
@@ -59,7 +59,7 @@ const RegisterWareHouseDriver = () => {
 
     const handleSelectWarehouse = (event) => {
         for (let index = 0; index < warehouses.length; index++) {
-            if(warehouses[index].warehouseId === event.target.value){
+            if (warehouses[index].warehouseId === event.target.value) {
                 setSelectedWarehouse(warehouses[index]);
                 console.log("check warehouse: ", warehouses[index]);
                 break;
@@ -69,11 +69,23 @@ const RegisterWareHouseDriver = () => {
     };
 
     const handleRequestDriver = async () => {
+        console.log("handleRequestDriver")
+        console.log({
+            driverId: driverId,
+            warehouseId: selectedWarehouseId,
+        })
         try {
-            const response = await request("post", "/driver-warehouses", {
+            await request("post", "/driver-warehouses", (res) => {
+                console.log("Request created successfully:", res.data);
+                history.push("/for-driver/info");
+            }, {
+                400: (error) => {
+                    console.error("Error creating driver-warehouses:", error);
+                }
+            }, {
+                driverId: driverId,
                 warehouseId: selectedWarehouseId,
-            }); // Thay đổi endpoint và dữ liệu body nếu cần
-            console.log("Request sent successfully:", response.data);
+            });
             history.push("/for-driver/info"); // Redirect to driver info page
         } catch (error) {
             console.error("Error sending request:", error);
@@ -131,7 +143,7 @@ const RegisterWareHouseDriver = () => {
                             padding: "20px",
                             display: "flex"
                         }}>
-                        <MultiLocationMap locations={warehouses} center={selectedWarehouse}/>
+                        <MultiLocationMap locations={warehouses} center={selectedWarehouse} />
                     </div>
                 </Grid>
             </Grid>
