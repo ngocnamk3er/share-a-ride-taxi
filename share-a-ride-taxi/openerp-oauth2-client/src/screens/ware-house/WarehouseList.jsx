@@ -28,6 +28,8 @@ const WarehouseList = () => {
     };
 
 
+    
+
     useEffect(() => {
         request("get", "/warehouses", (res) => {
             setWareHouses(res.data);
@@ -72,6 +74,11 @@ const WarehouseList = () => {
             ),
         },
     ];
+
+
+    if (!warehouses) {
+        return <CircularProgress />;
+    }
 
     return (
         <div>

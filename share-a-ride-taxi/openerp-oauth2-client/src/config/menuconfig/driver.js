@@ -12,9 +12,9 @@ export const DRIVER = {
         },
         {
             id: "MENU_SAR_FOR_DRIVER.REGISTER",
-            path: "/for-driver/test",
+            path: "/for-driver/warehouse",
             isPublic: false,
-            text: "Test",
+            text: "Driver's Warehouse",
             child: [],
         },
     ],

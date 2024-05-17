@@ -5,25 +5,26 @@ import L from 'leaflet';
 
 
 function ResetCenterView(props) {
-    const { locations } = props;
+    let { locations, center } = props;
     const map = useMap();
+    if (!center) center = locations[0]
 
     useEffect(() => {
-        if (locations) {
+        if (center) {
             map.setView(
-                L.latLng(locations[0].lat, locations[0].lon),
+                L.latLng(center.lat, center.lon),
                 map.getZoom(),
                 {
                     animate: true
                 }
             )
         }
-    }, [locations, map]);
+    }, [center, map]);
 
     return null;
 }
 
-const MultiLocationMap = ({ locations }) => {
+const MultiLocationMap = ({ locations, center }) => {
     const iconUrls = [];
 
     for (let i = 0; i < locations.length; i++) {
@@ -41,31 +42,31 @@ const MultiLocationMap = ({ locations }) => {
 
 
     return (
-            <MapContainer center={[0, 0]} zoom={12} style={{ height: '100%', width: '100%' }}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                {locations.map((location, index) => (
-                    <Marker key={index} position={[location.lat, location.lon]} icon={customIcons[index]}>
-                        <Popup>
-                            <div>
-                                <strong>Warehouse ID:</strong> {location.warehouseId}
-                            </div>
-                            <div>
-                                <strong>Warehouse Name:</strong> {location.warehouseName}
-                            </div>
-                            <div>
-                                <strong>Address:</strong> {location.address}
-                            </div>
-                            <div>
-                                <strong>Address note:</strong> {location.addressNote}
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
-                <ResetCenterView locations={locations} />
-            </MapContainer>
+        <MapContainer center={[0, 0]} zoom={12} style={{ height: '100%', width: '100%' }}>
+            <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {locations.map((location, index) => (
+                <Marker key={index} position={[location.lat, location.lon]} icon={customIcons[index]}>
+                    <Popup>
+                        <div>
+                            <strong>Warehouse ID:</strong> {location.warehouseId}
+                        </div>
+                        <div>
+                            <strong>Warehouse Name:</strong> {location.warehouseName}
+                        </div>
+                        <div>
+                            <strong>Address:</strong> {location.address}
+                        </div>
+                        <div>
+                            <strong>Address note:</strong> {location.addressNote}
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
+            <ResetCenterView locations={locations} center={center} />
+        </MapContainer>
     );
 };
 
