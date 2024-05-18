@@ -59,18 +59,18 @@ const RegisterDriver = () => {
 
 
         }
-        const checkDriverExists = async () => {
-            try {
-                const response = await request("get", `/drivers/user/${driverInfo.userId}`);
-                if (response.data) {
-                    history.push("/for-driver/info"); // Chuyển hướng đến màn hình DriverInfo nếu tài xế đã tồn tại
-                }
-            } catch (error) {
-                console.error("Error checking driver existence:", error);
-            }
-        };
+        // const checkDriverExists = async () => {
+        //     try {
+        //         const response = await request("get", `/drivers/user/${driverInfo.userId}`);
+        //         if (response.data) {
+        //             history.push("/for-driver/info"); // Chuyển hướng đến màn hình DriverInfo nếu tài xế đã tồn tại
+        //         }
+        //     } catch (error) {
+        //         console.error("Error checking driver existence:", error);
+        //     }
+        // };
 
-        checkDriverExists();
+        // checkDriverExists();
     }, [driverInfo.userId, history]);
 
     const handleSetPosition = (position) => {

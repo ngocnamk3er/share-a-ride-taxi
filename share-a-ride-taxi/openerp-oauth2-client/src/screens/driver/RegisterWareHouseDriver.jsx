@@ -86,7 +86,7 @@ const RegisterWareHouseDriver = () => {
                 driverId: driverId,
                 warehouseId: selectedWarehouseId,
             });
-            history.push("/for-driver/info"); // Redirect to driver info page
+            history.push("/for-driver/warehouse"); // Redirect to driver info page
         } catch (error) {
             console.error("Error sending request:", error);
         }
