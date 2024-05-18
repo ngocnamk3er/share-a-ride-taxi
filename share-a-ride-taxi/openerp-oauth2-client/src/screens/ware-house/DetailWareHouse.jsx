@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { Typography, CircularProgress, Grid } from "@mui/material";
+import { Typography, CircularProgress, Grid, IconButton } from "@mui/material";
 import { useParams } from 'react-router-dom';
 import { request } from "../../api";
-import MultiLocationMap from "../../components/multi-location-map/MultiLocationMap"; // Đảm bảo đường dẫn đến component MultiLocationMap là chính xác
-import { Height, WidthFull } from "@mui/icons-material";
-
+import MultiLocationMap from "../../components/multi-location-map/MultiLocationMap";
+import { StandardTable } from "erp-hust/lib/StandardTable";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const DetailWareHouse = () => {
     const [warehouse, setWarehouse] = useState(null);
+    const [driverWarehouses, setDriverWarehouses] = useState([]);
     const { id } = useParams(); // Lấy id từ URL
 
     useEffect(() => {
         fetchWarehouse();
+        fetchDriverWarehouses();
     }, []);
 
     const fetchWarehouse = async () => {
@@ -24,29 +26,61 @@ const DetailWareHouse = () => {
         }
     };
 
+    const fetchDriverWarehouses = async () => {
+        try {
+            const res = await request("get", `/driver-warehouses/warehouse/${id}`);
+            setDriverWarehouses(res.data);
+        } catch (error) {
+            console.error("Error fetching driver warehouses:", error);
+        }
+    };
+
+    const handleActivateClick = async (driverId, warehouseId) => {
+        try {
+            const res = await request("post", `/driver-warehouses/${driverId}/${warehouseId}/activate`);
+            // Update the driverWarehouses state to reflect the change
+            setDriverWarehouses(prevDriverWarehouses => 
+                prevDriverWarehouses.map(dw => 
+                    dw.driverId === driverId && dw.warehouseId === warehouseId ? res.data : dw
+                )
+            );
+        } catch (error) {
+            console.error("Error activating driver warehouse:", error);
+        }
+    };
+
+    const columns = [
+        { title: "Driver ID", field: "driverId" },
+        {
+            title: "Joining Date",
+            field: "joiningDate",
+            render: rowData => new Date(rowData.joiningDate).toLocaleString()
+        },
+        {
+            title: "Active",
+            field: "active",
+            render: rowData => rowData.active ? "Yes" : "No"
+        },
+        {
+            title: "Actions",
+            field: "actions",
+            render: rowData => (
+                <IconButton
+                    onClick={() => handleActivateClick(rowData.driverId, rowData.warehouseId)}
+                    disabled={rowData.active}
+                    color="primary"
+                >
+                    <CheckCircleIcon />
+                </IconButton>
+            )
+        }
+    ];
+
     if (!warehouse) {
         return <CircularProgress />;
     }
 
     return (
-        // <div>
-        //     <h1>Warehouse Detail</h1>
-        //     {warehouse ? (
-        //         <div>
-        //             <p><strong>Warehouse ID:</strong> {warehouse.warehouseId}</p>
-        //             <p><strong>Warehouse Name:</strong> {warehouse.warehouseName}</p>
-        //             <p><strong>Address:</strong> {warehouse.address}</p>
-        //             <p><strong>Address Note:</strong> {warehouse.addressNote}</p>
-        //             <p><strong>Latitude:</strong> {warehouse.lat}</p>
-        //             <p><strong>Longitude:</strong> {warehouse.lon}</p>
-        //             <p><strong>Created At:</strong> {warehouse.createdAt}</p>
-        //             <p><strong>Updated At:</strong> {warehouse.updatedAt}</p>
-        //             <p><strong>Created By User ID:</strong> {warehouse.createdByUserId}</p>
-        //         </div>
-        //     ) : (
-        //         <p>Loading...</p>
-        //     )}
-        // </div>
         <Grid container spacing={2}>
             <Grid item xs={12}>
                 <Typography variant="h4" gutterBottom>
@@ -70,7 +104,7 @@ const DetailWareHouse = () => {
             </Grid>
             <Grid item xs={12}>
                 <Typography>
-                    <strong>Address note : </strong> {warehouse.addressNote}
+                    <strong>Address note: </strong> {warehouse.addressNote}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -92,6 +126,22 @@ const DetailWareHouse = () => {
                     }}>
                     <MultiLocationMap locations={[warehouse]} />
                 </div>
+            </Grid>
+            <Grid item xs={12}>
+                <Typography variant="h6" gutterBottom>
+                    Drivers Associated with this Warehouse
+                </Typography>
+                <StandardTable
+                    title="Drivers List"
+                    columns={columns}
+                    data={driverWarehouses}
+                    options={{
+                        selection: false,
+                        pageSize: 5,
+                        search: true,
+                        sorting: true,
+                    }}
+                />
             </Grid>
         </Grid>
     );

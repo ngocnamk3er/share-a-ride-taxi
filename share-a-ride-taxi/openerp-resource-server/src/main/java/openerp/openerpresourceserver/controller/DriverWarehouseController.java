@@ -44,6 +44,16 @@ public class DriverWarehouseController {
         return ResponseEntity.ok().body(warehouse);
     }
 
+    @GetMapping("/warehouse/{warehouseId}")
+    public ResponseEntity<List<DriverWarehouse>> getDriverWarehouseByWarehouseId(
+            @PathVariable(value = "warehouseId") String warehouseId) {
+        List<DriverWarehouse> warehouses = service.getDriverWarehouseByWarehouseId(warehouseId);
+        if (warehouses == null || warehouses.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(warehouses);
+    }
+
     @PostMapping
     public ResponseEntity<DriverWarehouse> createDriverWarehouse(@RequestBody DriverWarehouse driverWarehouse) {
         System.out.println("driverWarehouse");

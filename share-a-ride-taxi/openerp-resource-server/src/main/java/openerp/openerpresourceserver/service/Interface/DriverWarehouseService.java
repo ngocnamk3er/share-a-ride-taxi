@@ -18,4 +18,6 @@ public interface DriverWarehouseService {
     DriverWarehouse activateDriverWarehouse(String driverId, String warehouseId);
 
     List<DriverWarehouse> getDriverWarehouseByDriverId(String driverId);
+
+    List<DriverWarehouse> getDriverWarehouseByWarehouseId(String warehouseId);
 }

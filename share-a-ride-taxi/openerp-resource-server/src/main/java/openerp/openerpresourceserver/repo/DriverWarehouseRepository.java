@@ -14,6 +14,8 @@ public interface DriverWarehouseRepository extends JpaRepository<DriverWarehouse
 
     Optional<DriverWarehouse> findByDriverIdAndWarehouseId(String driverId, String warehouseId);
 
+    List<DriverWarehouse> getDriverWarehouseByWarehouseId(String warehouseId);
+
 
     List<DriverWarehouse> findByDriverId(String driverId);
 }

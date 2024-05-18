@@ -63,8 +63,14 @@ public class DriverWarehouseServiceImpl implements DriverWarehouseService {
         return repository.save(driverWarehouse);
     }
 
+
     @Override
     public List<DriverWarehouse> getDriverWarehouseByDriverId(String driverId) {
         return repository.findByDriverId(driverId);
+    }
+
+    @Override
+    public List<DriverWarehouse> getDriverWarehouseByWarehouseId(String warehouseId) {
+        return repository.getDriverWarehouseByWarehouseId(warehouseId);
     }
 }
