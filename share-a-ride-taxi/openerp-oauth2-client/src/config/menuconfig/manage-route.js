@@ -1,6 +1,6 @@
 export const MANAGE_ROUTE = {
     id: "MENU_SAR_MANAGE_ROUTE",
-    icon: "DashboardIcon",
+    icon: "RouteIcon",
     text: "Manage route",
     child: [
         {

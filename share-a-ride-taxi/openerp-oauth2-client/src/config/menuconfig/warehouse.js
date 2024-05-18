@@ -1,6 +1,6 @@
 export const WAREHOUSE = {
     id: "MENU_SAR_WAREHOUSE",
-    icon: "DashboardIcon",
+    icon: "WarehouseIcon",
     text: "Manage warehouse",
     child: [
         {

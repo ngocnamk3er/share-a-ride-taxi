@@ -1,6 +1,6 @@
 export const PASSENGER_REQUEST = {
     id: "MENU_SAR_PASSENGER_REQUEST",
-    icon: "LocalLibraryIcon",
+    icon: "PassengerRequestIcon",
     text: "Passenger request",
     child: [
       {

@@ -1,6 +1,6 @@
 export const PARCEL_REQUEST = {
     id: "MENU_SAR_PARCEL_REQUEST",
-    icon: "LocalLibraryIcon",
+    icon: "ParcelRequestIcon",
     text: "Parcel request",
     child: [
       {

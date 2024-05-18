@@ -1,7 +1,7 @@
 export const DRIVER = {
     id: "MENU_SAR_FOR_DRIVER",
-    icon: "DashboardIcon",
-    text: "For driver",
+    icon: "ProfileIcon",
+    text: "Driver profile",
     child: [
         {
             id: "MENU_SAR_FOR_DRIVER.REGISTER",

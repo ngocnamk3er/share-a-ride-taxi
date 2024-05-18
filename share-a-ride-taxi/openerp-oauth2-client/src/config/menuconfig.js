@@ -19,7 +19,13 @@ import PeopleOutlineIcon from "@mui/icons-material/PeopleOutline";
 import PersonIcon from "@mui/icons-material/Person";
 import StarBorder from "@mui/icons-material/StarBorder";
 import StoreMallDirectorySharpIcon from "@mui/icons-material/StoreMallDirectorySharp";
+import RouteIcon from '@mui/icons-material/Route';
+import HailIcon from '@mui/icons-material/Hail';
 import TeachingIcon from "assets/icons/mathematics.svg";
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+
 import { CiEdit } from "react-icons/ci";
 import { GiTeacher } from "react-icons/gi";
 import { buildMapPathMenu } from "utils/MenuUtils";
@@ -60,6 +66,12 @@ menuIconMap.set(
   <img alt="Teaching icon" src={TeachingIcon} height={24} width={24} />
 );
 menuIconMap.set("DashboardIcon", <DashboardRoundedIcon />);
+menuIconMap.set("RouteIcon", <RouteIcon />);
+menuIconMap.set("PassengerRequestIcon", <HailIcon />);
+menuIconMap.set("ParcelRequestIcon", <WidgetsIcon />);
+menuIconMap.set("ProfileIcon", <AccountBoxIcon />);
+menuIconMap.set("WarehouseIcon", <WarehouseIcon />);
+
 menuIconMap.set("GiTeacher", <GiTeacher size={24} />);
 menuIconMap.set("InboxIcon", <InboxIcon />);
 menuIconMap.set("StarBorder", <StarBorder />);
