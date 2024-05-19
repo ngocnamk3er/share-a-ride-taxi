@@ -11,6 +11,7 @@ import DemoScreen from "views/DemoScreen";
 import PassengerRouter from "./PassengerRouter";
 import ParcelRequestRouter from "./ParcelRequestRouter";
 import ManageDriverRouter from "./ManageDriverRouter";
+import ManageRouteRouter from "./ManageRouteRouter";
 import DriverRouter from "./DriverRouter";
 import WarehouseRouter from "./WarehouseRouter";
 
@@ -45,6 +46,7 @@ function MainAppRouter(props) {
           <PrivateRoute component={PassengerRouter} path="/passenger-request" />
           <PrivateRoute component={ParcelRequestRouter} path="/parcel-request" />
           <PrivateRoute component={ManageDriverRouter} path="/manage-drivers" />
+          <PrivateRoute component={ManageRouteRouter} path="/manage-routes" />
           <PrivateRoute component={DriverRouter} path="/for-driver" />
           <PrivateRoute component={WarehouseRouter} path="/warehouse" />
           {/* <Route component={error} path="*" /> */}
