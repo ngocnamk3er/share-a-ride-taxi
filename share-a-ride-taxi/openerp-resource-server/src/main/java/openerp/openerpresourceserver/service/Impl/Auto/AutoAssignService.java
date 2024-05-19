@@ -81,6 +81,7 @@ public class AutoAssignService {
                 .concat("-------------------\n")
                 .concat(dropoffDetails);
 
+        clearDataStructures();
         return combinedDetails;
 
     }
@@ -244,6 +245,16 @@ public class AutoAssignService {
                 dropOffWareHouseVector.add(routeDropoff.getWareHouseId());
             }
         }
+    }
+
+    private void clearDataStructures() {
+        vectorPickUp.clear();
+        routePickupDetailVector.clear();
+        vectorRoutePickup.clear();
+        vectorDropoff.clear();
+        routeDropoffDetailVector.clear();
+        vectorRouteDropoff.clear();
+        pickUpWareHouseToDropOffWareHouse.clear();
     }
 
 }
