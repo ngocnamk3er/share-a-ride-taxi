@@ -9,6 +9,8 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "sar_route_pickup")
 public class RoutePickup {
 

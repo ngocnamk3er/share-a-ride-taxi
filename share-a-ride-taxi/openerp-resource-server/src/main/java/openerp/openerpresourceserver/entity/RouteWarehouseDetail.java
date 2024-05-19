@@ -9,7 +9,9 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
-@Table(name = "route_warehouse_detail")
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "sar_route_warehouse_detail")
 public class RouteWarehouseDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +21,7 @@ public class RouteWarehouseDetail {
     private String routeId;
 
     @Column(name = "ware_house_id", nullable = false)
-    private UUID warehouseId;
+    private String warehouseId;
 
     @Column(name = "visited")
     private boolean visited;

@@ -30,7 +30,7 @@ public class AutoAssignmentController {
     private final GraphHopperCalculator graphHopperCalculator;
     private final RouteWarehouseService routeWarehouseService;
 
-    @GetMapping("/hello")
+    @GetMapping("/assign-parcel-route")
     public ResponseEntity<String> hello() throws Exception {
         String result = autoAssignService.autoAssign();
         return ResponseEntity.ok(result);
@@ -44,7 +44,7 @@ public class AutoAssignmentController {
                 .startExecuteStamp(LocalDateTime.now())
                 .endStamp(LocalDateTime.now())
                 .routeStatusId(1)
-                .warehouseId("warehouse123")
+                .startWarehouseId("warehouse123")
                 .build();
         routeWarehouseService.createRoute(routeWarehouse);
         return ResponseEntity.ok("OK");

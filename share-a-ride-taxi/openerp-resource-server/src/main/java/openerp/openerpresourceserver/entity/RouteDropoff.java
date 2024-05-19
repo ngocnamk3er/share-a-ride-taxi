@@ -9,7 +9,9 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
-@Table(name = "route_dropoff")
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "sar_route_dropoff")
 public class RouteDropoff{
     @Id
     @Column(name = "id", nullable = false)

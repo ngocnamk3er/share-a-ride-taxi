@@ -10,6 +10,8 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "sar_route_warehouse")
 public class RouteWarehouse {
 
@@ -35,7 +37,7 @@ public class RouteWarehouse {
     @Column(name = "route_status_id")
     private Integer routeStatusId;
 
-    @Column(name = "ware_house_id")
-    private String warehouseId;
+    @Column(name = "start_ware_house_id")
+    private String startWarehouseId;
 
 }

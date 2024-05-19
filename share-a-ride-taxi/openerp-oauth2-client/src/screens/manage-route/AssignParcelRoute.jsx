@@ -59,7 +59,7 @@ const AssignParcelRoute = () => {
         setLoading(true)
         try {
             const res = await request("get", "/auto-assign/hello");
-            console.log("/auto-assign/hello");
+            console.log("/auto-assign/assign-parcel-route");
             console.log(res.data);
         } catch (error) {
             console.error("Error sending auto create route request:", error.message);

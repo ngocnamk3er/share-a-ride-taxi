@@ -3,10 +3,9 @@ package openerp.openerpresourceserver.service.Impl.Auto;
 import com.graphhopper.ResponsePath;
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.*;
-import openerp.openerpresourceserver.service.Interface.GraphHopperCalculator;
+import openerp.openerpresourceserver.enums.RouteStatus;
+import openerp.openerpresourceserver.service.Interface.*;
 import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
-import openerp.openerpresourceserver.service.Interface.ParcelRequestService;
-import openerp.openerpresourceserver.service.Interface.WarehouseService;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -25,17 +24,26 @@ public class AutoAssignService {
     private List<Warehouse> warehouses;
 
     //PickUp
+    private final RoutePickupService routePickupService;
+    private final RoutePickupDetailService routePickupDetailService;
     private final Vector<Pair<Warehouse, ParcelRequest>> vectorPickUp = new Vector<>();
     private final Vector<RoutePickupDetail> routePickupDetailVector = new Vector<>();
     private final Vector<RoutePickup> vectorRoutePickup = new Vector<>();
 
     //DropOff
+    private final RouteDropoffService routeDropoffService;
+    private final RouteDropoffDetailService routeDropoffDetailService;
     private final Vector<Pair<Warehouse, ParcelRequest>> vectorDropoff = new Vector<>();
     private final Vector<RouteDropoffDetail> routeDropoffDetailVector = new Vector<>();
     private final Vector<RouteDropoff> vectorRouteDropoff = new Vector<>();
 
     //Warehouse
+    private final RouteWarehouseService routeWarehouseService;
+    private final RouteWarehouseDetailService routeWarehouseDetailService;
     private final HashMap<String, Set<String>> pickUpWareHouseToDropOffWareHouse = new HashMap<>();
+    private final Vector<RouteWarehouse> routeWarehouseVector = new Vector<>();
+    private final HashMap<RouteWarehouse, Vector<RouteWarehouseDetail>> routeWarehouseToDetailVector = new HashMap<>();
+
     public String autoAssign() throws Exception {
         parcelPassengers = parcelRequestService.getAllParcelRequests();
         warehouses = warehouseService.getAllWarehouses();
@@ -43,14 +51,6 @@ public class AutoAssignService {
         clusteringPickUp();
         clusteringDropoff();
         clusteringWareHouse();
-
-//        return routePickupDetailVector.stream()
-//                .map(routePickupDetail -> "RouteId : " + routePickupDetail.getRouteId() + " RequestId: " + routePickupDetail.getRequestId() + " SedIndex : " + routePickupDetail.getSeqIndex())
-//                .collect(Collectors.joining("\n"));
-
-//        return routeDropoffDetailVector.stream()
-//                .map(routeDropoffDetail -> "RouteId : " + routeDropoffDetail.getRouteId() + " RequestId: " + routeDropoffDetail.getRequestId() + " SedIndex : " + routeDropoffDetail.getSeqIndex())
-//                .collect(Collectors.joining("\n"));
 
 
         String pickupDetails = routePickupDetailVector.stream()
@@ -74,7 +74,7 @@ public class AutoAssignService {
         }
 
 
-// Nối hai kết quả lại
+        // Nối hai kết quả lại
         String combinedDetails = pickupDetails
                 .concat("\n-------------------\n")
                 .concat(result.toString())
@@ -110,28 +110,35 @@ public class AutoAssignService {
         }
 
         for (String wareHouseId : pickUpWareHouseName) {
+
+            //Insert into database
             RoutePickup routePickup = RoutePickup.builder()
                     .wareHouseId(wareHouseId)
                     .id(wareHouseId + "_pickup_route")
+                    .routeStatusId(RouteStatus.NOT_READY.ordinal())
                     .build();
             vectorRoutePickup.add(routePickup);
+            routePickupService.save(routePickup);
         }
 
 
-        HashMap<String, Integer> warePickUpHouseIdToLength = new HashMap<>();
+        HashMap<String, Integer> warehousePickUpHouseIdToLength = new HashMap<>();
         for (int i = 0; i < vectorPickUp.size(); i++) {
             Pair<Warehouse, ParcelRequest> pair = vectorPickUp.get(i);
             Warehouse warehousePickUp = pair.getFirst();
             ParcelRequest parcelRequest = pair.getSecond();
-            int currentlength = warePickUpHouseIdToLength.get(warehousePickUp.getWarehouseId()) == null ? 0 : warePickUpHouseIdToLength.get(warehousePickUp.getWarehouseId());
-            currentlength = currentlength+1;
-            warePickUpHouseIdToLength.put(warehousePickUp.getWarehouseId(), currentlength);
+            int currentlength = warehousePickUpHouseIdToLength.get(warehousePickUp.getWarehouseId()) == null ? 0 : warehousePickUpHouseIdToLength.get(warehousePickUp.getWarehouseId());
+            currentlength = currentlength + 1;
+            warehousePickUpHouseIdToLength.put(warehousePickUp.getWarehouseId(), currentlength);
+
+            //Insert into database
             RoutePickupDetail routePickupDetail = RoutePickupDetail.builder()
                     .routeId(warehousePickUp.getWarehouseId() + "_pickup_route")
                     .requestId(parcelRequest.getRequestId())
                     .seqIndex(currentlength)
                     .build();
             routePickupDetailVector.add(routePickupDetail);
+            routePickupDetailService.save(routePickupDetail);
         }
     }
 
@@ -159,11 +166,14 @@ public class AutoAssignService {
         }
 
         for (String wareHouseId : dropOffWareHouseName) {
-            RouteDropoff routePickup = RouteDropoff.builder()
+            //Insert into database
+            RouteDropoff routeDropoff = RouteDropoff.builder()
                     .wareHouseId(wareHouseId)
                     .id(wareHouseId + "_dropoff_route")
+                    .routeStatusId(RouteStatus.NOT_READY.ordinal())
                     .build();
-            vectorRouteDropoff.add(routePickup);
+            vectorRouteDropoff.add(routeDropoff);
+            routeDropoffService.createRouteDropoff(routeDropoff);
         }
 
 
@@ -173,28 +183,44 @@ public class AutoAssignService {
             Warehouse warehouseDropOff = pair.getFirst();
             ParcelRequest parcelRequest = pair.getSecond();
             int currentlength = wareDropOffHouseIdToLength.get(warehouseDropOff.getWarehouseId()) == null ? 0 : wareDropOffHouseIdToLength.get(warehouseDropOff.getWarehouseId());
-            currentlength = currentlength+1;
+            currentlength = currentlength + 1;
             wareDropOffHouseIdToLength.put(warehouseDropOff.getWarehouseId(), currentlength);
+
+            //Insert into database
             RouteDropoffDetail routePickupDetail = RouteDropoffDetail.builder()
                     .routeId(warehouseDropOff.getWarehouseId() + "_dropoff_route")
                     .requestId(parcelRequest.getRequestId())
                     .seqIndex(currentlength)
                     .build();
             routeDropoffDetailVector.add(routePickupDetail);
+            routeDropoffDetailService.createRouteDropoffDetail(routePickupDetail);
         }
     }
 
-    private void clusteringWareHouse(){
-        for (RoutePickup routePickup : vectorRoutePickup){
+    private void clusteringWareHouse() {
+        for (RoutePickup routePickup : vectorRoutePickup) {
             String wareHouseId = routePickup.getWareHouseId();
-            if (pickUpWareHouseToDropOffWareHouse.get(routePickup.getWareHouseId())==null){
+
+            if (pickUpWareHouseToDropOffWareHouse.get(routePickup.getWareHouseId()) == null) {
                 pickUpWareHouseToDropOffWareHouse.put(wareHouseId, new HashSet<>());
+
+                //Insert into database
+                RouteWarehouse routeWarehouse = RouteWarehouse.builder()
+                        .startWarehouseId(wareHouseId)
+                        .id(wareHouseId + "_route_warehouse")
+                        .routeStatusId(RouteStatus.NOT_READY.ordinal())
+                        .build();
+                routeWarehouseService.createRoute(routeWarehouse);
             }
         }
 
+
+        HashMap<String, Integer> startWarehousHouseIdToLength = new HashMap<>();
         for (Map.Entry<String, Set<String>> entry : pickUpWareHouseToDropOffWareHouse.entrySet()) {
             String wareHouseId = entry.getKey();
-            Set<String> dropOffWareHouseVector = entry.getValue();
+
+            //routeDropOff đi ra từ Warehouse này
+            Set<String> dropOffWareHouseSet = entry.getValue();
 
             //routePickUpDetail đi tới Warehouse này
             Vector<RoutePickupDetail> routePickUpDetailOfThisWareHouse = new Vector<>();
@@ -205,45 +231,49 @@ public class AutoAssignService {
             //routePickUp đi tới Warehouse này
             Vector<RoutePickup> routePickUpOfThisWareHouse = new Vector<>();
 
-            //routeDropOff đi ra từ Warehouse này
-            Vector<RouteDropoff> routeDropOffFromThisWareHouse = new Vector<>();
-
             //Tìm các routePickup hướng tới wareHouse này
-            for (RoutePickup routePickup : vectorRoutePickup){
-                if (routePickup.getWareHouseId().equals(wareHouseId)){
+            for (RoutePickup routePickup : vectorRoutePickup) {
+                if (routePickup.getWareHouseId().equals(wareHouseId)) {
                     routePickUpOfThisWareHouse.add(routePickup);
                 }
             }
             //Tìm các routePickUpDetail hướng tới wareHouse này
-            for (RoutePickup routePickup : routePickUpOfThisWareHouse){
-                for (RoutePickupDetail routePickupDetail : routePickupDetailVector){
-                    if(routePickupDetail.getRouteId().equals(routePickup.getId())){
+            for (RoutePickup routePickup : routePickUpOfThisWareHouse) {
+                for (RoutePickupDetail routePickupDetail : routePickupDetailVector) {
+                    if (routePickupDetail.getRouteId().equals(routePickup.getId())) {
                         routePickUpDetailOfThisWareHouse.add(routePickupDetail);
                     }
                 }
             }
             // Tìm các routeDropOffDetail đi ra wareHouse này
-            for (RoutePickupDetail routePickupDetail : routePickUpDetailOfThisWareHouse){
-                for (RouteDropoffDetail routeDropoffDetail : routeDropoffDetailVector){
-                    if(routeDropoffDetail.getRequestId() == routePickupDetail.getRequestId()){
+            for (RoutePickupDetail routePickupDetail : routePickUpDetailOfThisWareHouse) {
+                for (RouteDropoffDetail routeDropoffDetail : routeDropoffDetailVector) {
+                    if (routeDropoffDetail.getRequestId() == routePickupDetail.getRequestId()) {
                         routeDropOffDetailFromThisWareHouse.add(routeDropoffDetail);
                     }
                 }
             }
 
             //Tìm các routeDropOff đi ra từ wareHouse này
-            for (RouteDropoff routeDropoff : vectorRouteDropoff){
-                for (RouteDropoffDetail routeDropoffDetail : routeDropOffDetailFromThisWareHouse){
-                    if(routeDropoffDetail.getRouteId().equals(routeDropoff.getId())){
-                        routeDropOffFromThisWareHouse.add(routeDropoff);
+            for (RouteDropoff routeDropoff : vectorRouteDropoff) {
+                for (RouteDropoffDetail routeDropoffDetail : routeDropOffDetailFromThisWareHouse) {
+                    if (routeDropoffDetail.getRouteId().equals(routeDropoff.getId())) {
+                        if (!dropOffWareHouseSet.contains(routeDropoff.getWareHouseId())){
+                            int currentlength = startWarehousHouseIdToLength.get(wareHouseId) == null ? 0 : startWarehousHouseIdToLength.get(wareHouseId);
+                            startWarehousHouseIdToLength.put(wareHouseId, currentlength + 1);
+                            //Insert into database
+                            RouteWarehouseDetail routeWarehouseDetail = RouteWarehouseDetail.builder()
+                                    .warehouseId(routeDropoff.getWareHouseId())
+                                    .sequenceIndex(currentlength + 1)
+                                    .routeId(wareHouseId + "_route_warehouse")
+                                    .build();
+                            routeWarehouseDetailService.save(routeWarehouseDetail);
+                        }
+                        dropOffWareHouseSet.add(routeDropoff.getWareHouseId());
                     }
                 }
             }
 
-
-            for (RouteDropoff routeDropoff : vectorRouteDropoff){
-                dropOffWareHouseVector.add(routeDropoff.getWareHouseId());
-            }
         }
     }
 

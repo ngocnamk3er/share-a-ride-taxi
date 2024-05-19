@@ -10,7 +10,9 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
-@Table(name = "route_dropoff_detail")
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "sar_route_dropoff_detail")
 public class RouteDropoffDetail{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

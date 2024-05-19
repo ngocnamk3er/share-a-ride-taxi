@@ -10,6 +10,8 @@ import java.util.UUID;
 @Entity
 @Builder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "sar_route_pickup_detail")
 public class RoutePickupDetail {
 
