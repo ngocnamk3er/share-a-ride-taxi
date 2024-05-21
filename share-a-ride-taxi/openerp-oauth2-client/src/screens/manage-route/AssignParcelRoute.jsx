@@ -57,8 +57,9 @@ const AssignParcelRoute = () => {
 
     const handleAutoCreateRoute = async () => {
         setLoading(true)
+        const day = "30_5";
         try {
-            const res = await request("get", "/auto-assign/hello");
+            const res = await request("get", "/auto-assign/assign-parcel-route/" + day);
             console.log("/auto-assign/assign-parcel-route");
             console.log(res.data);
         } catch (error) {
