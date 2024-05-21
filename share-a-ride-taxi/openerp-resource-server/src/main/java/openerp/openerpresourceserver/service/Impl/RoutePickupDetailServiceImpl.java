@@ -33,17 +33,21 @@ public class RoutePickupDetailServiceImpl implements RoutePickupDetailService {
     }
 
     @Override
-    public RoutePickupDetail findById(String id) {
+    public RoutePickupDetail findById(UUID id) {
         return routePickupDetailRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public List<RoutePickupDetail> findAllByRouteId(String routeId){
+        return routePickupDetailRepository.findAllByRouteId(routeId);
+    };
     @Override
     public List<RoutePickupDetail> findAll() {
         return routePickupDetailRepository.findAll();
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteById(UUID id) {
         routePickupDetailRepository.deleteById(id);
     }
 

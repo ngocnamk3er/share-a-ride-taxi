@@ -11,8 +11,11 @@ public interface RoutePickupDetailService {
 
     RoutePickupDetail update(UUID id, RoutePickupDetail routePickupDetail);
 
-    RoutePickupDetail findById(String id);
+    RoutePickupDetail findById(UUID id);
+
+    List<RoutePickupDetail> findAllByRouteId(String routeId);
+
     List<RoutePickupDetail> findAll();
-    void deleteById(String id);
+    void deleteById(UUID id);
     // Thêm các phương thức khác cần thiết tại đây
 }
