@@ -49,9 +49,9 @@ MENUS.push(teacher);
 MENUS.push(student);
 MENUS.push(PASSENGER_REQUEST);
 MENUS.push(PARCEL_REQUEST);
-MENUS.push(MANAGE_DRIVE)
 MENUS.push(DRIVER)
 MENUS.push(WAREHOUSE)
+MENUS.push(MANAGE_DRIVE)
 MENUS.push(MANAGE_ROUTE)
 
 export const menuIconMap = new Map();

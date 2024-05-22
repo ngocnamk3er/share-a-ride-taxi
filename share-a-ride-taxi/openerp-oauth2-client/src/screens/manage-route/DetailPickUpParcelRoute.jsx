@@ -17,14 +17,12 @@ const DetailPickUpParcelRoute = () => {
     const history = useHistory();
     const { id } = match.params;
 
-
-    // "id": "370c76d7-af30-4c78-86ce-ec6fe55ed126",
-    // "routeId": "ben-store_pickup_route_30_5",
-    // "requestId": "5c6774ca-9d5a-408a-8d12-47798b04452d",
-    // "visited": false,
-    // "seqIndex": 4,
-    // "lastUpdatedStamp": "2024-05-20T15:12:08.253674",
-    // "createdStamp": "2024-05-20T15:12:08.253674"
+    const routeStatusMap = {
+        0: "Not Ready",
+        1: "Ready",
+        2: "Start",
+        3: "Complete"
+    };
 
     const fetchRoutePickup = async () => {
         try {
@@ -98,8 +96,19 @@ const DetailPickUpParcelRoute = () => {
     return (
         <div>
             <h1>Route {id} Details</h1>
+            <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
+                listLocation={reqLocations}
+            />
+            <br />
             {routePickup && (
                 <div>
+                    <TextField
+                        label="Warehouse ID"
+                        value={routePickup.wareHouseId}
+                        InputProps={{ readOnly: true }}
+                        fullWidth
+                        margin="normal"
+                    />
                     <TextField
                         label="Driver ID"
                         value={routePickup.driverId}
@@ -115,20 +124,6 @@ const DetailPickUpParcelRoute = () => {
                         margin="normal"
                     />
                     <TextField
-                        label="Last Updated Time"
-                        value={routePickup.lastUpdatedStamp}
-                        InputProps={{ readOnly: true }}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Created Time"
-                        value={routePickup.createdStamp}
-                        InputProps={{ readOnly: true }}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
                         label="End Time"
                         value={routePickup.endStamp}
                         InputProps={{ readOnly: true }}
@@ -137,38 +132,13 @@ const DetailPickUpParcelRoute = () => {
                     />
                     <TextField
                         label="Route Status ID"
-                        value={routePickup.routeStatusId}
+                        value={routeStatusMap[routePickup.routeStatusId]}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
-                    <TextField
-                        label="Warehouse ID"
-                        value={routePickup.wareHouseId}
-                        InputProps={{ readOnly: true }}
-                        fullWidth
-                        margin="normal"
-                    />
-                    {/* <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleRefresh}
-                    >
-                        Refresh
-                    </Button> */}
-                    {/* <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => history.push('/edit-route/' + id)}
-                        style={{ marginLeft: '10px' }}
-                    >
-                        Edit
-                    </Button> */}
                 </div>
             )}
-            <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
-                listLocation={reqLocations}
-            />
         </div>
     );
 };

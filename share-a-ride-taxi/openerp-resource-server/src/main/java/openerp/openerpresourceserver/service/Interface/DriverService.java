@@ -14,7 +14,7 @@ public interface DriverService {
     void deleteDriver(UUID id);
     Driver updateDriver(String id, Driver driverRequest);
 
-    Driver activateDriver(UUID id);
+    Driver activateDriver(String userId);
 
     Driver getDriverByUserId(String userId);
 

@@ -86,7 +86,7 @@ const ActivateDriver = () => {
             sorting: false,
             render: (rowData) => (
                 <IconButton
-                    onClick={() => activateDriver(rowData.id)}
+                    onClick={() => activateDriver(rowData.userId)}
                     variant="contained"
                     color="success"
                 >

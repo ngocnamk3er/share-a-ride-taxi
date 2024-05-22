@@ -110,7 +110,7 @@ public class DriverController {
 
 
     @PostMapping("/{id}/activate")
-    public ResponseEntity<Driver> activateDriver(@PathVariable UUID id) {
+    public ResponseEntity<Driver> activateDriver(@PathVariable String id) {
         Driver activatedDriver = driverService.activateDriver(id);
         return ResponseEntity.ok().body(activatedDriver);
     }

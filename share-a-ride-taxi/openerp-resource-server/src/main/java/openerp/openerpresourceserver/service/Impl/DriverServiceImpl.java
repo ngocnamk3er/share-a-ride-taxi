@@ -62,15 +62,14 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver activateDriver(UUID id) {
-        Driver driver = driverRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Driver not found with ID: " + id));
+    public Driver activateDriver(String userId) {
+        Driver driver = driverRepository.findByUserId(userId);
 
         if (driver.getStatusId() == DriverStatus.WAITING.ordinal()) {
             driver.setStatusId(DriverStatus.ACTIVE.ordinal());
             return driverRepository.save(driver);
         } else {
-            throw new IllegalStateException("Driver with ID " + id + " is not in waiting state");
+            throw new IllegalStateException("Driver with ID " + userId + " is not in waiting state");
         }
     }
 
