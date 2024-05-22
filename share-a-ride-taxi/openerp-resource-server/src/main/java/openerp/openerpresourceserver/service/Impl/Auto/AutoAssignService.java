@@ -291,6 +291,10 @@ public class AutoAssignService {
         }
     }
 
+    private void tspPickUpRoute(){
+
+    }
+
     private void clearDataStructures() {
         vectorPickUp.clear();
         routePickupDetailVector.clear();
