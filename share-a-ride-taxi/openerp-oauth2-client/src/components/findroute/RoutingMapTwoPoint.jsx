@@ -29,6 +29,7 @@ const RoutingMapTwoPoint = (props) => {
     const center = props.center ? props.center : [21.0283334, 105.854041];
     const listLocation = props.listLocation;
     const { style } = props;
+    
 
     return (
         <>

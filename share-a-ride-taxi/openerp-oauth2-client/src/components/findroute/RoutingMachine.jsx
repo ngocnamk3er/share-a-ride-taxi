@@ -5,6 +5,9 @@ import "leaflet-routing-machine";
 
 const createRoutineMachineLayer = (props) => {
   const { listLocation } = props;
+
+  console.log("check listLocation : ", listLocation);
+
   const waypoints = listLocation.map((location, index) =>
     L.latLng(location.lat, location.lon)
   );
@@ -30,11 +33,16 @@ const createRoutineMachineLayer = (props) => {
       styles: [{ color: "#6FA1EC", weight: 4 }],
     },
     createMarker: function (i, waypoint, n) {
-      // Use the custom icon for markers
-      return L.marker(waypoint.latLng, {
+      // Create a marker with a custom icon
+      const marker = L.marker(waypoint.latLng, {
         draggable: false,
-        icon: customIcons[i]
+        icon: customIcons[i],
       });
+
+      // Bind a popup with the address
+      marker.bindPopup(listLocation[i].address);
+
+      return marker;
     },
     show: true,
     addWaypoints: false,
