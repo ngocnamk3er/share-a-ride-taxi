@@ -2,11 +2,20 @@ package openerp.openerpresourceserver.repo;
 
 import openerp.openerpresourceserver.entity.ParcelRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface ParcelRequestRepository extends JpaRepository<ParcelRequest, UUID> {
-    // Các phương thức truy vấn cụ thể có thể được thêm vào đây nếu cần
+
+    @Query(value = "SELECT pr.* FROM sar_parcel_request pr " +
+            "INNER JOIN sar_route_pickup_detail rpd ON pr.request_id = rpd.request_id " +
+            "INNER JOIN sar_route_pickup rp ON rp.id = rpd.route_id " +
+            "WHERE rp.id = :pickUpRouteId", nativeQuery = true)
+    List<ParcelRequest> getParcelRequesByPickUpRoute(@Param("pickUpRouteId") String pickUpRouteId);
 }
+

@@ -10,6 +10,8 @@ public interface ParcelRequestService {
 
     ParcelRequest getParcelRequestById(UUID id);
 
+    List<ParcelRequest> getParcelRequestByPickUpRouteId(String id);
+
     List<ParcelRequest> getAllParcelRequests();
 
     void deleteParcelRequest(UUID id);

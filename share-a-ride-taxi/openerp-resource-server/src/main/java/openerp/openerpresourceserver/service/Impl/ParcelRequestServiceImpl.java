@@ -27,6 +27,11 @@ public class ParcelRequestServiceImpl implements ParcelRequestService {
     }
 
     @Override
+    public List<ParcelRequest> getParcelRequestByPickUpRouteId(String id) {
+       return  repository.getParcelRequesByPickUpRoute(id);
+    }
+
+    @Override
     public List<ParcelRequest> getAllParcelRequests() {
         return repository.findAll();
     }

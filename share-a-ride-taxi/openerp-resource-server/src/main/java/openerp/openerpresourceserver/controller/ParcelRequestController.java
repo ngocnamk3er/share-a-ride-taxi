@@ -35,6 +35,11 @@ public class ParcelRequestController {
         return ResponseEntity.ok(parcelRequest);
     }
 
+    @GetMapping("/by-pickup-route/{id}")
+    public List<ParcelRequest> getParcelRequestByPickUpRouteId(@PathVariable String id) {
+        return parcelRequestService.getParcelRequestByPickUpRouteId(id);
+    }
+
     @PostMapping
     public ResponseEntity<ParcelRequest> createParcelRequest(@RequestBody ParcelRequest parcelRequest) throws Exception {
         Coordinate start = new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getPickupLongitude());
