@@ -24,6 +24,9 @@ public class AutoAssignService {
     private List<ParcelRequest> parcelPassengers;
     private List<Warehouse> warehouses;
 
+    //Driver
+    private final DriverService driverService;
+
     //PickUp
     private final RoutePickupService routePickupService;
     private final RoutePickupDetailService routePickupDetailService;
@@ -88,6 +91,7 @@ public class AutoAssignService {
     }
 
     private void clusteringPickUp(String day) throws Exception {
+
         for (ParcelRequest parcelRequest : parcelPassengers) {
             Coordinate parcelRequestPickUpLocation = new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getPickupLongitude());
             Warehouse pickUpWarehouse = new Warehouse();
@@ -111,12 +115,14 @@ public class AutoAssignService {
         }
 
         for (String wareHouseId : pickUpWareHouseName) {
-
+            List<Driver> drivers = driverService.getDriversByWarehouseId(wareHouseId);
+            Driver driver = drivers.get(0);
             //Insert into database
             RoutePickup routePickup = RoutePickup.builder()
                     .wareHouseId(wareHouseId)
-                    .id(wareHouseId + "_pickup_route_"+day)
+                    .id(wareHouseId + "_pickup_route_" + day)
                     .routeStatusId(RouteStatus.NOT_READY.ordinal())
+                    .driverId(driver.getUserId())
                     .build();
             vectorRoutePickup.add(routePickup);
             routePickupService.save(routePickup);
@@ -134,7 +140,7 @@ public class AutoAssignService {
 
             //Insert into database
             RoutePickupDetail routePickupDetail = RoutePickupDetail.builder()
-                    .routeId(warehousePickUp.getWarehouseId() + "_pickup_route_"+day)
+                    .routeId(warehousePickUp.getWarehouseId() + "_pickup_route_" + day)
                     .requestId(parcelRequest.getRequestId())
                     .seqIndex(currentlength)
                     .build();
@@ -167,11 +173,14 @@ public class AutoAssignService {
         }
 
         for (String wareHouseId : dropOffWareHouseName) {
+            List<Driver> drivers = driverService.getDriversByWarehouseId(wareHouseId);
+            Driver driver = drivers.get(0);
             //Insert into database
             RouteDropoff routeDropoff = RouteDropoff.builder()
                     .wareHouseId(wareHouseId)
-                    .id(wareHouseId + "_dropoff_route_"+day)
+                    .id(wareHouseId + "_dropoff_route_" + day)
                     .routeStatusId(RouteStatus.NOT_READY.ordinal())
+                    .driverId(driver.getUserId())
                     .build();
             vectorRouteDropoff.add(routeDropoff);
             routeDropoffService.createRouteDropoff(routeDropoff);
@@ -189,7 +198,7 @@ public class AutoAssignService {
 
             //Insert into database
             RouteDropoffDetail routePickupDetail = RouteDropoffDetail.builder()
-                    .routeId(warehouseDropOff.getWarehouseId() + "_dropoff_route_"+day)
+                    .routeId(warehouseDropOff.getWarehouseId() + "_dropoff_route_" + day)
                     .requestId(parcelRequest.getRequestId())
                     .seqIndex(currentlength)
                     .build();
@@ -206,11 +215,15 @@ public class AutoAssignService {
                 pickUpWareHouseToDropOffWareHouse.put(wareHouseId, new HashSet<>());
 
                 //Insert into database
+                List<Driver> drivers = driverService.getDriversByWarehouseId(wareHouseId);
+                Driver driver = drivers.get(0);
                 RouteWarehouse routeWarehouse = RouteWarehouse.builder()
                         .startWarehouseId(wareHouseId)
-                        .id(wareHouseId + "_route_warehouse_"+day)
+                        .id(wareHouseId + "_route_warehouse_" + day)
                         .routeStatusId(RouteStatus.NOT_READY.ordinal())
+                        .driverId(driver.getUserId())
                         .build();
+
                 routeWarehouseService.createRoute(routeWarehouse);
             }
         }
@@ -259,14 +272,14 @@ public class AutoAssignService {
             for (RouteDropoff routeDropoff : vectorRouteDropoff) {
                 for (RouteDropoffDetail routeDropoffDetail : routeDropOffDetailFromThisWareHouse) {
                     if (routeDropoffDetail.getRouteId().equals(routeDropoff.getId())) {
-                        if (!dropOffWareHouseSet.contains(routeDropoff.getWareHouseId())){
+                        if (!dropOffWareHouseSet.contains(routeDropoff.getWareHouseId())) {
                             int currentlength = startWarehousHouseIdToLength.get(wareHouseId) == null ? 0 : startWarehousHouseIdToLength.get(wareHouseId);
                             startWarehousHouseIdToLength.put(wareHouseId, currentlength + 1);
                             //Insert into database
                             RouteWarehouseDetail routeWarehouseDetail = RouteWarehouseDetail.builder()
                                     .warehouseId(routeDropoff.getWareHouseId())
                                     .sequenceIndex(currentlength + 1)
-                                    .routeId(wareHouseId + "_route_warehouse_"+day)
+                                    .routeId(wareHouseId + "_route_warehouse_" + day)
                                     .build();
                             routeWarehouseDetailService.save(routeWarehouseDetail);
                         }

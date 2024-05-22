@@ -44,6 +44,7 @@ public class DriverServiceImpl implements DriverService {
         driverRepository.deleteById(id);
     }
 
+
     @Override
     public Driver updateDriver(String id, Driver driverRequest) {
         Driver driver = driverRepository.findByUserId(id);
@@ -80,5 +81,10 @@ public class DriverServiceImpl implements DriverService {
 
     public boolean existsDriverByUserId(String userId) {
         return driverRepository.existsByUserId(userId);
+    }
+
+    @Override
+    public List<Driver> getDriversByWarehouseId(String warehouseId) {
+        return driverRepository.findByWarehouseId(warehouseId);
     }
 }

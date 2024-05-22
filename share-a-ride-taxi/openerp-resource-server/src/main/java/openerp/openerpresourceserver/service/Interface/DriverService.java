@@ -19,4 +19,6 @@ public interface DriverService {
     Driver getDriverByUserId(String userId);
 
     boolean existsDriverByUserId(String userId);
+
+    List<Driver> getDriversByWarehouseId(String warehouseId);
 }
