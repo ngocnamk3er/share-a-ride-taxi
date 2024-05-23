@@ -292,7 +292,21 @@ public class AutoAssignService {
     }
 
     private void tspPickUpRoute(){
+        for (RoutePickup routePickup : vectorRoutePickup){
 
+        }
+    }
+
+    private void tspDropOffRoute(){
+        for (RouteDropoff routeDropoff : vectorRouteDropoff){
+
+        }
+    }
+
+    private void tspWarehouseRoute(){
+        for (RouteDropoff routeDropoff : vectorRouteDropoff){
+
+        }
     }
 
     private void clearDataStructures() {

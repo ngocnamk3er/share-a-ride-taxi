@@ -2,7 +2,7 @@ import { Route, Switch, useRouteMatch } from "react-router";
 import AssignParcelRoute from "../screens/manage-route/AssignParcelRoute";
 import AssignPassengerRoute from "screens/manage-route/AssignPassengerRoute";
 import ParcelRouteList from "screens/manage-route/ParcelRouteList";
-import DetailParcelRoute from "screens/manage-route/DetailPickUpParcelRoute";
+import DetailPickUpParcelRoute from "screens/manage-route/DetailPickUpParcelRoute";
 
 export default function ManageRouteRouter() {
     let { path } = useRouteMatch();
@@ -15,7 +15,7 @@ export default function ManageRouteRouter() {
                     path={`${path}/parcel-route-list`}
                 ></Route>
                 <Route
-                    component={DetailParcelRoute}
+                    component={DetailPickUpParcelRoute}
                     exact
                     path={`${path}/parcel-route-list/:id`}
                 ></Route>

@@ -5,9 +5,13 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
 import RoutingMapTwoPoint from '../../components/findroute/RoutingMapTwoPoint';
+import PickUpRoute from "components/pickup-route/PickUpRoute";
+
 
 const DetailPickUpParcelRoute = () => {
     const [routePickup, setRoutePickup] = useState(null);
+    const [driver, setDriver] = useState(null);
+    const [warehouse, setWarehouse] = useState(null);
     const [routePickupDetailList, setRoutePickupDetailList] = useState(null);
     const [pickUpRequests, setPickUpRequests] = useState(null);
     const [reqLocations, setReqLocations] = useState(null);
@@ -57,6 +61,24 @@ const DetailPickUpParcelRoute = () => {
         }
     };
 
+    const fetchDriver = async (driverId) => {
+        try {
+            const response = await request('get', `/drivers/user/${driverId}`);
+            setDriver(response.data);
+        } catch (err) {
+            setError(err);
+        }
+    };
+
+    const fetchWarehouse = async (warehouseId) => {
+        try {
+            const response = await request('get', `/warehouses/${warehouseId}`);
+            setWarehouse(response.data);
+        } catch (err) {
+            setError(err);
+        }
+    };
+
     useEffect(() => {
         fetchRoutePickup();
         fetchRoutePickupDetailList();
@@ -66,6 +88,21 @@ const DetailPickUpParcelRoute = () => {
     useEffect(() => {
         console.log("check reqLocations : ", reqLocations)
     }, [reqLocations]);
+
+    useEffect(() => {
+        if (routePickup) {
+            fetchDriver(routePickup.driverId);
+            fetchWarehouse(routePickup.wareHouseId);
+        }
+    }, [routePickup])
+
+    useEffect(() => {
+        if (driver && warehouse) {
+            console.log("check driver : ", driver)
+            console.log("check warehouse : ", warehouse)
+        }
+
+    }, [driver, warehouse])
 
     useEffect(() => {
         console.log("check pickUpRequests : ", pickUpRequests)
@@ -81,23 +118,17 @@ const DetailPickUpParcelRoute = () => {
     }, [pickUpRequests]);
 
 
-
-    const handleRefresh = () => {
-        setLoading(true);
-        setError(null);
-        setRoutePickup(null);
-        fetchRoutePickup();
-    };
-
     if (loading) return <CircularProgress />;
-    if (reqLocations == null) return <CircularProgress />;
+    if (!(reqLocations && driver && warehouse)) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;
 
     return (
         <div>
             <h1>Route {id} Details</h1>
-            <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
+            <PickUpRoute style={{ width: "100%", height: "80vh" }}
                 listLocation={reqLocations}
+                driver={driver}
+                warehouse={warehouse}
             />
             <br />
             {routePickup && (
