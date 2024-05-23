@@ -33,7 +33,7 @@ class RouteWarehouseDetailServiceImpTest {
         RouteWarehouseDetail detail = RouteWarehouseDetail.builder()
                 .id(UUID.randomUUID())
                 .routeId("123")
-                .warehouseId(UUID.randomUUID())
+                .warehouseId("warehouseId")
                 .visited(false)
                 .sequenceIndex(1)
                 .build();

@@ -31,7 +31,7 @@ public class RouteWareHouseServiceTest {
                 .startExecuteStamp(LocalDateTime.now())
                 .endStamp(LocalDateTime.now())
                 .routeStatusId(1)
-                .warehouseId("warehouse123")
+                .startWarehouseId("warehouse123")
                 .build();
 
         // Giả lập repository.save() trả về đối tượng đã được lưu
