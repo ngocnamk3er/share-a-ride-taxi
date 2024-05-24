@@ -17,4 +17,6 @@ public interface ParcelRequestService {
     void deleteParcelRequest(UUID id);
 
     boolean existsById(UUID requestId);
+
+    List<ParcelRequest> getParcelRequestByDropOffRouteId(String id);
 }

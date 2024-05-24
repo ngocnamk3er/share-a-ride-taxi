@@ -43,11 +43,20 @@ const ParcelRouteList = () => {
         }
     };
 
-    const handleViewClick = (rowData) => {
-        history.push(`${path}/${rowData.id}`);
+    const handlePickUpRouteViewClick = (rowData) => {
+        history.push(`${path}/pick-up-route/${rowData.id}`);
     }
 
-    const columnsPickUpAndDropOff = [
+    const handleWarehouseViewClick = (rowData) => {
+        history.push(`${path}/warehouse-route/${rowData.id}`);
+    }
+
+    const handleDropOffViewClick = (rowData) => {
+        history.push(`${path}/drop-off-route/${rowData.id}`);
+    }
+
+
+    const columnsPickUp = [
         {
             title: 'ID',
             field: 'id'
@@ -75,7 +84,7 @@ const ParcelRouteList = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleViewClick(rowData)
+                        handlePickUpRouteViewClick(rowData)
                     }}
                     variant="contained"
                     color="primary"
@@ -85,6 +94,8 @@ const ParcelRouteList = () => {
             ),
         },
     ]
+
+
 
     const columnsWarehouse = [
         {
@@ -101,11 +112,12 @@ const ParcelRouteList = () => {
         // { title: 'Created Stamp', field: 'createdStamp' },
         {
             title: 'Route Status',
-            field: 'routeStatusId'
+            field: 'routeStatusId',
+            render: (rowData) => routeStatusMap[rowData.routeStatusId]
         },
         {
             title: 'Start warehouse',
-            field: 'startWarehouseId'
+            field: 'startWarehouseId',
         },
         {
             title: "View",
@@ -113,7 +125,47 @@ const ParcelRouteList = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleViewClick(rowData)
+                        handleWarehouseViewClick(rowData)
+                    }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
+        },
+    ]
+
+
+    const columnsDropOff = [
+        {
+            title: 'ID',
+            field: 'id'
+        },
+        {
+            title: 'Driver ID',
+            field: 'driverId'
+        },
+        // { title: 'Start Execute Stamp', field: 'startExecuteStamp' },
+        // { title: 'End Stamp', field: 'endStamp', key: 'endStamp' },
+        // { title: 'Last Updated Stamp', field: 'lastUpdatedStamp' },
+        // { title: 'Created Stamp', field: 'createdStamp' },
+        {
+            title: 'Route Status ID',
+            field: 'routeStatusId',
+            render: (rowData) => routeStatusMap[rowData.routeStatusId] // Render status label using lookup
+        },
+        {
+            title: 'Warehouse ID',
+            field: 'wareHouseId'
+        },
+        {
+            title: "View",
+            sorting: false,
+            render: (rowData) => (
+                <IconButton
+                    onClick={() => {
+                        handleDropOffViewClick(rowData)
                     }}
                     variant="contained"
                     color="primary"
@@ -127,15 +179,7 @@ const ParcelRouteList = () => {
     return (
         <div>
             <h2>Pickup Routes</h2>
-            <StandardTable columns={columnsPickUpAndDropOff} data={pickupRoutes} options={{
-                selection: false,
-                pageSize: 5,
-                search: true,
-                sorting: true,
-            }} />
-            <br />
-            <h2>Dropoff Routes</h2>
-            <StandardTable columns={columnsPickUpAndDropOff} data={dropoffRoutes} options={{
+            <StandardTable columns={columnsPickUp} data={pickupRoutes} options={{
                 selection: false,
                 pageSize: 5,
                 search: true,
@@ -144,6 +188,14 @@ const ParcelRouteList = () => {
             <br />
             <h2>Warehouse Routes</h2>
             <StandardTable columns={columnsWarehouse} data={warehouseRoutes} options={{
+                selection: false,
+                pageSize: 5,
+                search: true,
+                sorting: true,
+            }} />
+            <br />
+            <h2>Dropoff Routes</h2>
+            <StandardTable columns={columnsDropOff} data={dropoffRoutes} options={{
                 selection: false,
                 pageSize: 5,
                 search: true,

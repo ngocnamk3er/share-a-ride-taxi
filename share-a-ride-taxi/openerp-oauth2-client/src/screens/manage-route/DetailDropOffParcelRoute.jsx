@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { TextField, Button } from "@mui/material";
+import { TextField } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
-import RoutingMapTwoPoint from '../../components/findroute/RoutingMapTwoPoint';
-import PickUpRoute from "components/route/pickup-route/PickUpRoute";
+import DropOffRoute from "components/route/dropoff-route/DropOffRoute";
 
 
-const DetailPickUpParcelRoute = () => {
-    const [routePickup, setRoutePickup] = useState(null);
+const DetailDropOffParcelRoute = () => {
+    const [routeDropOff, setRouteDropOff] = useState(null);
     const [driver, setDriver] = useState(null);
     const [warehouse, setWarehouse] = useState(null);
-    const [routePickupDetailList, setRoutePickupDetailList] = useState(null);
-    const [pickUpRequests, setPickUpRequests] = useState(null);
+    const [dropOffRequests, setDropOffRequests] = useState(null);
     const [reqLocations, setReqLocations] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const match = useRouteMatch();
-    const history = useHistory();
     const { id } = match.params;
 
     const routeStatusMap = {
@@ -28,10 +25,10 @@ const DetailPickUpParcelRoute = () => {
         3: "Complete"
     };
 
-    const fetchRoutePickup = async () => {
+    const fetchRouteDropOff = async () => {
         try {
-            const response = await request('get', `/route-pickups/${id}`);
-            setRoutePickup(response.data);
+            const response = await request('get', `/route-dropoffs/${id}`);
+            setRouteDropOff(response.data);
         } catch (err) {
             setError(err);
         } finally {
@@ -39,21 +36,10 @@ const DetailPickUpParcelRoute = () => {
         }
     };
 
-    const fetchRoutePickupDetailList = async () => {
+    const fetchDropOffRouteRequests = async () => {
         try {
-            const response = await request('get', `/route-pickup-details/by-route/${id}`);
-            setRoutePickupDetailList(response.data);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchPickUpRouteRequests = async () => {
-        try {
-            const response = await request('get', `/parcel-requests/by-pickup-route/${id}`);
-            setPickUpRequests(response.data);
+            const response = await request('get', `/parcel-requests/by-drop-off-route/${id}`);
+            setDropOffRequests(response.data);
         } catch (err) {
             setError(err);
         } finally {
@@ -80,9 +66,8 @@ const DetailPickUpParcelRoute = () => {
     };
 
     useEffect(() => {
-        fetchRoutePickup();
-        fetchRoutePickupDetailList();
-        fetchPickUpRouteRequests();
+        fetchRouteDropOff();
+        fetchDropOffRouteRequests();
     }, [id]);
 
     useEffect(() => {
@@ -90,11 +75,12 @@ const DetailPickUpParcelRoute = () => {
     }, [reqLocations]);
 
     useEffect(() => {
-        if (routePickup) {
-            fetchDriver(routePickup.driverId);
-            fetchWarehouse(routePickup.wareHouseId);
+        if (routeDropOff) {
+            console.log("check routeDropOff : ", routeDropOff)
+            fetchDriver(routeDropOff.driverId);
+            fetchWarehouse(routeDropOff.wareHouseId);
         }
-    }, [routePickup])
+    }, [routeDropOff])
 
     useEffect(() => {
         if (driver && warehouse) {
@@ -105,18 +91,24 @@ const DetailPickUpParcelRoute = () => {
     }, [driver, warehouse])
 
     useEffect(() => {
-        console.log("check pickUpRequests : ", pickUpRequests)
-        if (pickUpRequests != null) {
-            setReqLocations(pickUpRequests.map((req) => {
+        console.log("check dropOffRequests : ", dropOffRequests)
+        if (dropOffRequests != null) {
+            setReqLocations(dropOffRequests.map((req) => {
                 return {
-                    lat: req.pickupLatitude,
-                    lon: req.pickupLongitude,
-                    address: req.pickupAddress
+                    lat: req.dropoffLatitude,
+                    lon: req.dropoffLongitude,
+                    address: req.dropoffAddress
                 };
             }))
         }
-    }, [pickUpRequests]);
+    }, [dropOffRequests]);
 
+
+    useEffect(()=>{
+        if(reqLocations && driver && warehouse){
+            console.log("okok")
+        }
+    },[reqLocations,driver,warehouse])
 
     if (loading) return <CircularProgress />;
     if (!(reqLocations && driver && warehouse)) return <CircularProgress />;
@@ -125,45 +117,45 @@ const DetailPickUpParcelRoute = () => {
     return (
         <div>
             <h1>Route {id} Details</h1>
-            <PickUpRoute style={{ width: "100%", height: "80vh" }}
+            <DropOffRoute style={{ width: "100%", height: "80vh" }}
                 listLocation={reqLocations}
                 driver={driver}
                 warehouse={warehouse}
             />
             <br />
-            {routePickup && (
+            {routeDropOff && (
                 <div>
                     <TextField
                         label="Warehouse ID"
-                        value={routePickup.wareHouseId}
+                        value={routeDropOff.wareHouseId}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Driver ID"
-                        value={routePickup.driverId}
+                        value={routeDropOff.driverId}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Start Execute Time"
-                        value={routePickup.startExecuteStamp}
+                        value={routeDropOff.startExecuteStamp}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="End Time"
-                        value={routePickup.endStamp}
+                        value={routeDropOff.endStamp}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Route Status ID"
-                        value={routeStatusMap[routePickup.routeStatusId]}
+                        value={routeStatusMap[routeDropOff.routeStatusId]}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
@@ -175,4 +167,4 @@ const DetailPickUpParcelRoute = () => {
 };
 
 const SCR_ID = "SCR_SAR_DEFAULT";
-export default withScreenSecurity(DetailPickUpParcelRoute, SCR_ID, true);
+export default withScreenSecurity(DetailDropOffParcelRoute, SCR_ID, true);

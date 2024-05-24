@@ -32,6 +32,11 @@ public class ParcelRequestServiceImpl implements ParcelRequestService {
     }
 
     @Override
+    public List<ParcelRequest> getParcelRequestByDropOffRouteId(String id) {
+        return repository.getParcelRequesByDropOffRoute(id);
+    }
+
+    @Override
     public List<ParcelRequest> getAllParcelRequests() {
         return repository.findAll();
     }
@@ -45,4 +50,5 @@ public class ParcelRequestServiceImpl implements ParcelRequestService {
     public boolean existsById(UUID requestId) {
         return repository.existsById(requestId);
     }
+
 }

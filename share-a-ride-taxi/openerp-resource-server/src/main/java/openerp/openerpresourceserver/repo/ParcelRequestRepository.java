@@ -17,5 +17,11 @@ public interface ParcelRequestRepository extends JpaRepository<ParcelRequest, UU
             "INNER JOIN sar_route_pickup rp ON rp.id = rpd.route_id " +
             "WHERE rp.id = :pickUpRouteId", nativeQuery = true)
     List<ParcelRequest> getParcelRequesByPickUpRoute(@Param("pickUpRouteId") String pickUpRouteId);
+
+    @Query(value = "SELECT pr.* FROM sar_parcel_request pr " +
+            "INNER JOIN sar_route_dropoff_detail rdd ON pr.request_id = rdd.request_id " +
+            "INNER JOIN sar_route_dropoff rd ON rd.id = rdd.route_id " +
+            "WHERE rd.id = :dropOffRouteId", nativeQuery = true)
+    List<ParcelRequest> getParcelRequesByDropOffRoute(@Param("dropOffRouteId") String id);
 }
 

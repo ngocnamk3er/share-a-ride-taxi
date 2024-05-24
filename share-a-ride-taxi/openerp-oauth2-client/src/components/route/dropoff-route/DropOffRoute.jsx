@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import RoutingMachine from "./RoutingMachine";
+import RoutingMachine from "./DropOffRoutingMachine";
 
 function ResetCenterView(props) {
     const { center } = props;
@@ -24,7 +24,7 @@ function ResetCenterView(props) {
     return null;
 }
 
-const PickUpRoute = (props) => {
+const DropOffRoute = (props) => {
     const center = props.center ? props.center : [21.0283334, 105.854041];
     const listLocation = props.listLocation;
     const { driver } = props;
@@ -46,4 +46,4 @@ const PickUpRoute = (props) => {
     );
 };
 
-export default PickUpRoute;
+export default DropOffRoute;

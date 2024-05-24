@@ -8,15 +8,15 @@ const createRoutineMachineLayer = (props) => {
 
   const waypoints = [
     L.latLng(driver.lat, driver.lon),
+    L.latLng(warehouse.lat, warehouse.lon),
     ...listLocation.map((location) => L.latLng(location.lat, location.lon)),
-    L.latLng(warehouse.lat, warehouse.lon)
   ];
 
   // Import your custom icon images
   const iconUrls = [
-    require(`../../assets/img/driver.png`),
-    ...listLocation.map((_, i) => require(`../../assets/img/${i + 1}.png`)),
-    require(`../../assets/img/warehouse.png`)
+    require(`../../../assets/img/driver.png`),
+    require(`../../../assets/img/warehouse.png`),
+    ...listLocation.map((_, i) => require(`../../../assets/img/${i + 1}.png`)),
   ];
 
   // Define your custom icons
@@ -50,10 +50,10 @@ const createRoutineMachineLayer = (props) => {
 
       if (i === 0) {
         marker.bindPopup(driver.address).openPopup();
-      } else if (i === waypoints.length - 1) {
+      } else if (i === 1) {
         marker.bindPopup(warehouse.address).openPopup();
       } else {
-        marker.bindPopup(listLocation[i - 1].address).openPopup();
+        marker.bindPopup(listLocation[i - 2].address).openPopup();
       }
       return marker;
     },
@@ -66,25 +66,25 @@ const createRoutineMachineLayer = (props) => {
         smoothFactor: 1
       });
 
-      // line.setText('  ►  ', {
-      //   repeat: true,
-      //   attributes: {
-      //     fill: 'red'
-      //   }
+      line.setText('  ►  ', {
+        repeat: true,
+        attributes: {
+          fill: 'green'
+        }
+      });
+
+      // line.on('mouseover', function() {
+      //   this.setText('  ►  ', {
+      //     repeat: true,
+      //     attributes: {
+      //       fill: 'green'
+      //     }
+      //   });
       // });
 
-      line.on('mouseover', function() {
-        this.setText('  ►  ', {
-          repeat: true,
-          attributes: {
-            fill: 'red'
-          }
-        });
-      });
-
-      line.on('mouseout', function() {
-        this.setText(null);
-      });
+      // line.on('mouseout', function() {
+      //   this.setText(null);
+      // });
 
       return line;
     }
@@ -93,6 +93,6 @@ const createRoutineMachineLayer = (props) => {
   return instance;
 };
 
-const RoutingMachine = createControlComponent(createRoutineMachineLayer);
+const DropOffRoutingMachine = createControlComponent(createRoutineMachineLayer);
 
-export default RoutingMachine;
+export default DropOffRoutingMachine;
