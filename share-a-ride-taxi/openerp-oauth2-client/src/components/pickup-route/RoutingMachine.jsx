@@ -1,16 +1,10 @@
 import L from "leaflet";
 import { createControlComponent } from "@react-leaflet/core";
 import "leaflet-routing-machine";
-
+import 'leaflet-textpath'; // Import Leaflet.TextPath
 
 const createRoutineMachineLayer = (props) => {
-  const { listLocation } = props;
-  const { driver } = props;
-  const { warehouse } = props;
-
-  console.log("check listLocation : ", listLocation);
-
-
+  const { listLocation, driver, warehouse } = props;
 
   const waypoints = [
     L.latLng(driver.lat, driver.lon),
@@ -19,29 +13,33 @@ const createRoutineMachineLayer = (props) => {
   ];
 
   // Import your custom icon images
-  const iconUrls = [];
-
-  iconUrls.push(require(`../../assets/img/driver.png`));
-
-  for (let i = 0; i < listLocation.length; i++) {
-    iconUrls.push(require(`../../assets/img/${i + 1}.png`));
-  }
-
-  iconUrls.push(require(`../../assets/img/warehouse.png`));
+  const iconUrls = [
+    require(`../../assets/img/driver.png`),
+    ...listLocation.map((_, i) => require(`../../assets/img/${i + 1}.png`)),
+    require(`../../assets/img/warehouse.png`)
+  ];
 
   // Define your custom icons
   const customIcons = iconUrls.map(url =>
     L.icon({
       iconUrl: url,
       iconSize: [48, 48], // Adjust the size as needed
-      iconAnchor: [16, 32], // Adjust the anchor point if needed
+      iconAnchor: [24, 48], // Adjust the anchor point if needed
     })
   );
 
   const instance = L.Routing.control({
     waypoints: waypoints,
     lineOptions: {
-      styles: [{ color: "#6FA1EC", weight: 4 }],
+      styles: [
+        {
+          color: "#6FA1EC",
+          weight: 5,
+          opacity: 0.75,
+          lineCap: 'butt',
+          smoothFactor: 1
+        }
+      ],
     },
     createMarker: function (i, waypoint, n) {
       // Create a marker with a custom icon
@@ -51,21 +49,45 @@ const createRoutineMachineLayer = (props) => {
       });
 
       if (i === 0) {
-        marker.bindPopup(driver.address);
-      } else if (i === waypoint.length - 1){
-        marker.bindPopup(listLocation[i + 1]);
-      }else{
-        marker.bindPopup(warehouse.address);
+        marker.bindPopup(driver.address).openPopup();
+      } else if (i === waypoints.length - 1) {
+        marker.bindPopup(warehouse.address).openPopup();
+      } else {
+        marker.bindPopup(listLocation[i - 1].address).openPopup();
       }
-
       return marker;
     },
-    show: true,
-    addWaypoints: false,
-    routeWhileDragging: true,
-    draggableWaypoints: true,
-    fitSelectedRoutes: true,
-    showAlternatives: false,
+    routeLine: function (route) {
+      const line = L.polyline(route.coordinates, {
+        color: '#6FA1EC',
+        weight: 5,
+        opacity: 0.75,
+        lineCap: 'butt',
+        smoothFactor: 1
+      });
+
+      // line.setText('  ►  ', {
+      //   repeat: true,
+      //   attributes: {
+      //     fill: 'red'
+      //   }
+      // });
+
+      line.on('mouseover', function() {
+        this.setText('  ►  ', {
+          repeat: true,
+          attributes: {
+            fill: 'red'
+          }
+        });
+      });
+
+      line.on('mouseout', function() {
+        this.setText(null);
+      });
+
+      return line;
+    }
   });
 
   return instance;
