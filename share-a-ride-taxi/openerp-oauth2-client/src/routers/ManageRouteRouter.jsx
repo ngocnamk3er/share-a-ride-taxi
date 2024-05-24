@@ -4,6 +4,7 @@ import AssignPassengerRoute from "screens/manage-route/AssignPassengerRoute";
 import ParcelRouteList from "screens/manage-route/ParcelRouteList";
 import DetailPickUpParcelRoute from "screens/manage-route/DetailPickUpParcelRoute";
 import DetailDropOffParcelRoute from "screens/manage-route/DetailDropOffParcelRoute";
+import DetailWarehouseRoute from "screens/manage-route/DetailWarehouseRoute";
 
 export default function ManageRouteRouter() {
     let { path } = useRouteMatch();
@@ -26,9 +27,9 @@ export default function ManageRouteRouter() {
                     path={`${path}/parcel-route-list/drop-off-route/:id`}
                 ></Route>
                 <Route
-                    component={DetailPickUpParcelRoute}
+                    component={DetailWarehouseRoute}
                     exact
-                    path={`${path}/parcel-route-list/:id`}
+                    path={`${path}/parcel-route-list/warehouse-route/:id`}
                 ></Route>
                 <Route
                     component={AssignParcelRoute}

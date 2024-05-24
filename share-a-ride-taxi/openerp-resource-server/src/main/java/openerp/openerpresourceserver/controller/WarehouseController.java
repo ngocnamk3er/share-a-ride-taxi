@@ -27,6 +27,11 @@ public class WarehouseController {
         return warehouseService.getWarehouseById(id);
     }
 
+    @GetMapping("/by-warehouse-route/{id}")
+    public List<Warehouse> getWarehouseByWarehouseRouteId(@PathVariable String id) {
+        return warehouseService.getWarehouseByWarehoueRouteId(id);
+    }
+
     @PostMapping
     public Warehouse createWarehouse(@RequestBody Warehouse warehouse) {
         warehouse.setCreatedAt(LocalDateTime.now());

@@ -9,4 +9,6 @@ public interface WarehouseService {
     Warehouse getWarehouseById(String id);
     Warehouse saveWarehouse(Warehouse warehouse);
     void deleteWarehouse(String id);
+
+    List<Warehouse> getWarehouseByWarehoueRouteId(String id);
 }

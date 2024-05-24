@@ -33,4 +33,9 @@ public class WarehouseServiceImpl implements WarehouseService {
     public void deleteWarehouse(String id) {
         warehouseRepository.deleteById(id);
     }
+
+    @Override
+    public List<Warehouse> getWarehouseByWarehoueRouteId(String id) {
+        return warehouseRepository.getWarehouseByWarehoueRouteId(id);
+    }
 }
