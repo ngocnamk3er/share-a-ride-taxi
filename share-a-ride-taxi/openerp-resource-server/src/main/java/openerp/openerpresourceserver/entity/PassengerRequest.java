@@ -67,8 +67,27 @@ public class PassengerRequest {
     @Column(name = "dropoff_address_note")
     private String dropoffAddressNote;
 
-    @Column(name = "assigned_warehouse_id")
-    private String assignedWarehouseId;
+    @Column(name = "route_id")
+    private String routeId;
+
+    @Column(name = "route_type")
+    private String routeType;
+
+    @Column(name = "pick_up_seq_index")
+    private Integer pickUpSeqIndex;
+
+    @Column(name = "drop_off_seq_index")
+    private Integer dropOffSeqIndex;
+
+    @Column(name = "lat")
+    private Double lat;
+
+    @Column(name = "lon")
+    private Double lon;
+
+    @Column(name = "address")
+    private String address;
+
     // Getters and setters
 }
 

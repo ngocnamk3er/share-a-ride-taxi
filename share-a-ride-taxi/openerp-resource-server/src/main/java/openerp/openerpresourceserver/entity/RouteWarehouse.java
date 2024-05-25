@@ -40,4 +40,13 @@ public class RouteWarehouse {
     @Column(name = "start_ware_house_id")
     private String startWarehouseId;
 
+    @Column(name = "lat")
+    private Double lat;
+
+    @Column(name = "lon")
+    private Double lon;
+
+    @Column(name = "address")
+    private String address;
+
 }

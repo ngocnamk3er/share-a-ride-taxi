@@ -78,5 +78,14 @@ public class ParcelRequest {
 
     @Column(name = "assigned_warehouse_id")
     private String assignedWarehouseId;
+
+    @Column(name = "lat")
+    private Double lat;
+
+    @Column(name = "lon")
+    private Double lon;
+
+    @Column(name = "address")
+    private String address;
     // Getters and setters
 }

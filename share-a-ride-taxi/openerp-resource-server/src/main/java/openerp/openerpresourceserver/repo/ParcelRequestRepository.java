@@ -15,13 +15,15 @@ public interface ParcelRequestRepository extends JpaRepository<ParcelRequest, UU
     @Query(value = "SELECT pr.* FROM sar_parcel_request pr " +
             "INNER JOIN sar_route_pickup_detail rpd ON pr.request_id = rpd.request_id " +
             "INNER JOIN sar_route_pickup rp ON rp.id = rpd.route_id " +
-            "WHERE rp.id = :pickUpRouteId", nativeQuery = true)
+            "WHERE rp.id = :pickUpRouteId " +
+            "ORDER BY rpd.seq_index", nativeQuery = true)
     List<ParcelRequest> getParcelRequesByPickUpRoute(@Param("pickUpRouteId") String pickUpRouteId);
 
     @Query(value = "SELECT pr.* FROM sar_parcel_request pr " +
             "INNER JOIN sar_route_dropoff_detail rdd ON pr.request_id = rdd.request_id " +
             "INNER JOIN sar_route_dropoff rd ON rd.id = rdd.route_id " +
-            "WHERE rd.id = :dropOffRouteId", nativeQuery = true)
+            "WHERE rd.id = :dropOffRouteId " +
+            "ORDER BY rdd.seq_index", nativeQuery = true)
     List<ParcelRequest> getParcelRequesByDropOffRoute(@Param("dropOffRouteId") String id);
 }
 

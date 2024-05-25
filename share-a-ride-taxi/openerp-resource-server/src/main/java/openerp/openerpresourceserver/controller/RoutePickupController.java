@@ -40,6 +40,8 @@ public class RoutePickupController {
         return ResponseEntity.ok(routePickup);
     }
 
+
+
     @GetMapping
     public List<RoutePickup> getAllRoutePickups() {
         return routePickupService.findAll();

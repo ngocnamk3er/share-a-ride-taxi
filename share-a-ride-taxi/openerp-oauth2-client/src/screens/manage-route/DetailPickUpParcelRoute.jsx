@@ -22,6 +22,7 @@ const DetailPickUpParcelRoute = () => {
     const [center, setCenter] = useState(null);
     const match = useRouteMatch();
     const history = useHistory();
+    const { path } = match;
     const { id } = match.params;
 
     const statusLookup = {
@@ -183,6 +184,16 @@ const DetailPickUpParcelRoute = () => {
     return (
         <div>
             <h1>Route {id} Details</h1>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => history.push(`/manage-routes/parcel-route-list/pick-up-route/${id}/add-request`)}
+                style={{ marginTop: '20px' }}
+            >
+                AddRequestToPickUpRoute
+            </Button>
+            <br />
+            <br />
             <PickUpRoute style={{ width: "100%", height: "80vh" }}
                 listLocation={reqLocations}
                 driver={driver}

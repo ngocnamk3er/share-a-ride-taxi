@@ -3,6 +3,7 @@ package openerp.openerpresourceserver.service.Impl.Auto;
 import com.graphhopper.ResponsePath;
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.*;
+import openerp.openerpresourceserver.enums.RequestStatus;
 import openerp.openerpresourceserver.enums.RouteStatus;
 import openerp.openerpresourceserver.service.Interface.*;
 import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
@@ -144,6 +145,9 @@ public class AutoAssignService {
                     .requestId(parcelRequest.getRequestId())
                     .seqIndex(currentlength)
                     .build();
+            parcelRequest.setStatusId(RequestStatus.DRIVER_ASSIGNED.ordinal());
+
+            parcelRequestService.createParcelRequest(parcelRequest);
             routePickupDetailVector.add(routePickupDetail);
             routePickupDetailService.save(routePickupDetail);
         }
@@ -182,6 +186,7 @@ public class AutoAssignService {
                     .routeStatusId(RouteStatus.NOT_READY.ordinal())
                     .driverId(driver.getUserId())
                     .build();
+
             vectorRouteDropoff.add(routeDropoff);
             routeDropoffService.createRouteDropoff(routeDropoff);
         }
@@ -202,6 +207,8 @@ public class AutoAssignService {
                     .requestId(parcelRequest.getRequestId())
                     .seqIndex(currentlength)
                     .build();
+
+            parcelRequest.setStatusId(RequestStatus.DRIVER_ASSIGNED.ordinal());
             routeDropoffDetailVector.add(routePickupDetail);
             routeDropoffDetailService.createRouteDropoffDetail(routePickupDetail);
         }

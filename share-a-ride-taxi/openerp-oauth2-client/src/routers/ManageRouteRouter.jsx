@@ -5,6 +5,8 @@ import ParcelRouteList from "screens/manage-route/ParcelRouteList";
 import DetailPickUpParcelRoute from "screens/manage-route/DetailPickUpParcelRoute";
 import DetailDropOffParcelRoute from "screens/manage-route/DetailDropOffParcelRoute";
 import DetailWarehouseRoute from "screens/manage-route/DetailWarehouseRoute";
+import AddRequestToPickUpRoute from "screens/manage-route/AddRequestToPickUpRoute";
+
 
 export default function ManageRouteRouter() {
     let { path } = useRouteMatch();
@@ -20,6 +22,11 @@ export default function ManageRouteRouter() {
                     component={DetailPickUpParcelRoute}
                     exact
                     path={`${path}/parcel-route-list/pick-up-route/:id`}
+                ></Route>
+                <Route
+                    component={AddRequestToPickUpRoute}
+                    exact
+                    path={`${path}/parcel-route-list/pick-up-route/:id/add-request`}
                 ></Route>
                 <Route
                     component={DetailDropOffParcelRoute}

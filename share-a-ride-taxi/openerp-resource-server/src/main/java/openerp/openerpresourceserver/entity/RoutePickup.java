@@ -39,4 +39,13 @@ public class RoutePickup {
     @Column(name = "ware_house_id")
     private String wareHouseId;
 
+    @Column(name = "lat")
+    private Double lat;
+
+    @Column(name = "lon")
+    private Double lon;
+
+    @Column(name = "address")
+    private String address;
+
 }
