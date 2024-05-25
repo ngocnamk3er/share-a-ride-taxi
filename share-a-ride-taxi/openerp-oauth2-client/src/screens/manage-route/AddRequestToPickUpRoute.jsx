@@ -134,14 +134,36 @@ const AddRequestToPickUpRoute = () => {
     };
 
     const handleUpdateRouteClick = async () => {
-        const assignedParcelRequests = columns['column2'].taskIds.map((taskId, index) => ({
-            routeId: id,
-            requestId: taskId.id,
-            seqIndex: index + 1 // Thay đổi cách tính seqIndex nếu cần
-        }));
-
+        const assignedPassengerRequests = [];
+        const assignedParcelRequests = [];
+    
+        columns['column2'].taskIds.forEach((taskId, index) => {
+            if (taskId.type === 'passenger-request') {
+                assignedPassengerRequests.push({
+                    requestId: taskId.id,
+                    routeId: id,
+                    pickUpSeqIndex: index + 1, // Cần xem xét cách tính seqIndex
+                    dropOffSeqIndex: index + 1, // Cần xem xét cách tính seqIndex
+                    // Các thuộc tính khác của passenger request bạn muốn gửi đi
+                });
+            }
+        });
+    
+        columns['column2'].taskIds.forEach((taskId, index) => {
+            if (taskId.type === 'parcel-request') {
+                assignedParcelRequests.push({
+                    routeId: id,
+                    requestId: taskId.id,
+                    seqIndex: index + 1 // Thay đổi cách tính seqIndex nếu cần
+                });
+            }
+        });
+    
         try {
-            await request("post", `/route-pickups/${id}/pick-up-route-details`,null,null, assignedParcelRequests);
+            await Promise.all([
+                request("put", `/passenger-requests/add-to-route/${id}`, null, null, assignedPassengerRequests),
+                request("post", `/route-pickups/${id}/pick-up-route-details`, null, null, assignedParcelRequests)
+            ]);
             console.log("Route updated successfully");
             // Có thể hiển thị thông báo hoặc cập nhật UI tại đây nếu cần
         } catch (error) {
@@ -149,6 +171,7 @@ const AddRequestToPickUpRoute = () => {
             // Xử lý lỗi và hiển thị thông báo cho người dùng nếu cần
         }
     };
+    
 
     useEffect(() => {
         console.log(columns['column2'].taskIds)
