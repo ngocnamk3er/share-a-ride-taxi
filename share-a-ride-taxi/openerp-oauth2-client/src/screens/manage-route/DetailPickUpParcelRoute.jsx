@@ -4,8 +4,10 @@ import { TextField, Button } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
-import RoutingMapTwoPoint from '../../components/findroute/RoutingMapTwoPoint';
+import { StandardTable } from "erp-hust/lib/StandardTable";
 import PickUpRoute from "components/route/pickup-route/PickUpRoute";
+import IconButton from "@mui/material/IconButton";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 
 const DetailPickUpParcelRoute = () => {
@@ -17,9 +19,60 @@ const DetailPickUpParcelRoute = () => {
     const [reqLocations, setReqLocations] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [center, setCenter] = useState(null);
     const match = useRouteMatch();
     const history = useHistory();
     const { id } = match.params;
+
+    const statusLookup = {
+        0: "None",
+        1: "Received",
+        2: "Driver Assigned",
+        3: "In Transit",
+        4: "Delivered",
+        5: "Cancelled"
+    };
+
+    const columnsRequest = [
+        {
+            title: "Sender Name",
+            field: "senderName",
+        },
+        {
+            title: "Recipient Name",
+            field: "recipientName",
+        },
+        {
+            title: "Pickup Location Address",
+            field: "pickupAddress",
+        },
+        {
+            title: "Status",
+            field: "statusId",
+            render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
+        },
+        // {
+        //     title: "Visited",
+        //     render: (rowData) => routePickupDetailList.find((element) => {
+        //         return rowData.id === element.request_id;
+        //     }).visited // Render status label using lookup
+        // }
+        // {
+        //     title: "View",
+        //     sorting: false,
+        //     render: (rowData) => (
+        //         <IconButton
+        //             onClick={() => {
+        //                 handleViewClick(rowData);
+        //             }}
+        //             variant="contained"
+        //             color="primary"
+        //         >
+        //             <VisibilityIcon />
+        //         </IconButton>
+        //     ),
+        // },
+    ]
 
     const routeStatusMap = {
         0: "Not Ready",
@@ -79,6 +132,11 @@ const DetailPickUpParcelRoute = () => {
         }
     };
 
+    const handleRowClick = (event, rowData) => {
+        const center = [rowData.pickupLatitude, rowData.pickupLongitude]
+        setCenter(center);
+    };
+
     useEffect(() => {
         fetchRoutePickup();
         fetchRoutePickupDetailList();
@@ -129,6 +187,19 @@ const DetailPickUpParcelRoute = () => {
                 listLocation={reqLocations}
                 driver={driver}
                 warehouse={warehouse}
+                center={center}
+            />
+            <br />
+            <StandardTable
+                columns={columnsRequest}
+                data={pickUpRequests}
+                options={{
+                    selection: false,
+                    pageSize: 5,
+                    search: true,
+                    sorting: true,
+                }}
+                onRowClick={handleRowClick}
             />
             <br />
             {routePickup && (

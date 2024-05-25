@@ -12,7 +12,7 @@ function ResetCenterView(props) {
         if (center) {
             map.setView(
                 L.latLng(center[0], center[1]),
-                12,
+                48,
                 map.getZoom(),
                 {
                     animate: true,
@@ -39,7 +39,7 @@ const PickUpRoute = (props) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <RoutingMachine listLocation={listLocation} driver={driver} warehouse={warehouse} />
+                <RoutingMachine listLocation={listLocation} driver={driver} warehouse={warehouse}/>
                 <ResetCenterView center={center} />
             </MapContainer>
         </>

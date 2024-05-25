@@ -4,7 +4,7 @@ import "leaflet-routing-machine";
 import 'leaflet-textpath'; // Import Leaflet.TextPath
 
 const createRoutineMachineLayer = (props) => {
-  const { driver, startWarehouse, listLocation } = props;
+  const { driver, startWarehouse, listLocation, center } = props;
 
   const waypoints = [
     L.latLng(driver.lat, driver.lon),
