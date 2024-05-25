@@ -132,9 +132,9 @@ const AddRequestToPickUpRoute = () => {
                                         className="task-list"
                                     >
                                         {column.taskIds.map((taskId, index) => {
-                                            const request = column.id === 'column1' ?
-                                                passengerRequests.find(req => req.requestId === taskId) :
-                                                parcelRequests.find(req => req.requestId === taskId);
+                                            // const request = column.id === 'column1' ?
+                                            //     passengerRequests.find(req => req.requestId === taskId) :
+                                            //     parcelRequests.find(req => req.requestId === taskId);
 
                                             return (
                                                 <Draggable key={taskId} draggableId={taskId} index={index}>
@@ -145,7 +145,7 @@ const AddRequestToPickUpRoute = () => {
                                                             {...provided.dragHandleProps}
                                                             className="task"
                                                         >
-                                                            {request ? (column.id === 'column1' ? request.passengerName : request.recipientName) : ''}
+                                                            {taskId}
                                                         </div>
                                                     )}
                                                 </Draggable>
