@@ -29,7 +29,7 @@ const AddRequestToPickUpRoute = () => {
             try {
                 const res = await request("get", `/passenger-requests`);
                 setPassengerRequests(res.data);
-                const taskIds = res.data.map(request => request.requestId);
+                const taskIds = res.data.map(request => "passenger-request "+request.requestId);
                 setColumns(prevColumns => ({
                     ...prevColumns,
                     'column1': {
@@ -46,7 +46,7 @@ const AddRequestToPickUpRoute = () => {
             try {
                 const res = await request("get", `/parcel-requests/by-pickup-route/${id}`);
                 setParcelRequests(res.data);
-                const taskIds = res.data.map(request => request.requestId);
+                const taskIds = res.data.map(request => "parcel-request "+request.requestId);
                 setColumns(prevColumns => ({
                     ...prevColumns,
                     'column2': {
