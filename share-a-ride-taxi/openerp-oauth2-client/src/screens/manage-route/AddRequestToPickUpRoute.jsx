@@ -29,7 +29,13 @@ const AddRequestToPickUpRoute = () => {
             try {
                 const res = await request("get", `/passenger-requests`);
                 setPassengerRequests(res.data);
-                const taskIds = res.data.map(request => "passenger-request "+request.requestId);
+                // const taskIds = res.data.map(request => "passenger-request "+request.requestId);
+                const taskIds = res.data.map(request => ({
+                    id: request.requestId,
+                    type: 'passenger-request',
+                    description: "passenger-request of " + request.passengerName,
+                    // Các thuộc tính khác của request bạn muốn bổ sung vào object
+                }));
                 setColumns(prevColumns => ({
                     ...prevColumns,
                     'column1': {
@@ -46,7 +52,13 @@ const AddRequestToPickUpRoute = () => {
             try {
                 const res = await request("get", `/parcel-requests/by-pickup-route/${id}`);
                 setParcelRequests(res.data);
-                const taskIds = res.data.map(request => "parcel-request "+request.requestId);
+                // const taskIds = res.data.map(request => "parcel-request "+request.requestId);
+                const taskIds = res.data.map(request => ({
+                    id: request.requestId,
+                    type: 'parcel-request',
+                    description: "parcel-request of " + request.senderName,
+                    // Các thuộc tính khác của request bạn muốn bổ sung vào object
+                }));
                 setColumns(prevColumns => ({
                     ...prevColumns,
                     'column2': {
@@ -78,10 +90,13 @@ const AddRequestToPickUpRoute = () => {
         const start = columns[source.droppableId];
         const finish = columns[destination.droppableId];
 
+        // Chuyển chuỗi draggableId thành đối tượng
+        const draggedItem = JSON.parse(draggableId);
+
         if (start === finish) {
             const newTaskIds = Array.from(start.taskIds);
             newTaskIds.splice(source.index, 1);
-            newTaskIds.splice(destination.index, 0, draggableId);
+            newTaskIds.splice(destination.index, 0, draggedItem);
 
             const newColumn = {
                 ...start,
@@ -104,7 +119,7 @@ const AddRequestToPickUpRoute = () => {
         };
 
         const finishTaskIds = Array.from(finish.taskIds);
-        finishTaskIds.splice(destination.index, 0, draggableId);
+        finishTaskIds.splice(destination.index, 0, draggedItem);
         const newFinish = {
             ...finish,
             taskIds: finishTaskIds
@@ -115,7 +130,12 @@ const AddRequestToPickUpRoute = () => {
             [newStart.id]: newStart,
             [newFinish.id]: newFinish
         }));
+
     };
+
+    useEffect(() => {
+        console.log(columns['column2'].taskIds)
+    },[columns])
 
     return (
         <div>
@@ -137,7 +157,7 @@ const AddRequestToPickUpRoute = () => {
                                             //     parcelRequests.find(req => req.requestId === taskId);
 
                                             return (
-                                                <Draggable key={taskId} draggableId={taskId} index={index}>
+                                                <Draggable key={JSON.stringify(taskId)} draggableId={JSON.stringify(taskId)} index={index}>
                                                     {(provided) => (
                                                         <div
                                                             ref={provided.innerRef}
@@ -145,7 +165,7 @@ const AddRequestToPickUpRoute = () => {
                                                             {...provided.dragHandleProps}
                                                             className="task"
                                                         >
-                                                            {taskId}
+                                                            {taskId.description}
                                                         </div>
                                                     )}
                                                 </Draggable>
