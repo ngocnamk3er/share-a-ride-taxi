@@ -3,7 +3,7 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import './AddRequestToPickUpRoute.css';
 import { useParams } from "react-router-dom";
 import { request } from "../../api";
-import { Typography, Grid, Box } from "@mui/material";
+import { Typography, Grid, Button } from "@mui/material";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const AddRequestToPickUpRoute = () => {
@@ -133,13 +133,35 @@ const AddRequestToPickUpRoute = () => {
 
     };
 
+    const handleUpdateRouteClick = async () => {
+        const assignedParcelRequests = columns['column2'].taskIds.map((taskId, index) => ({
+            routeId: id,
+            requestId: taskId.id,
+            seqIndex: index + 1 // Thay đổi cách tính seqIndex nếu cần
+        }));
+
+        try {
+            await request("post", `/route-pickups/${id}/pick-up-route-details`,null,null, assignedParcelRequests);
+            console.log("Route updated successfully");
+            // Có thể hiển thị thông báo hoặc cập nhật UI tại đây nếu cần
+        } catch (error) {
+            console.error("Error updating route:", error);
+            // Xử lý lỗi và hiển thị thông báo cho người dùng nếu cần
+        }
+    };
+
     useEffect(() => {
         console.log(columns['column2'].taskIds)
-    },[columns])
+    }, [columns])
 
     return (
         <div>
             <Grid container spacing={2}>
+                <Grid item xs={12} className="update-button">
+                    <Button variant="contained" color="primary" onClick={handleUpdateRouteClick}>
+                        Update Route
+                    </Button>
+                </Grid>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {Object.values(columns).map(column => (
                         <Grid item xs={6} key={column.id} className="column">

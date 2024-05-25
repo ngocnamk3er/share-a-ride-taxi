@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface RoutePickupDetailRepository extends JpaRepository<RoutePickupDetail, UUID> {
     List<RoutePickupDetail> findAllByRouteId(String routeId);
+
+    void deleteAllByRouteId(String routeId);
 }

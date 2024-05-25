@@ -61,6 +61,16 @@ public class PassengerRequestController {
         return ResponseEntity.ok(updatedPassengerRequest);
     }
 
+    @PutMapping("/add-to-route/{id}")
+    public ResponseEntity<PassengerRequest> addPassengerRequestToRoute(@PathVariable UUID id, @RequestBody PassengerRequest passengerRequest) {
+        PassengerRequest existPassengerRequest = passengerRequestService.getPassengerRequestById(id);
+        existPassengerRequest.setRouteId(passengerRequest.getRouteId());
+        existPassengerRequest.setPickUpSeqIndex(passengerRequest.getPickUpSeqIndex());
+        existPassengerRequest.setDropOffSeqIndex(passengerRequest.getDropOffSeqIndex());
+        PassengerRequest updatedPassengerRequest = passengerRequestService.savePassengerRequest(existPassengerRequest);
+        return ResponseEntity.ok(updatedPassengerRequest);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePassengerRequest(@PathVariable UUID id) {
         if (!passengerRequestService.existsById(id)) {

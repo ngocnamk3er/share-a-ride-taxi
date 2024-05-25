@@ -17,5 +17,7 @@ public interface RoutePickupDetailService {
 
     List<RoutePickupDetail> findAll();
     void deleteById(UUID id);
+
+    void deleteAllByRouteId(String routeId);
     // Thêm các phương thức khác cần thiết tại đây
 }

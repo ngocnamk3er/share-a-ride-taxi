@@ -5,6 +5,7 @@ import openerp.openerpresourceserver.repo.RoutePickupDetailRepository;
 import openerp.openerpresourceserver.service.Interface.RoutePickupDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,6 +50,12 @@ public class RoutePickupDetailServiceImpl implements RoutePickupDetailService {
     @Override
     public void deleteById(UUID id) {
         routePickupDetailRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByRouteId(String routeId) {
+        routePickupDetailRepository.deleteAllByRouteId(routeId);
     }
 
     // Thêm các phương thức khác cần thiết tại đây
