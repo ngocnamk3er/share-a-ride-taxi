@@ -11,7 +11,7 @@ const CreateParcelRequest = () => {
 
     const history = useHistory();
 
-    const RECEIVED = 1;
+    const RECEIVED = 0;
 
     const [parcelData, setParcelData] = useState({
         senderName: "",

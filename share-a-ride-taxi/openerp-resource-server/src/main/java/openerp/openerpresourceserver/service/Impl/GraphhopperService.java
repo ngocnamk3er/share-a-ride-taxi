@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+
 @Service
 public class GraphhopperService {
 
@@ -17,10 +19,10 @@ public class GraphhopperService {
 
     public RoutingEstimate getRoutingEstimate(Coordinate point1, Coordinate point2) {
         // Lấy tọa độ của điểm 1 và điểm 2 từ hai đối tượng Coordinates được truyền vào
-        double latitude1 = point1.getLatitude();
-        double longitude1 = point1.getLongitude();
-        double latitude2 = point2.getLatitude();
-        double longitude2 = point2.getLongitude();
+        BigDecimal latitude1 = point1.getLatitude();
+        BigDecimal longitude1 = point1.getLongitude();
+        BigDecimal latitude2 = point2.getLatitude();
+        BigDecimal longitude2 = point2.getLongitude();
 
         // Khởi tạo RestTemplate
         RestTemplate restTemplate = new RestTemplate();
@@ -45,7 +47,7 @@ public class GraphhopperService {
         JSONObject firstPathObject = pathsArray.getJSONObject(0);
 
         // Lấy giá trị distance từ đối tượng firstPathObject
-        double distance = firstPathObject.getDouble("distance");
+        BigDecimal distance = firstPathObject.getBigDecimal("distance");
 
         // Lấy giá trị time từ đối tượng firstPathObject
         int time = firstPathObject.getInt("time");

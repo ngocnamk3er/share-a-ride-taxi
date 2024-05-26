@@ -1,10 +1,9 @@
-package openerp.openerpresourceserver.model.request;
+package openerp.openerpresourceserver.DTO.request;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 public class ParcelRequestRequest {

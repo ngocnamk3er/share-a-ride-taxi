@@ -1,21 +1,19 @@
-package openerp.openerpresourceserver.model.response;
+package openerp.openerpresourceserver.DTO.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import openerp.openerpresourceserver.enums.RequestStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PassengerRequestResponse {
-    private UUID id;
+public class PassengerRequestRequest {
     private String passengerName;
     private String phoneNumber;
     private String email;
@@ -26,6 +24,5 @@ public class PassengerRequestResponse {
     private BigDecimal dropoffLocationLongitude;
     private String dropoffLocationAddress;
     private LocalDateTime requestTime;
-    private String requestStatus;
-
+    private Integer statusId;
 }

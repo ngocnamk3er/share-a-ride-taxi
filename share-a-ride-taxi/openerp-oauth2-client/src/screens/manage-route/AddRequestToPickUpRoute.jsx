@@ -7,8 +7,11 @@ import { Typography, Grid, Button } from "@mui/material";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const AddRequestToPickUpRoute = () => {
-    const [passengerRequests, setPassengerRequests] = useState([]);
-    const [parcelRequests, setParcelRequests] = useState([]);
+    const [unAssignedParcelRequests, setUnAssignedParcelRequests] = useState([]);
+    const [unAssignedPassengerRequests, setUnAssignedPassengerRequests] = useState([]);
+
+    const [parcelRequestsOfRoute, setParcelRequestsOfRoute] = useState([]);
+    const [passengerRequestsOfRoute, setPassengerRequestsOfRoute] = useState([]);
     const { id } = useParams();
 
     const [columns, setColumns] = useState({
@@ -28,9 +31,13 @@ const AddRequestToPickUpRoute = () => {
         const fetchPassengerRequests = async () => {
             try {
                 const res = await request("get", `/passenger-requests`);
-                setPassengerRequests(res.data);
+
+                const filteredRequests = res.data.filter(request => request.statusId === 0);
+
+                setUnAssignedPassengerRequests(filteredRequests);
+
                 // const taskIds = res.data.map(request => "passenger-request "+request.requestId);
-                const taskIds = res.data.map(request => ({
+                const taskIds = filteredRequests.map(request => ({
                     id: request.requestId,
                     type: 'passenger-request',
                     description: "passenger-request of " + request.passengerName,
@@ -48,31 +55,50 @@ const AddRequestToPickUpRoute = () => {
             }
         };
 
-        const fetchParcelRequests = async () => {
+        const fetchRequestsOfRoute = async () => {
             try {
-                const res = await request("get", `/parcel-requests/by-pickup-route/${id}`);
-                setParcelRequests(res.data);
-                // const taskIds = res.data.map(request => "parcel-request "+request.requestId);
-                const taskIds = res.data.map(request => ({
+                // Gọi API để lấy parcel requests
+                const resParcelReq = await request("get", `/parcel-requests/by-pickup-route/${id}`);
+                setParcelRequestsOfRoute(resParcelReq.data);
+        
+                // Gọi API để lấy passenger requests
+                const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
+                setPassengerRequestsOfRoute(resPassengerReq.data);
+        
+                // Kết hợp taskIds của parcel requests và passenger requests
+                const parcelTaskIds = resParcelReq.data.map(request => ({
                     id: request.requestId,
                     type: 'parcel-request',
                     description: "parcel-request of " + request.senderName,
-                    // Các thuộc tính khác của request bạn muốn bổ sung vào object
+                    seqIndex: request.seqIndex
                 }));
+        
+                const passengerTaskIds = resPassengerReq.data.map(request => ({
+                    id: request.requestId,
+                    type: 'passenger-request',
+                    description: "passenger-request of " + request.passengerName,
+                    seqIndex: request.seqIndex
+                }));
+        
+                // Kết hợp cả hai loại taskIds
+                const combinedTaskIds = [...parcelTaskIds, ...passengerTaskIds];
+                combinedTaskIds.sort((a, b) => a.seqIndex - b.seqIndex);
+
                 setColumns(prevColumns => ({
                     ...prevColumns,
                     'column2': {
                         ...prevColumns['column2'],
-                        taskIds: taskIds
+                        taskIds: combinedTaskIds
                     }
                 }));
             } catch (error) {
-                console.error("Error fetching parcel requests:", error);
+                console.error("Error fetching requests:", error);
             }
         };
+        
 
         fetchPassengerRequests();
-        fetchParcelRequests();
+        fetchRequestsOfRoute();
     }, [id]);
 
     const onDragEnd = (result) => {
@@ -136,20 +162,19 @@ const AddRequestToPickUpRoute = () => {
     const handleUpdateRouteClick = async () => {
         const assignedPassengerRequests = [];
         const assignedParcelRequests = [];
-    
+
         columns['column2'].taskIds.forEach((taskId, index) => {
             if (taskId.type === 'passenger-request') {
                 assignedPassengerRequests.push({
                     requestId: taskId.id,
                     routeId: id,
-                    pickUpSeqIndex: index + 1, // Cần xem xét cách tính seqIndex
-                    dropOffSeqIndex: index + 1, // Cần xem xét cách tính seqIndex
+                    seqIndex: index + 1, // Cần xem xét cách tính seqIndex
                     routeType: "PICK_UP_ROUTE"
                     // Các thuộc tính khác của passenger request bạn muốn gửi đi
                 });
             }
         });
-    
+
         columns['column2'].taskIds.forEach((taskId, index) => {
             if (taskId.type === 'parcel-request') {
                 assignedParcelRequests.push({
@@ -159,7 +184,7 @@ const AddRequestToPickUpRoute = () => {
                 });
             }
         });
-    
+
         try {
             await Promise.all([
                 request("put", `/passenger-requests/add-to-route/${id}`, null, null, assignedPassengerRequests),
@@ -172,7 +197,7 @@ const AddRequestToPickUpRoute = () => {
             // Xử lý lỗi và hiển thị thông báo cho người dùng nếu cần
         }
     };
-    
+
 
     useEffect(() => {
         console.log(columns['column2'].taskIds)

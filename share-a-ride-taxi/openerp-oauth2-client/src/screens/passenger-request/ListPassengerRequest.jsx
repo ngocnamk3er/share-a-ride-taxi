@@ -15,12 +15,11 @@ const ListPassengerRequest = () => {
     let { path } = useRouteMatch();
 
     const statusLookup = {
-        0: "None",
-        1: "Received",
-        2: "Driver Assigned",
-        3: "In Transit",
-        4: "Delivered",
-        5: "Cancelled"
+        0: "Received",
+        1: "Driver Assigned",
+        2: "In Transit",
+        3: "Delivered",
+        4: "Cancelled"
     };
 
     useEffect(() => {

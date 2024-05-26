@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
 
 
 const CreatePassengerRequest = () => {
-    const RECEIVED = 1
+    const RECEIVED = 0
 
     const history = useHistory();
 

@@ -1,28 +1,30 @@
 package openerp.openerpresourceserver.service.Impl.Object;
 
-public class Coordinate {
-    private Double latitude;
-    private Double longitude;
+import java.math.BigDecimal;
 
-    public Coordinate(Double latitude, Double longitude) {
+public class Coordinate {
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+
+    public Coordinate(BigDecimal latitude, BigDecimal longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
     // Getters and setters
-    public double getLatitude() {
+    public BigDecimal getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
+    public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public BigDecimal getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Double longitude) {
+    public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
     }
 }

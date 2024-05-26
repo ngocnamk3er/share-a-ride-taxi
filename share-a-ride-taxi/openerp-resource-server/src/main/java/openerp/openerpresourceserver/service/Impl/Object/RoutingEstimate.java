@@ -1,20 +1,22 @@
 package openerp.openerpresourceserver.service.Impl.Object;
 
+import java.math.BigDecimal;
+
 public class RoutingEstimate {
-    private double distance;
+    private BigDecimal distance;
     private int time;
 
-    public RoutingEstimate(double distance, int time) {
+    public RoutingEstimate(BigDecimal distance, int time) {
         this.distance = distance;
         this.time = time;
     }
 
     // Getters and setters
-    public double getDistance() {
+    public BigDecimal getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(BigDecimal distance) {
         this.distance = distance;
     }
 

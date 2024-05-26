@@ -1,8 +1,6 @@
-package openerp.openerpresourceserver.model.request;
+package openerp.openerpresourceserver.DTO.request;
 
-import jakarta.persistence.Column;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 

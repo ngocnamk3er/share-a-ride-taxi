@@ -2,6 +2,7 @@ package openerp.openerpresourceserver.controller;
 
 import com.graphhopper.ResponsePath;
 import lombok.RequiredArgsConstructor;
+import openerp.openerpresourceserver.DTO.response.ParcelRequestWithSeqIndex;
 import openerp.openerpresourceserver.entity.ParcelRequest;
 import openerp.openerpresourceserver.service.Interface.GraphHopperCalculator;
 import openerp.openerpresourceserver.service.Impl.GraphhopperService;
@@ -13,6 +14,7 @@ import openerp.openerpresourceserver.service.Interface.ParcelRequestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +38,7 @@ public class ParcelRequestController {
     }
 
     @GetMapping("/by-pickup-route/{id}")
-    public List<ParcelRequest> getParcelRequestByPickUpRouteId(@PathVariable String id) {
+    public List<ParcelRequestWithSeqIndex> getParcelRequestByPickUpRouteId(@PathVariable String id) {
         return parcelRequestService.getParcelRequestByPickUpRouteId(id);
     }
 
@@ -50,7 +52,7 @@ public class ParcelRequestController {
         Coordinate start = new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getPickupLongitude());
         Coordinate end =  new Coordinate(parcelRequest.getDropoffLatitude(), parcelRequest.getDropoffLongitude());
         ResponsePath path = graphHopperCalculator.calculate(start, end);
-        parcelRequest.setDistance(path.getDistance());
+        parcelRequest.setDistance(BigDecimal.valueOf(path.getDistance()));
         parcelRequest.setEndTime(parcelRequest.getRequestTime().plusSeconds(path.getTime()/1000));
         ParcelRequest createdParcelRequest = parcelRequestService.createParcelRequest(parcelRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdParcelRequest);

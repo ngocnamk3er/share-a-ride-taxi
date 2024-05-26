@@ -3,6 +3,7 @@ package openerp.openerpresourceserver.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -43,26 +44,26 @@ public class ParcelRequest {
     private Integer statusId;
 
     @Column(name = "distance")
-    private Double distance;
+    private BigDecimal distance;
 
 
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
     @Column(name = "pickup_latitude")
-    private Double pickupLatitude;
+    private BigDecimal pickupLatitude;
 
     @Column(name = "pickup_longitude")
-    private Double pickupLongitude;
+    private BigDecimal pickupLongitude;
 
     @Column(name = "pickup_address")
     private String pickupAddress;
 
     @Column(name = "dropoff_latitude")
-    private Double dropoffLatitude;
+    private BigDecimal dropoffLatitude;
 
     @Column(name = "dropoff_longitude")
-    private Double dropoffLongitude;
+    private BigDecimal dropoffLongitude;
 
     @Column(name = "dropoff_address")
     private String dropoffAddress;
@@ -80,10 +81,10 @@ public class ParcelRequest {
     private String assignedWarehouseId;
 
     @Column(name = "lat")
-    private Double lat;
+    private BigDecimal lat;
 
     @Column(name = "lon")
-    private Double lon;
+    private BigDecimal lon;
 
     @Column(name = "address")
     private String address;

@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.service.Interface;
 
+import openerp.openerpresourceserver.DTO.response.ParcelRequestWithSeqIndex;
 import openerp.openerpresourceserver.entity.ParcelRequest;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface ParcelRequestService {
 
     ParcelRequest getParcelRequestById(UUID id);
 
-    List<ParcelRequest> getParcelRequestByPickUpRouteId(String id);
+    List<ParcelRequestWithSeqIndex> getParcelRequestByPickUpRouteId(String id);
 
     List<ParcelRequest> getAllParcelRequests();
 

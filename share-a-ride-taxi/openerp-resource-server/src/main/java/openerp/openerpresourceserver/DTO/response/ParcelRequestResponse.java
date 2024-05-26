@@ -1,4 +1,4 @@
-package openerp.openerpresourceserver.model.response;
+package openerp.openerpresourceserver.DTO.response;
 
 import lombok.Data;
 

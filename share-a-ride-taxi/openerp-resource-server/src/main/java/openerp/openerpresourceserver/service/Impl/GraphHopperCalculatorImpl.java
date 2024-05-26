@@ -58,8 +58,8 @@ public class GraphHopperCalculatorImpl implements GraphHopperCalculator {
 
     @Override
     public ResponsePath calculate(Coordinate start, Coordinate end) throws Exception {
-        GHRequest request = new GHRequest(roundDouble(start.getLatitude()), roundDouble(start.getLongitude()),
-                roundDouble(end.getLatitude()), roundDouble(end.getLongitude()))
+        GHRequest request = new GHRequest(roundBigDecimal(start.getLatitude()), roundBigDecimal(start.getLongitude()),
+                roundBigDecimal(end.getLatitude()), roundBigDecimal(end.getLongitude()))
                 .setProfile("car").setLocale(Locale.US);
         GHResponse response = graphHopper.route(request);
 

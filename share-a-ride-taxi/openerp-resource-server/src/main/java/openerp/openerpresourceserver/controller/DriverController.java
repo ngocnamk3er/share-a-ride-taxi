@@ -4,7 +4,7 @@ package openerp.openerpresourceserver.controller;
 import com.nimbusds.jose.shaded.gson.Gson;
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.Driver;
-import openerp.openerpresourceserver.model.request.DriverRequest;
+import openerp.openerpresourceserver.DTO.request.DriverRequest;
 import openerp.openerpresourceserver.service.Interface.DriverService;
 import openerp.openerpresourceserver.service.Impl.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;

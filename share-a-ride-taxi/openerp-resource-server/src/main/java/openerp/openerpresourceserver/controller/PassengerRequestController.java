@@ -3,6 +3,8 @@ package openerp.openerpresourceserver.controller;
 import com.graphhopper.ResponsePath;
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.PassengerRequest;
+import openerp.openerpresourceserver.enums.RequestStatus;
+import openerp.openerpresourceserver.enums.RequestType;
 import openerp.openerpresourceserver.enums.RouteType;
 import openerp.openerpresourceserver.service.Interface.GraphHopperCalculator;
 import openerp.openerpresourceserver.service.Impl.GraphhopperService;
@@ -14,6 +16,7 @@ import openerp.openerpresourceserver.service.Interface.PassengerRequestService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +33,12 @@ public class PassengerRequestController {
         return passengerRequestService.getAllPassengerRequests();
     }
 
+    @GetMapping("/get-by-route-id/{routeId}")
+    public ResponseEntity<List<PassengerRequest>> getPassengerRequestById(@PathVariable String routeId) {
+        List<PassengerRequest> passengerRequests = passengerRequestService.getPassengerRequestByRouteId(routeId);
+        return ResponseEntity.ok(passengerRequests);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PassengerRequest> getPassengerRequestById(@PathVariable UUID id) {
         PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(id);
@@ -41,7 +50,7 @@ public class PassengerRequestController {
         Coordinate start = new Coordinate(passengerRequest.getPickupLatitude(), passengerRequest.getDropoffLongitude());
         Coordinate end =  new Coordinate(passengerRequest.getDropoffLatitude(), passengerRequest.getDropoffLongitude());
         ResponsePath path = graphHopperCalculator.calculate(start, end);
-        passengerRequest.setDistance(path.getDistance());
+        passengerRequest.setDistance(BigDecimal.valueOf(path.getDistance()));
         passengerRequest.setEndTime(passengerRequest.getRequestTime().plusSeconds(path.getTime()/1000));
         PassengerRequest createdPassengerRequest = passengerRequestService.savePassengerRequest(passengerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPassengerRequest);
@@ -69,8 +78,8 @@ public class PassengerRequestController {
         for (PassengerRequest passengerRequest : passengerRequestList){
             passengerRequest.setRouteType(null);
             passengerRequest.setRouteId(null);
-            passengerRequest.setPickUpSeqIndex(null);
-            passengerRequest.setDropOffSeqIndex(null);
+            passengerRequest.setSeqIndex(null);
+            passengerRequest.setStatusId(RequestStatus.RECEIVED.ordinal());
         }
 
         for (PassengerRequest passengerRequest : passengerRequests) {
@@ -80,8 +89,8 @@ public class PassengerRequestController {
             }
             existPassengerRequest.setRouteType(passengerRequest.getRouteType());
             existPassengerRequest.setRouteId(routeId);
-            existPassengerRequest.setPickUpSeqIndex(passengerRequest.getPickUpSeqIndex());
-            existPassengerRequest.setDropOffSeqIndex(passengerRequest.getDropOffSeqIndex());
+            existPassengerRequest.setSeqIndex(passengerRequest.getSeqIndex());
+            existPassengerRequest.setStatusId(RequestStatus.DRIVER_ASSIGNED.ordinal());
             passengerRequestService.savePassengerRequest(existPassengerRequest);
         }
         return ResponseEntity.ok(passengerRequests);
