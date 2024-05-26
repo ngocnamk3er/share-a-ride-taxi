@@ -42,4 +42,9 @@ public class PassengerRequestServiceImpl implements PassengerRequestService {
     public boolean existsById(UUID requestId) {
         return passengerRequestRepository.existsById(requestId);
     }
+
+    @Override
+    public List<PassengerRequest> getPassengerRequestByRouteId(String routeId) {
+        return passengerRequestRepository.findAllByRouteId(routeId);
+    }
 }

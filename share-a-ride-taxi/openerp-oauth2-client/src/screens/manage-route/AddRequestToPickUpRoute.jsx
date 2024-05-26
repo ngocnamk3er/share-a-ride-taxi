@@ -144,6 +144,7 @@ const AddRequestToPickUpRoute = () => {
                     routeId: id,
                     pickUpSeqIndex: index + 1, // Cần xem xét cách tính seqIndex
                     dropOffSeqIndex: index + 1, // Cần xem xét cách tính seqIndex
+                    routeType: "PICK_UP_ROUTE"
                     // Các thuộc tính khác của passenger request bạn muốn gửi đi
                 });
             }

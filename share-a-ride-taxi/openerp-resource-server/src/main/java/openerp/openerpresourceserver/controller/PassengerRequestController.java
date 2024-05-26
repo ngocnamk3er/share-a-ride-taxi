@@ -3,6 +3,7 @@ package openerp.openerpresourceserver.controller;
 import com.graphhopper.ResponsePath;
 import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.PassengerRequest;
+import openerp.openerpresourceserver.enums.RouteType;
 import openerp.openerpresourceserver.service.Interface.GraphHopperCalculator;
 import openerp.openerpresourceserver.service.Impl.GraphhopperService;
 import openerp.openerpresourceserver.service.Impl.Object.Coordinate;
@@ -63,11 +64,21 @@ public class PassengerRequestController {
 
     @PutMapping("/add-to-route/{routeId}")
     public ResponseEntity<List<PassengerRequest>> addPassengerRequestsToRoute(@PathVariable String routeId, @RequestBody List<PassengerRequest> passengerRequests) {
+        List<PassengerRequest> passengerRequestList = passengerRequestService.getPassengerRequestByRouteId(routeId);
+
+        for (PassengerRequest passengerRequest : passengerRequestList){
+            passengerRequest.setRouteType(null);
+            passengerRequest.setRouteId(null);
+            passengerRequest.setPickUpSeqIndex(null);
+            passengerRequest.setDropOffSeqIndex(null);
+        }
+
         for (PassengerRequest passengerRequest : passengerRequests) {
             PassengerRequest existPassengerRequest = passengerRequestService.getPassengerRequestById(passengerRequest.getRequestId());
             if (existPassengerRequest == null) {
                 return ResponseEntity.notFound().build();
             }
+            existPassengerRequest.setRouteType(passengerRequest.getRouteType());
             existPassengerRequest.setRouteId(routeId);
             existPassengerRequest.setPickUpSeqIndex(passengerRequest.getPickUpSeqIndex());
             existPassengerRequest.setDropOffSeqIndex(passengerRequest.getDropOffSeqIndex());
