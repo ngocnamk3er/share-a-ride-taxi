@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Grid } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
@@ -45,24 +45,16 @@ const DetailPickUpParcelRoute = () => {
                 return '';
             },
         },
-        // {
-        //     title: "Recipient Name",
-        //     field: "recipientName",
-        // },
-        // {
-        //     title: "Pickup Location Address",
-        //     field: "pickupAddress",
-        // },
-        // {
-        //     title: "Status",
-        //     field: "statusId",
-        //     render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
-        // },
         {
             title: "View",
             sorting: false,
+            cellStyle: { width: '10px', padding: '0px', textAlign: 'center' },
+            headerStyle: { width: '10px', padding: '0px', textAlign: 'center' },
             render: (rowData) => (
                 <IconButton
+                    style={{
+                        width: 50,
+                    }}
                     onClick={() => {
                         handleViewClick(rowData);
                     }}
@@ -203,31 +195,43 @@ const DetailPickUpParcelRoute = () => {
             </Button>
             <br />
             <br />
-            <PickUpRoute style={{ width: "100%", height: "80vh" }}
-                listLocation={pickUpParcelRequests.map(req => ({
-                    lat: req.pickupLatitude,
-                    lon: req.pickupLongitude,
-                    address: req.pickupAddress
-                }))}
-                combinedRequests={combinedRequests}
-                driver={driver}
-                warehouse={warehouse}
-                center={center}
-            />
-            <br />
-            
-            <StandardTable
-                columns={columnsRequest}
-                data={combinedRequests}
-                options={{
-                    selection: false,
-                    pageSize: 5,
-                    search: true,
-                    sorting: true,
-                }}
-                onRowClick={handleRowClick}
-            />
-            <br />
+            <Grid container spacing={2}>
+                <Grid item xs={8}>
+                    <PickUpRoute style={{ width: "100%", height: "100%" }}
+                        listLocation={pickUpParcelRequests.map(req => ({
+                            lat: req.pickupLatitude,
+                            lon: req.pickupLongitude,
+                            address: req.pickupAddress
+                        }))}
+                        combinedRequests={combinedRequests}
+                        driver={driver}
+                        warehouse={warehouse}
+                        center={center}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <StandardTable
+                        columns={columnsRequest}
+                        data={combinedRequests}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            marginTop: "-40px",
+                            marginBottom: "20px",
+                            overflowY: "scroll",
+                            overflowX: "hidden"
+                        }}
+                        options={{
+                            selection: false,
+                            pageSize: 5,
+                            search: true,
+                            sorting: true,
+                        }}
+                        onRowClick={handleRowClick}
+                    />
+                </Grid>
+            </Grid>
+
             {routePickup && (
                 <div>
                     <TextField

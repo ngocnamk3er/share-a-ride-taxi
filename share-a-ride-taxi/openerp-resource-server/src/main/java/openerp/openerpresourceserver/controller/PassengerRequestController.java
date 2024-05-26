@@ -76,10 +76,11 @@ public class PassengerRequestController {
         List<PassengerRequest> passengerRequestList = passengerRequestService.getPassengerRequestByRouteId(routeId);
 
         for (PassengerRequest passengerRequest : passengerRequestList){
-            passengerRequest.setRouteType(null);
             passengerRequest.setRouteId(null);
+            passengerRequest.setRouteType(null);
             passengerRequest.setSeqIndex(null);
             passengerRequest.setStatusId(RequestStatus.RECEIVED.ordinal());
+            passengerRequestService.savePassengerRequest(passengerRequest);
         }
 
         for (PassengerRequest passengerRequest : passengerRequests) {

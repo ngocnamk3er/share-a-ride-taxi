@@ -6,7 +6,7 @@ import 'leaflet-textpath'; // Import Leaflet.TextPath
 const createRoutineMachineLayer = (props) => {
   const { listLocation, driver, warehouse, combinedRequests } = props;
 
-
+  console.log("check combinedRequests in createRoutineMachineLayer", combinedRequests)
 
   const waypoints = [
     L.latLng(driver.lat, driver.lon),
@@ -33,12 +33,12 @@ const createRoutineMachineLayer = (props) => {
     ...combinedRequests.flatMap((request, i) => {
       if (request.type === "passenger-request") {
         return [
-          require(`../../../assets/img/passengerPickUp.png`),
+          require(`../../../assets/img/passengerPickUp${i + 1}.png`),
           require(`../../../assets/img/placeholder.png`)
         ];
       } else {
         return [
-          require(`../../../assets/img/${i + 1}.png`)
+          require(`../../../assets/img/parcelPickUp${i + 1}.png`)
         ];
       }
     }),
