@@ -4,18 +4,44 @@ import "leaflet-routing-machine";
 import 'leaflet-textpath'; // Import Leaflet.TextPath
 
 const createRoutineMachineLayer = (props) => {
-  const { listLocation, driver, warehouse } = props;
+  const { listLocation, driver, warehouse, combinedRequests } = props;
+
+
 
   const waypoints = [
     L.latLng(driver.lat, driver.lon),
-    ...listLocation.map((location) => L.latLng(location.lat, location.lon)),
+    ...combinedRequests.flatMap((request) => {
+      if (request.type === "passenger-request") {
+        return [
+          L.latLng(request.pickupLatitude, request.pickupLongitude),
+          L.latLng(request.dropoffLatitude, request.dropoffLongitude)
+        ];
+      } else {
+        return L.latLng(request.pickupLatitude, request.pickupLongitude);
+      }
+    }),
     L.latLng(warehouse.lat, warehouse.lon)
   ];
+
+  console.log("check waypoints : ", waypoints)
+  console.log("check combinedRequests in createRoutineMachineLayer : ", combinedRequests)
 
   // Import your custom icon images
   const iconUrls = [
     require(`../../../assets/img/driver.png`),
-    ...listLocation.map((_, i) => require(`../../../assets/img/${i + 1}.png`)),
+    // ...listLocation.map((_, i) => require(`../../../assets/img/${i + 1}.png`)),
+    ...combinedRequests.flatMap((request, i) => {
+      if (request.type === "passenger-request") {
+        return [
+          require(`../../../assets/img/passengerPickUp.png`),
+          require(`../../../assets/img/placeholder.png`)
+        ];
+      } else {
+        return [
+          require(`../../../assets/img/${i + 1}.png`)
+        ];
+      }
+    }),
     require(`../../../assets/img/warehouse.png`)
   ];
 
@@ -48,13 +74,13 @@ const createRoutineMachineLayer = (props) => {
         icon: customIcons[i],
       });
 
-      if (i === 0) {
-        marker.bindPopup(driver.address).openPopup();
-      } else if (i === waypoints.length - 1) {
-        marker.bindPopup(warehouse.address).openPopup();
-      } else {
-        marker.bindPopup(listLocation[i - 1].address).openPopup();
-      }
+      // if (i === 0) {
+      //   marker.bindPopup(driver.address).openPopup();
+      // } else if (i === waypoints.length - 1) {
+      //   marker.bindPopup(warehouse.address).openPopup();
+      // } else {
+      //   marker.bindPopup(listLocation[i - 1].address).openPopup();
+      // }
       return marker;
     },
     routeLine: function (route) {
@@ -73,7 +99,7 @@ const createRoutineMachineLayer = (props) => {
       //   }
       // });
 
-      line.on('mouseover', function() {
+      line.on('mouseover', function () {
         this.setText('  ►  ', {
           repeat: true,
           attributes: {
@@ -82,7 +108,7 @@ const createRoutineMachineLayer = (props) => {
         });
       });
 
-      line.on('mouseout', function() {
+      line.on('mouseout', function () {
         this.setText(null);
       });
 

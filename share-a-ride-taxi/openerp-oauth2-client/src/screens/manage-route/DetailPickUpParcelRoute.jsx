@@ -9,71 +9,71 @@ import PickUpRoute from "components/route/pickup-route/PickUpRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-
 const DetailPickUpParcelRoute = () => {
     const [routePickup, setRoutePickup] = useState(null);
     const [driver, setDriver] = useState(null);
     const [warehouse, setWarehouse] = useState(null);
     const [routePickupDetailList, setRoutePickupDetailList] = useState(null);
-    const [pickUpRequests, setPickUpRequests] = useState(null);
-    const [reqLocations, setReqLocations] = useState(null);
+    const [pickUpParcelRequests, setPickUpParcelRequests] = useState(null);
+    const [passengerRequests, setPassengerRequests] = useState(null);
+    const [combinedRequests, setCombinedRequests] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [center, setCenter] = useState(null);
     const match = useRouteMatch();
     const history = useHistory();
-    const { path } = match;
     const { id } = match.params;
 
     const statusLookup = {
-        0: "None",
-        1: "Received",
-        2: "Driver Assigned",
-        3: "In Transit",
-        4: "Delivered",
-        5: "Cancelled"
+        0: "Received",
+        1: "Driver Assigned",
+        2: "In Transit",
+        3: "Delivered",
+        4: "Cancelled"
     };
 
     const columnsRequest = [
         {
             title: "Sender Name",
             field: "senderName",
-        },
-        {
-            title: "Recipient Name",
-            field: "recipientName",
-        },
-        {
-            title: "Pickup Location Address",
-            field: "pickupAddress",
-        },
-        {
-            title: "Status",
-            field: "statusId",
-            render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
+            render: (rowData) => {
+                if (rowData.type === 'parcel-request') {
+                    return `parcel-request of ${rowData.senderName}`;
+                } else if (rowData.type === 'passenger-request') {
+                    return `passenger-request of ${rowData.passengerName}`;
+                }
+                return '';
+            },
         },
         // {
-        //     title: "Visited",
-        //     render: (rowData) => routePickupDetailList.find((element) => {
-        //         return rowData.id === element.request_id;
-        //     }).visited // Render status label using lookup
-        // }
-        // {
-        //     title: "View",
-        //     sorting: false,
-        //     render: (rowData) => (
-        //         <IconButton
-        //             onClick={() => {
-        //                 handleViewClick(rowData);
-        //             }}
-        //             variant="contained"
-        //             color="primary"
-        //         >
-        //             <VisibilityIcon />
-        //         </IconButton>
-        //     ),
+        //     title: "Recipient Name",
+        //     field: "recipientName",
         // },
-    ]
+        // {
+        //     title: "Pickup Location Address",
+        //     field: "pickupAddress",
+        // },
+        // {
+        //     title: "Status",
+        //     field: "statusId",
+        //     render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
+        // },
+        {
+            title: "View",
+            sorting: false,
+            render: (rowData) => (
+                <IconButton
+                    onClick={() => {
+                        handleViewClick(rowData);
+                    }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
+        },
+    ];
 
     const routeStatusMap = {
         0: "Not Ready",
@@ -106,8 +106,30 @@ const DetailPickUpParcelRoute = () => {
 
     const fetchPickUpRouteRequests = async () => {
         try {
-            const response = await request('get', `/parcel-requests/by-pickup-route/${id}`);
-            setPickUpRequests(response.data);
+            const resParcelReq = await request('get', `/parcel-requests/by-pickup-route/${id}`);
+            const pickUpParcelRequests = resParcelReq.data;
+            setPickUpParcelRequests(pickUpParcelRequests)
+
+            const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
+            const passengerRequests = resPassengerReq.data;
+            setPassengerRequests(passengerRequests)
+
+            // Kết hợp cả hai loại yêu cầu
+            const combinedRequests = [
+                ...pickUpParcelRequests.map(request => ({
+                    ...request,
+                    type: 'parcel-request',
+                })),
+                ...passengerRequests.map(request => ({
+                    ...request,
+                    type: 'passenger-request',
+                })),
+            ];
+
+            // Sắp xếp theo seqIndex
+            combinedRequests.sort((a, b) => a.seqIndex - b.seqIndex);
+
+            setCombinedRequests(combinedRequests);
         } catch (err) {
             setError(err);
         } finally {
@@ -138,6 +160,11 @@ const DetailPickUpParcelRoute = () => {
         setCenter(center);
     };
 
+    const handleViewClick = (rowData) => {
+        // Xử lý khi click vào View
+        console.log("View clicked for:", rowData);
+    };
+
     useEffect(() => {
         fetchRoutePickup();
         fetchRoutePickupDetailList();
@@ -145,40 +172,22 @@ const DetailPickUpParcelRoute = () => {
     }, [id]);
 
     useEffect(() => {
-        console.log("check reqLocations : ", reqLocations)
-    }, [reqLocations]);
-
-    useEffect(() => {
         if (routePickup) {
             fetchDriver(routePickup.driverId);
             fetchWarehouse(routePickup.wareHouseId);
         }
-    }, [routePickup])
+    }, [routePickup]);
 
     useEffect(() => {
-        if (driver && warehouse) {
-            console.log("check driver : ", driver)
-            console.log("check warehouse : ", warehouse)
-        }
-
-    }, [driver, warehouse])
+        console.log("check driver and warehouse:", driver, warehouse);
+    }, [driver, warehouse]);
 
     useEffect(() => {
-        console.log("check pickUpRequests : ", pickUpRequests)
-        if (pickUpRequests != null) {
-            setReqLocations(pickUpRequests.map((req) => {
-                return {
-                    lat: req.pickupLatitude,
-                    lon: req.pickupLongitude,
-                    address: req.pickupAddress
-                };
-            }))
-        }
-    }, [pickUpRequests]);
-
+        console.log("check combinedRequests:", JSON.stringify(combinedRequests));
+    }, [combinedRequests]);
 
     if (loading) return <CircularProgress />;
-    if (!(reqLocations && driver && warehouse)) return <CircularProgress />;
+    if (!(combinedRequests && driver && warehouse && pickUpParcelRequests)) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;
 
     return (
@@ -190,20 +199,26 @@ const DetailPickUpParcelRoute = () => {
                 onClick={() => history.push(`/manage-routes/parcel-route-list/pick-up-route/${id}/add-request`)}
                 style={{ marginTop: '20px' }}
             >
-                AddRequestToPickUpRoute
+                Add Request To PickUp Route
             </Button>
             <br />
             <br />
             <PickUpRoute style={{ width: "100%", height: "80vh" }}
-                listLocation={reqLocations}
+                listLocation={pickUpParcelRequests.map(req => ({
+                    lat: req.pickupLatitude,
+                    lon: req.pickupLongitude,
+                    address: req.pickupAddress
+                }))}
+                combinedRequests={combinedRequests}
                 driver={driver}
                 warehouse={warehouse}
                 center={center}
             />
             <br />
+            
             <StandardTable
                 columns={columnsRequest}
-                data={pickUpRequests}
+                data={combinedRequests}
                 options={{
                     selection: false,
                     pageSize: 5,

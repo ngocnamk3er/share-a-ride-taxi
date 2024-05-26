@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import RoutingMachine from "./PickUpRoutingMachine";
+import PickUpRoutingMachine from "./PickUpRoutingMachine";
 
 function ResetCenterView(props) {
     const { center } = props;
@@ -26,11 +26,13 @@ function ResetCenterView(props) {
 
 const PickUpRoute = (props) => {
     const center = props.center ? props.center : [21.0283334, 105.854041];
-    const listLocation = props.listLocation;
+    const { listLocation } = props;
     const { driver } = props;
     const { warehouse } = props;
     const { style } = props;
+    const { combinedRequests } = props;
 
+    console.log("check combinedRequests in PickUpRoute : ", combinedRequests)
 
     return (
         <>
@@ -39,7 +41,7 @@ const PickUpRoute = (props) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <RoutingMachine listLocation={listLocation} driver={driver} warehouse={warehouse}/>
+                <PickUpRoutingMachine listLocation={listLocation} driver={driver} warehouse={warehouse} combinedRequests={combinedRequests}/>
                 <ResetCenterView center={center} />
             </MapContainer>
         </>
