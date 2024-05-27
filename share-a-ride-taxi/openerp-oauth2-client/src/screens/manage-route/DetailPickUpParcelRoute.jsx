@@ -10,7 +10,9 @@ import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const DetailPickUpParcelRoute = () => {
+const DetailPickUpParcelRoute = (props) => {
+    const { isDriver } = props
+
     const [routePickup, setRoutePickup] = useState(null);
     const [driver, setDriver] = useState(null);
     const [warehouse, setWarehouse] = useState(null);
@@ -70,9 +72,8 @@ const DetailPickUpParcelRoute = () => {
             field: "visited",
             render: rowData => (
                 <IconButton
-                    // onClick={() => handleActivateClick(rowData.driverId, rowData.warehouseId)}
-                    disabled={!rowData.visited}
-                    color="primary"
+                    onClick={() => handleActivateClick(rowData)}
+                    color={rowData.visited ? 'primary' : 'text.disabled'}
                 >
                     <CheckCircleIcon />
                 </IconButton>
@@ -87,10 +88,16 @@ const DetailPickUpParcelRoute = () => {
         3: "Complete"
     };
 
-    const handleRowClick = (event, rowData) => {
-        const center = [rowData.pickupLatitude, rowData.pickupLongitude]
-        setCenter(center);
-    };
+    const handleActivateClick = (rowData) => {
+        if(isDriver){
+            console.log("Done clicked for:", rowData.type);
+        }
+    }
+
+    // const handleRowClick = (event, rowData) => {
+    //     const center = [rowData.pickupLatitude, rowData.pickupLongitude]
+    //     setCenter(center);
+    // };
 
     const handleViewClick = (rowData) => {
         // Xử lý khi click vào View
@@ -108,17 +115,17 @@ const DetailPickUpParcelRoute = () => {
                 setLoading(false);
             }
         };
-    
+
         const fetchPickUpRouteRequests = async () => {
             try {
                 const resParcelReq = await request('get', `/parcel-requests/by-pickup-route/${id}`);
                 const pickUpParcelRequests = resParcelReq.data;
                 setPickUpParcelRequests(pickUpParcelRequests)
-    
+
                 const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
                 const passengerRequests = resPassengerReq.data;
                 setPassengerRequests(passengerRequests)
-    
+
                 // Kết hợp cả hai loại yêu cầu
                 const combinedRequests = [
                     ...pickUpParcelRequests.map(request => ({
@@ -130,10 +137,10 @@ const DetailPickUpParcelRoute = () => {
                         type: 'passenger-request',
                     })),
                 ];
-    
+
                 // Sắp xếp theo seqIndex
                 combinedRequests.sort((a, b) => a.seqIndex - b.seqIndex);
-    
+
                 setCombinedRequests(combinedRequests);
             } catch (err) {
                 setError(err);
@@ -141,7 +148,7 @@ const DetailPickUpParcelRoute = () => {
                 setLoading(false);
             }
         };
-    
+
 
         fetchRoutePickup();
         fetchPickUpRouteRequests();
@@ -156,7 +163,7 @@ const DetailPickUpParcelRoute = () => {
                 setError(err);
             }
         };
-    
+
         const fetchWarehouse = async (warehouseId) => {
             try {
                 const response = await request('get', `/warehouses/${warehouseId}`);
@@ -187,14 +194,17 @@ const DetailPickUpParcelRoute = () => {
     return (
         <div>
             <h1>Route {id} Details</h1>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => history.push(`/manage-routes/parcel-route-list/pick-drop-off-route/${id}/add-request`)}
-                style={{ marginTop: '20px' }}
-            >
-                Add Request To Drop Off Route
-            </Button>
+            {
+                !isDriver &&
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => history.push(`/manage-routes/parcel-route-list/pick-drop-off-route/${id}/add-request`)}
+                    style={{ marginTop: '20px' }}
+                >
+                    Add Request To Drop Off Route
+                </Button>
+            }
             <br />
             <br />
             <Grid container spacing={2}>
@@ -209,6 +219,7 @@ const DetailPickUpParcelRoute = () => {
                         driver={driver}
                         warehouse={warehouse}
                         center={center}
+                        isDriver={isDriver}
                     />
                 </Grid>
                 <Grid item xs={4}>
@@ -229,7 +240,6 @@ const DetailPickUpParcelRoute = () => {
                             search: true,
                             sorting: true,
                         }}
-                        onRowClick={handleRowClick}
                     />
                 </Grid>
             </Grid>

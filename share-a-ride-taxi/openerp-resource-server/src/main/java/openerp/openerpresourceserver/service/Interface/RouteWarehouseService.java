@@ -9,4 +9,6 @@ public interface RouteWarehouseService {
     RouteWarehouse createRoute(RouteWarehouse route);
     RouteWarehouse updateRoute(String id, RouteWarehouse route);
     void deleteRoute(String id);
+
+    List<RouteWarehouse> findByDriverId(String driverId);
 }

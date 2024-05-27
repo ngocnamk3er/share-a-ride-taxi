@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.controller;
 
+import openerp.openerpresourceserver.entity.RouteDropoff;
 import openerp.openerpresourceserver.entity.RouteWarehouse;
 import openerp.openerpresourceserver.service.Interface.RouteWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,14 @@ public class RouteWarehouseController {
         }
         routeWarehouseService.deleteRoute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<List<RouteWarehouse>> getPickUpRouteByDriverId(@PathVariable String driverId) {
+        List<RouteWarehouse> routes = routeWarehouseService.findByDriverId(driverId);
+        if (routes == null || routes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(routes);
     }
 }

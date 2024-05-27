@@ -31,6 +31,7 @@ const PickUpRoute = (props) => {
     const { warehouse } = props;
     const { style } = props;
     const { combinedRequests } = props;
+    const { isDriver } = props;
 
     console.log("check combinedRequests in PickUpRoute : ", combinedRequests)
 
@@ -41,7 +42,13 @@ const PickUpRoute = (props) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <PickUpRoutingMachine listLocation={listLocation} driver={driver} warehouse={warehouse} combinedRequests={combinedRequests}/>
+                <PickUpRoutingMachine
+                    listLocation={listLocation}
+                    driver={driver}
+                    warehouse={warehouse}
+                    combinedRequests={combinedRequests}
+                    isDriver={isDriver}
+                />
                 <ResetCenterView center={center} />
             </MapContainer>
         </>

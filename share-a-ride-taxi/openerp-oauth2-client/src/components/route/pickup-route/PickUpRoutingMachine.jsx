@@ -4,9 +4,7 @@ import "leaflet-routing-machine";
 import 'leaflet-textpath'; // Import Leaflet.TextPath
 
 const createRoutineMachineLayer = (props) => {
-  const { listLocation, driver, warehouse, combinedRequests } = props;
-
-  console.log("check combinedRequests in createRoutineMachineLayer", combinedRequests)
+  const { driver, warehouse, combinedRequests, isDriver } = props;
 
   const waypoints = [
     L.latLng(driver.lat, driver.lon),
@@ -23,13 +21,9 @@ const createRoutineMachineLayer = (props) => {
     L.latLng(warehouse.lat, warehouse.lon)
   ];
 
-  console.log("check waypoints : ", waypoints)
-  console.log("check combinedRequests in createRoutineMachineLayer : ", combinedRequests)
-
   // Import your custom icon images
   const iconUrls = [
     require(`../../../assets/img/driver.png`),
-    // ...listLocation.map((_, i) => require(`../../../assets/img/${i + 1}.png`)),
     ...combinedRequests.flatMap((request, i) => {
       if (request.type === "passenger-request") {
         return [
@@ -54,6 +48,8 @@ const createRoutineMachineLayer = (props) => {
     })
   );
 
+  let runningPointMarker = null;
+
   const instance = L.Routing.control({
     waypoints: waypoints,
     lineOptions: {
@@ -74,13 +70,6 @@ const createRoutineMachineLayer = (props) => {
         icon: customIcons[i],
       });
 
-      // if (i === 0) {
-      //   marker.bindPopup(driver.address).openPopup();
-      // } else if (i === waypoints.length - 1) {
-      //   marker.bindPopup(warehouse.address).openPopup();
-      // } else {
-      //   marker.bindPopup(listLocation[i - 1].address).openPopup();
-      // }
       return marker;
     },
     routeLine: function (route) {
@@ -91,13 +80,6 @@ const createRoutineMachineLayer = (props) => {
         lineCap: 'butt',
         smoothFactor: 1
       });
-
-      // line.setText('  ►  ', {
-      //   repeat: true,
-      //   attributes: {
-      //     fill: 'green'
-      //   }
-      // });
 
       line.on('mouseover', function () {
         this.setText('  ►  ', {
@@ -114,6 +96,36 @@ const createRoutineMachineLayer = (props) => {
 
       return line;
     }
+  });
+
+  // Function to simulate running point along the route
+  function simulateRunningPoint(route) {
+    let index = 0;
+    let timer = setInterval(function () {
+      if (runningPointMarker) {
+        runningPointMarker.setLatLng(route.coordinates[index]);
+      } else {
+        runningPointMarker = L.marker(route.coordinates[index], {
+          icon: L.divIcon({
+            className: 'running-point-icon',
+            html: '►',
+            iconSize: [12, 12],
+            iconAnchor: [6, 6],
+          }),
+        }).addTo(instance._map);
+      }
+
+      index++;
+
+      if (index >= route.coordinates.length) {
+        clearInterval(timer);
+      }
+    }, 1000); // Move every 1 second
+  }
+
+  instance.on('routesfound', function (e) {
+    const route = e.routes[0].coordinates;
+    simulateRunningPoint(route);
   });
 
   return instance;

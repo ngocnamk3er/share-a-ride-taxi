@@ -47,5 +47,10 @@ public class RouteDropoffServiceImpl implements RouteDropoffService {
         routeDropoffRepository.deleteById(id);
     }
 
+    @Override
+    public List<RouteDropoff> findByDriverId(String driverId) {
+        return routeDropoffRepository.findByDriverId(driverId);
+    }
+
 }
 

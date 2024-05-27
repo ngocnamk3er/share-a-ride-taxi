@@ -53,4 +53,9 @@ public class RouteWarehouseServiceImpl implements RouteWarehouseService {
     public void deleteRoute(String id) {
         repository.deleteById(id);
     }
+
+    @Override
+    public List<RouteWarehouse> findByDriverId(String driverId) {
+        return repository.findByDriverId(driverId);
+    }
 }

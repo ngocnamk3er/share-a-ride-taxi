@@ -83,4 +83,13 @@ public class RouteDropoffController {
 
         return ResponseEntity.ok("Route details updated successfully");
     }
+
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<List<RouteDropoff>> getPickUpRouteByDriverId(@PathVariable("routeId") String driverId) {
+        List<RouteDropoff> routes = routeDropoffService.findByDriverId(driverId);
+        if (routes == null || routes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(routes);
+    }
 }

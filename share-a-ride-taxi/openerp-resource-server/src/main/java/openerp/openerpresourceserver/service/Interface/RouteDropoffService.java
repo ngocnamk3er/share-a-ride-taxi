@@ -10,4 +10,6 @@ public interface RouteDropoffService {
     RouteDropoff createRouteDropoff(RouteDropoff routeDropoff);
     RouteDropoff updateRouteDropoff(String id, RouteDropoff routeDropoff);
     void deleteRouteDropoff(String id);
+
+    List<RouteDropoff> findByDriverId(String driverId);
 }

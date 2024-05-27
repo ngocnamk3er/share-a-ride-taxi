@@ -1,8 +1,15 @@
 export const DRIVER = {
     id: "MENU_SAR_FOR_DRIVER",
     icon: "ProfileIcon",
-    text: "Driver profile",
+    text: "Driver",
     child: [
+        {
+            id: "MENU_SAR_FOR_DRIVER.REGISTER",
+            path: "/for-driver/route",
+            isPublic: false,
+            text: "Driver's route",
+            child: [],
+        },
         {
             id: "MENU_SAR_FOR_DRIVER.REGISTER",
             path: "/for-driver/info",
