@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.service.Impl;
 
+import jakarta.transaction.Transactional;
 import openerp.openerpresourceserver.entity.RouteDropoffDetail;
 import openerp.openerpresourceserver.repo.RouteDropoffDetailRepository;
 import openerp.openerpresourceserver.service.Interface.RouteDropoffDetailService;
@@ -47,5 +48,11 @@ public class RouteDropoffDetailServiceImpl implements RouteDropoffDetailService 
     @Override
     public void deleteRouteDropoffDetail(UUID id) {
         routeDropoffDetailRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllByRouteId(String routeId) {
+        routeDropoffDetailRepository.deleteAllByRouteId(routeId);
     }
 }

@@ -46,5 +46,9 @@ public class RoutePickupServiceImpl implements RoutePickupService {
         routePickupRepository.deleteById(id);
     }
 
+    @Override
+    public List<RoutePickup> findByDriverId(String driverId) {
+        return routePickupRepository.findByDriverId(driverId);
+    }
     // Thêm các phương thức khác cần thiết tại đây
 }

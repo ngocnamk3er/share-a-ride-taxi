@@ -40,6 +40,6 @@ public class ParcelRequestWithSeqIndex {
     private BigDecimal lon;
     private String address;
     private int seqIndex;
-
+    private boolean visited;
     // Constructors, getters, and setters
 }

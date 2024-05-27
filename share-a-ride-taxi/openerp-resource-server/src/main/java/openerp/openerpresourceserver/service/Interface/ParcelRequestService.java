@@ -19,5 +19,5 @@ public interface ParcelRequestService {
 
     boolean existsById(UUID requestId);
 
-    List<ParcelRequest> getParcelRequestByDropOffRouteId(String id);
+    List<ParcelRequestWithSeqIndex> getParcelRequestByDropOffRouteId(String id);
 }

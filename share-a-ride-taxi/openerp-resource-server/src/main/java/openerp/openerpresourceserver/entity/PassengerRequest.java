@@ -86,6 +86,8 @@ public class PassengerRequest {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "visited")
+    private Boolean visited;
     // Getters and setters
 }
 

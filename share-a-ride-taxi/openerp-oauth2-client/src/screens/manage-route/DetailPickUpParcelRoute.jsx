@@ -8,12 +8,12 @@ import { StandardTable } from "erp-hust/lib/StandardTable";
 import PickUpRoute from "components/route/pickup-route/PickUpRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const DetailPickUpParcelRoute = () => {
     const [routePickup, setRoutePickup] = useState(null);
     const [driver, setDriver] = useState(null);
     const [warehouse, setWarehouse] = useState(null);
-    const [routePickupDetailList, setRoutePickupDetailList] = useState(null);
     const [pickUpParcelRequests, setPickUpParcelRequests] = useState(null);
     const [passengerRequests, setPassengerRequests] = useState(null);
     const [combinedRequests, setCombinedRequests] = useState(null);
@@ -65,6 +65,19 @@ const DetailPickUpParcelRoute = () => {
                 </IconButton>
             ),
         },
+        {
+            title: "Done",
+            field: "visited",
+            render: rowData => (
+                <IconButton
+                    // onClick={() => handleActivateClick(rowData.driverId, rowData.warehouseId)}
+                    disabled={!rowData.visited}
+                    color="primary"
+                >
+                    <CheckCircleIcon />
+                </IconButton>
+            )
+        }
     ];
 
     const routeStatusMap = {
@@ -72,79 +85,6 @@ const DetailPickUpParcelRoute = () => {
         1: "Ready",
         2: "Start",
         3: "Complete"
-    };
-
-    const fetchRoutePickup = async () => {
-        try {
-            const response = await request('get', `/route-pickups/${id}`);
-            setRoutePickup(response.data);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchRoutePickupDetailList = async () => {
-        try {
-            const response = await request('get', `/route-pickup-details/by-route/${id}`);
-            setRoutePickupDetailList(response.data);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchPickUpRouteRequests = async () => {
-        try {
-            const resParcelReq = await request('get', `/parcel-requests/by-pickup-route/${id}`);
-            const pickUpParcelRequests = resParcelReq.data;
-            setPickUpParcelRequests(pickUpParcelRequests)
-
-            const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
-            const passengerRequests = resPassengerReq.data;
-            setPassengerRequests(passengerRequests)
-
-            // Kết hợp cả hai loại yêu cầu
-            const combinedRequests = [
-                ...pickUpParcelRequests.map(request => ({
-                    ...request,
-                    type: 'parcel-request',
-                })),
-                ...passengerRequests.map(request => ({
-                    ...request,
-                    type: 'passenger-request',
-                })),
-            ];
-
-            // Sắp xếp theo seqIndex
-            combinedRequests.sort((a, b) => a.seqIndex - b.seqIndex);
-
-            setCombinedRequests(combinedRequests);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const fetchDriver = async (driverId) => {
-        try {
-            const response = await request('get', `/drivers/user/${driverId}`);
-            setDriver(response.data);
-        } catch (err) {
-            setError(err);
-        }
-    };
-
-    const fetchWarehouse = async (warehouseId) => {
-        try {
-            const response = await request('get', `/warehouses/${warehouseId}`);
-            setWarehouse(response.data);
-        } catch (err) {
-            setError(err);
-        }
     };
 
     const handleRowClick = (event, rowData) => {
@@ -158,12 +98,74 @@ const DetailPickUpParcelRoute = () => {
     };
 
     useEffect(() => {
+        const fetchRoutePickup = async () => {
+            try {
+                const response = await request('get', `/route-pickups/${id}`);
+                setRoutePickup(response.data);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        const fetchPickUpRouteRequests = async () => {
+            try {
+                const resParcelReq = await request('get', `/parcel-requests/by-pickup-route/${id}`);
+                const pickUpParcelRequests = resParcelReq.data;
+                setPickUpParcelRequests(pickUpParcelRequests)
+    
+                const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
+                const passengerRequests = resPassengerReq.data;
+                setPassengerRequests(passengerRequests)
+    
+                // Kết hợp cả hai loại yêu cầu
+                const combinedRequests = [
+                    ...pickUpParcelRequests.map(request => ({
+                        ...request,
+                        type: 'parcel-request',
+                    })),
+                    ...passengerRequests.map(request => ({
+                        ...request,
+                        type: 'passenger-request',
+                    })),
+                ];
+    
+                // Sắp xếp theo seqIndex
+                combinedRequests.sort((a, b) => a.seqIndex - b.seqIndex);
+    
+                setCombinedRequests(combinedRequests);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+
         fetchRoutePickup();
-        fetchRoutePickupDetailList();
         fetchPickUpRouteRequests();
     }, [id]);
 
     useEffect(() => {
+        const fetchDriver = async (driverId) => {
+            try {
+                const response = await request('get', `/drivers/user/${driverId}`);
+                setDriver(response.data);
+            } catch (err) {
+                setError(err);
+            }
+        };
+    
+        const fetchWarehouse = async (warehouseId) => {
+            try {
+                const response = await request('get', `/warehouses/${warehouseId}`);
+                setWarehouse(response.data);
+            } catch (err) {
+                setError(err);
+            }
+        };
+
         if (routePickup) {
             fetchDriver(routePickup.driverId);
             fetchWarehouse(routePickup.wareHouseId);
@@ -188,10 +190,10 @@ const DetailPickUpParcelRoute = () => {
             <Button
                 variant="contained"
                 color="primary"
-                onClick={() => history.push(`/manage-routes/parcel-route-list/pick-up-route/${id}/add-request`)}
+                onClick={() => history.push(`/manage-routes/parcel-route-list/pick-drop-off-route/${id}/add-request`)}
                 style={{ marginTop: '20px' }}
             >
-                Add Request To PickUp Route
+                Add Request To Drop Off Route
             </Button>
             <br />
             <br />

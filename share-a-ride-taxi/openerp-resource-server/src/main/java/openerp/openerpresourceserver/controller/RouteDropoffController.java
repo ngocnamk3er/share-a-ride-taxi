@@ -1,20 +1,28 @@
 package openerp.openerpresourceserver.controller;
 
+import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.RouteDropoff;
+import openerp.openerpresourceserver.entity.RouteDropoffDetail;
+import openerp.openerpresourceserver.entity.RoutePickup;
+import openerp.openerpresourceserver.entity.RoutePickupDetail;
+import openerp.openerpresourceserver.service.Interface.RouteDropoffDetailService;
 import openerp.openerpresourceserver.service.Interface.RouteDropoffService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/route-dropoffs")
 public class RouteDropoffController {
 
-    @Autowired
-    private RouteDropoffService routeDropoffService;
+    private final RouteDropoffService routeDropoffService;
+    private final RouteDropoffDetailService routeDropoffDetailService;
 
     @GetMapping
     public List<RouteDropoff> getAllRouteDropoffs() {
@@ -49,5 +57,30 @@ public class RouteDropoffController {
         }
         routeDropoffService.deleteRouteDropoff(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{routeId}/drop-off-route-details")
+    public ResponseEntity<?> updateRouteDetailsForRoute(@PathVariable("routeId") String routeId, @RequestBody List<RouteDropoffDetail> routeDetails) {
+        System.out.println("System.out.println(routeDetails);");
+        System.out.println(routeDetails);
+
+        // Kiểm tra xem RoutePickup có tồn tại không
+        RouteDropoff existingRoute = routeDropoffService.getRouteDropoffById(routeId).orElse(null);
+        if (existingRoute == null) {
+            return new ResponseEntity<>("Route not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Xóa tất cả RoutePickupDetail của Route hiện tại
+        routeDropoffDetailService.deleteAllByRouteId(routeId);
+
+        // Thêm mới danh sách RoutePickupDetail được cung cấp
+        for (RouteDropoffDetail routeDetail : routeDetails) {
+            routeDetail.setRouteId(routeId);
+            routeDetail.setCreatedStamp(LocalDateTime.now());
+            routeDetail.setLastUpdatedStamp(LocalDateTime.now());
+            routeDropoffDetailService.createRouteDropoffDetail(routeDetail);
+        }
+
+        return ResponseEntity.ok("Route details updated successfully");
     }
 }

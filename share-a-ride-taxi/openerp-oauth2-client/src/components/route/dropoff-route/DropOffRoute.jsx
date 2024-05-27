@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import RoutingMachine from "./DropOffRoutingMachine";
+import DropOffRoutingMachine from "./DropOffRoutingMachine";
 
 function ResetCenterView(props) {
     const { center } = props;
@@ -12,7 +12,7 @@ function ResetCenterView(props) {
         if (center) {
             map.setView(
                 L.latLng(center[0], center[1]),
-                12,
+                48,
                 map.getZoom(),
                 {
                     animate: true,
@@ -26,11 +26,10 @@ function ResetCenterView(props) {
 
 const DropOffRoute = (props) => {
     const center = props.center ? props.center : [21.0283334, 105.854041];
-    const listLocation = props.listLocation;
     const { driver } = props;
     const { warehouse } = props;
     const { style } = props;
-
+    const { combinedRequests } = props;
 
     return (
         <>
@@ -39,7 +38,7 @@ const DropOffRoute = (props) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <RoutingMachine listLocation={listLocation} driver={driver} warehouse={warehouse} />
+                <DropOffRoutingMachine combinedRequests={combinedRequests} driver={driver} warehouse={warehouse} />
                 <ResetCenterView center={center} />
             </MapContainer>
         </>

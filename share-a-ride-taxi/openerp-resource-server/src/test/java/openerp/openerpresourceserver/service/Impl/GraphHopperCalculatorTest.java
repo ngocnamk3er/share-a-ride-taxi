@@ -41,8 +41,8 @@ public class GraphHopperCalculatorTest {
 
     @Test
     public void calculateTest2() {
-        Coordinate start = new Coordinate(21.0283334, 105.854041);
-        Coordinate end = new Coordinate(19.9781573, 105.4816107);
+        Coordinate start = new Coordinate(BigDecimal.valueOf(21.0283334), BigDecimal.valueOf(105.854041));
+        Coordinate end = new Coordinate(BigDecimal.valueOf(19.9781573), BigDecimal.valueOf(105.4816107));
 
         ResponsePath path;
         try {

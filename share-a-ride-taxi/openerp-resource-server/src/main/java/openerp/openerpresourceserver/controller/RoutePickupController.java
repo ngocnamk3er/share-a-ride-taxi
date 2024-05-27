@@ -47,6 +47,15 @@ public class RoutePickupController {
         return ResponseEntity.ok(routePickup);
     }
 
+    @GetMapping("/driver/{driverId}")
+    public ResponseEntity<List<RoutePickup>> getPickUpRouteByDriverId(@PathVariable String driverId) {
+        List<RoutePickup> routes = routePickupService.findByDriverId(driverId);
+        if (routes == null || routes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(routes);
+    }
+
     @PostMapping("/{routeId}/pick-up-route-details")
     public ResponseEntity<?> updateRouteDetailsForRoute(@PathVariable("routeId") String routeId, @RequestBody List<RoutePickupDetail> routeDetails) {
         System.out.println("System.out.println(routeDetails);");

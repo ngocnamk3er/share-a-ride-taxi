@@ -3,27 +3,25 @@ import withScreenSecurity from 'components/common/withScreenSecurity';
 import './AddRequestToPickUpRoute.css';
 import { useParams } from "react-router-dom";
 import { request } from "../../api";
-import { Typography, Grid, Button, Modal } from "@mui/material";
+import { Grid, Button, Modal } from "@mui/material";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import PickUpRoute from "components/route/pickup-route/PickUpRoute";
 import { useHistory } from "react-router-dom";
 import DropOffRoute from "components/route/dropoff-route/DropOffRoute";
 import { useRouteMatch } from 'react-router-dom';
 
-const AddRequestToPickUpRoute = () => {
+const AddRequestToDropOffRoute = () => {
     const [unAssignedParcelRequests, setUnAssignedParcelRequests] = useState([]);
     const [unAssignedPassengerRequests, setUnAssignedPassengerRequests] = useState([]);
     const [parcelRequestsOfRoute, setParcelRequestsOfRoute] = useState([]);
     const [passengerRequestsOfRoute, setPassengerRequestsOfRoute] = useState([]);
     const [combinedRequests, setCombinedRequests] = useState(null);
-    const [routePickup, setRoutePickup] = useState(null);
+    const [routeDropoff, setRouteDropoff] = useState(null);
     const [driver, setDriver] = useState(null);
     const [warehouse, setWarehouse] = useState(null);
     const [error, setError] = useState(null);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-    let { path } = useRouteMatch();
     const history = useHistory();
-
+    let { path } = useRouteMatch();
     const { id } = useParams();
 
     const [columns, setColumns] = useState({
@@ -41,8 +39,8 @@ const AddRequestToPickUpRoute = () => {
 
     const fetchRoutePickup = async () => {
         try {
-            const response = await request('get', `/route-pickups/${id}`);
-            setRoutePickup(response.data);
+            const response = await request('get', `/route-dropoffs/${id}`);
+            setRouteDropoff(response.data);
         } catch (err) {
             setError(err);
         }
@@ -103,7 +101,7 @@ const AddRequestToPickUpRoute = () => {
     const fetchRequestsOfRoute = async () => {
         try {
             // Gọi API để lấy parcel requests
-            const resParcelReq = await request("get", `/parcel-requests/by-pickup-route/${id}`);
+            const resParcelReq = await request("get", `/parcel-requests/by-drop-off-route/${id}`);
             setParcelRequestsOfRoute(resParcelReq.data);
 
             // Gọi API để lấy passenger requests
@@ -116,9 +114,9 @@ const AddRequestToPickUpRoute = () => {
                 type: 'parcel-request',
                 description: "parcel-request of " + request.senderName,
                 seqIndex: request.seqIndex,
-                pickupLatitude: request.pickupLatitude,
-                pickupLongitude: request.pickupLongitude,
-                pickupAddress: request.pickupAddress
+                dropoffLatitude: request.dropoffLatitude,
+                dropoffLongitude: request.dropoffLongitude,
+                dropoffAddress: request.dropoffAddress
             }));
 
             const passengerTaskIds = resPassengerReq.data.map(request => ({
@@ -158,11 +156,11 @@ const AddRequestToPickUpRoute = () => {
 
 
     useEffect(() => {
-        if (routePickup) {
-            fetchDriver(routePickup.driverId);
-            fetchWarehouse(routePickup.wareHouseId);
+        if (routeDropoff) {
+            fetchDriver(routeDropoff.driverId);
+            fetchWarehouse(routeDropoff.wareHouseId);
         }
-    }, [routePickup]);
+    }, [routeDropoff]);
 
     useEffect(() => {
         if (combinedRequests) {
@@ -238,7 +236,7 @@ const AddRequestToPickUpRoute = () => {
                     requestId: taskId.id,
                     routeId: id,
                     seqIndex: index + 1, // Cần xem xét cách tính seqIndex
-                    routeType: "PICK_UP_ROUTE",
+                    routeType: "DROP_OFF_ROUTE",
                     // Các thuộc tính khác của passenger request bạn muốn gửi đi
                 });
             }
@@ -255,9 +253,9 @@ const AddRequestToPickUpRoute = () => {
         });
 
         try {
-            await Promise.all([
+            const res =  await Promise.all([
                 request("put", `/passenger-requests/add-to-route/${id}`, null, null, assignedPassengerRequests),
-                request("post", `/route-pickups/${id}/pick-up-route-details`, null, null, assignedParcelRequests)
+                request("post", `/route-dropoffs/${id}/drop-off-route-details`, null, null, assignedParcelRequests)
             ]);
             const newPath = path.replace('/:id/add-request', `/${id}`);
             history.push(newPath);
@@ -281,9 +279,9 @@ const AddRequestToPickUpRoute = () => {
                     requestId: task.id,
                     type: task.type,
                     senderName: task.description.split(' of ')[1],
-                    pickupAddress: task.pickupAddress,
-                    pickupLatitude: task.pickupLatitude,
-                    pickupLongitude: task.pickupLongitude,
+                    dropoffLatitude: task.dropoffLatitude,
+                    dropoffLongitude: task.dropoffLongitude,
+                    dropoffAddress: task.dropoffAddress,
                 };
             } else if (task.type === 'passenger-request') {
                 return {
@@ -374,7 +372,7 @@ const AddRequestToPickUpRoute = () => {
                         padding: "20px",
                         display: "flex"
                     }}>
-                    <PickUpRoute
+                    <DropOffRoute
                         style={{
                             width:"100%",
                             height:"100%",
@@ -390,4 +388,4 @@ const AddRequestToPickUpRoute = () => {
 
 const SCR_ID = "SCR_SAR_DEFAULT";
 
-export default withScreenSecurity(AddRequestToPickUpRoute, SCR_ID, true);
+export default withScreenSecurity(AddRequestToDropOffRoute, SCR_ID, true);

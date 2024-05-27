@@ -43,7 +43,7 @@ public class ParcelRequestController {
     }
 
     @GetMapping("/by-drop-off-route/{id}")
-    public List<ParcelRequest> getParcelRequestByDropOffRouteId(@PathVariable String id) {
+    public List<ParcelRequestWithSeqIndex> getParcelRequestByDropOffRouteId(@PathVariable String id) {
         return parcelRequestService.getParcelRequestByDropOffRouteId(id);
     }
 

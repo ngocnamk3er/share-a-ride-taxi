@@ -75,6 +75,7 @@ public class ParcelRequestServiceImpl implements ParcelRequestService {
             dto.setLon((BigDecimal)(result[22]));
             dto.setAddress((String) result[23]);
             dto.setSeqIndex((int) result[24]);
+            dto.setVisited((boolean) result[25]);
 
             parcelRequestsDTO.add(dto);
         }
@@ -83,8 +84,53 @@ public class ParcelRequestServiceImpl implements ParcelRequestService {
     }
 
     @Override
-    public List<ParcelRequest> getParcelRequestByDropOffRouteId(String id) {
-        return repository.getParcelRequesByDropOffRoute(id);
+    public List<ParcelRequestWithSeqIndex> getParcelRequestByDropOffRouteId(String dropOffRouteId) {
+        List<Object[]> results = repository.getParcelRequesByDropOffRoute(dropOffRouteId);
+        List<ParcelRequestWithSeqIndex> parcelRequestsDTO = new ArrayList<>();
+
+        for (Object[] result : results) {
+            ParcelRequestWithSeqIndex dto = new ParcelRequestWithSeqIndex();
+            dto.setRequestId((UUID) result[0]);
+            dto.setSenderName((String) result[1]);
+            dto.setSenderPhoneNumber((String) result[2]);
+            dto.setSenderEmail((String) result[3]);
+            dto.setRecipientName((String) result[4]);
+            dto.setRecipientPhoneNumber((String) result[5]);
+            dto.setRecipientEmail((String) result[6]);
+
+            // Convert Instant to LocalDateTime
+            if (result[7] instanceof Instant) {
+                dto.setRequestTime(LocalDateTime.ofInstant((Instant) result[7], ZoneOffset.UTC));
+            }
+
+            dto.setStatusId((Integer) result[8]);
+            dto.setDistance((BigDecimal) (result[9]));
+
+            // Convert Instant to LocalDateTime
+            if (result[10] instanceof Instant) {
+                dto.setEndTime(LocalDateTime.ofInstant((Instant) result[10], ZoneOffset.UTC));
+            }
+
+            dto.setPickupLatitude((BigDecimal)(result[11]));
+            dto.setPickupLongitude((BigDecimal)(result[12]));
+            dto.setPickupAddress((String) result[13]);
+            dto.setDropoffLatitude((BigDecimal)(result[14]));
+            dto.setDropoffLongitude((BigDecimal)(result[15]));
+            dto.setDropoffAddress((String) result[16]);
+            dto.setCreatedByUserLoginId((String) result[17]);
+            dto.setPickupAddressNote((String) result[18]);
+            dto.setDropoffAddressNote((String) result[19]);
+            dto.setAssignedWarehouseId((String) result[20]);
+            dto.setLat((BigDecimal)(result[21]));
+            dto.setLon((BigDecimal)(result[22]));
+            dto.setAddress((String) result[23]);
+            dto.setSeqIndex((int) result[24]);
+            dto.setVisited((boolean) result[25]);
+
+            parcelRequestsDTO.add(dto);
+        }
+
+        return parcelRequestsDTO;
     }
 
     @Override

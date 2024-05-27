@@ -21,7 +21,7 @@ const AssignParcelRoute = () => {
 
     const fetchParcelRequests = () => {
         request("get", "/parcel-requests", (res) => {
-            const receivedRequests = res.data.filter(request => request.statusId === 1).reverse();
+            const receivedRequests = res.data.filter(request => request.statusId === 0).reverse();
             setParcelRequests(receivedRequests);
         }).then();
     }
@@ -71,12 +71,11 @@ const AssignParcelRoute = () => {
 
     // Lookup object for status
     const statusLookup = {
-        0: "None",
-        1: "Received",
-        2: "Driver Assigned",
-        3: "In Transit",
-        4: "Delivered",
-        5: "Cancelled"
+        0: "Received",
+        1: "Driver Assigned",
+        2: "In Transit",
+        3: "Delivered",
+        4: "Cancelled"
     };
 
     const columns = [

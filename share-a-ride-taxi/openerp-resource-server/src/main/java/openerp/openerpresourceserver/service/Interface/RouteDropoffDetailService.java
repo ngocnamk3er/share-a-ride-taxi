@@ -11,4 +11,6 @@ public interface RouteDropoffDetailService {
     RouteDropoffDetail createRouteDropoffDetail(RouteDropoffDetail routeDropoffDetail);
     RouteDropoffDetail updateRouteDropoffDetail(UUID id, RouteDropoffDetail routeDropoffDetail);
     void deleteRouteDropoffDetail(UUID id);
+
+    void deleteAllByRouteId(String routeId);
 }
