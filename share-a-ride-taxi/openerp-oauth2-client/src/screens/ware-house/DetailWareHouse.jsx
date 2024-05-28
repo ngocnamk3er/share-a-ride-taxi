@@ -23,6 +23,10 @@ const DetailWareHouse = () => {
     const [routeWarehousesComeIn, setRouteWarehousesComeIn] = useState([]);
     const [showWarehouseComeInTable, setShowWarehouseComeInTable] = useState(false);
 
+    
+    const [routeDropOff, setRouteDropOff] = useState([]);
+    const [showRouteDropOffable, setShowRouteDropOffable] = useState(false);
+
     const { id } = useParams();
     const tableRef = useRef(null);
 
@@ -30,6 +34,7 @@ const DetailWareHouse = () => {
         fetchWarehouse();
         fetchDriverWarehouses();
         fetchRoutePickups();
+        fetchRouteDropOff();
         fetchRouteWarehousesGoOut();
         fetchRouteWarehousesComeIn();
     }, []);
@@ -55,6 +60,15 @@ const DetailWareHouse = () => {
             setDriverWarehouses(res.data);
         } catch (error) {
             console.error("Error fetching driver warehouses:", error);
+        }
+    };
+
+    const fetchRouteDropOff = async () => {
+        try {
+            const res = await request('get', `/route-dropoffs/warehouse/${id}`);
+            setRouteDropOff(res.data);
+        } catch (error) {
+            console.error('Error fetching route pickups:', error);
         }
     };
 
@@ -352,6 +366,38 @@ const DetailWareHouse = () => {
                                     title="Warehouse Routes Come In"
                                     columns={warehouseRouteComeInColumns}
                                     data={routeWarehousesComeIn}
+                                    options={{
+                                        selection: false,
+                                        pageSize: 5,
+                                        search: true,
+                                        sorting: true,
+                                    }}
+                                />
+                            )}
+                        </Box>
+                        <Box mt={2} ref={tableRef}>
+                            <ButtonBase
+                                onClick={() => toggleTableVisibility(setShowRouteDropOffable, showRouteDropOffable)}
+                                style={{
+                                    width: "100%",
+                                    padding: "10px",
+                                    textAlign: "left",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    borderBottom: "1px solid #ddd"
+                                }}
+                            >
+                                <Typography variant="h6" color="primary">
+                                    Drop Off Routes
+                                </Typography>
+                                <ExpandMoreIcon style={{ transform: showRouteDropOffable ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }} />
+                            </ButtonBase>
+                            {showRouteDropOffable && (
+                                <StandardTable
+                                    title="Warehouse Routes Come In"
+                                    columns={routeColumns}
+                                    data={routeDropOff}
                                     options={{
                                         selection: false,
                                         pageSize: 5,
