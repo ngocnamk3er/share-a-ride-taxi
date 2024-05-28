@@ -6,6 +6,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useRouteMatch } from 'react-router-dom';
+import routeStatusMap from "config/statusMap";
 
 const ParcelRouteList = () => {
     const [pickupRoutes, setPickupRoutes] = useState([]);
@@ -13,13 +14,6 @@ const ParcelRouteList = () => {
     const [warehouseRoutes, setWarehouseRoutes] = useState([]);
     const history = useHistory(); // Initialize useHistory hook
     let { path } = useRouteMatch();
-
-    const routeStatusMap = {
-        0: "Not Ready",
-        1: "Ready",
-        2: "Start",
-        3: "Complete"
-    };
 
     useEffect(() => {
         fetchRoutes();

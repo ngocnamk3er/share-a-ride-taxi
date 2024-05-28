@@ -5,7 +5,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
 import WarehouseRoute from "../../components/route/warehouse-route/WarehouseRoute"
-
+import routeStatusMap from "config/statusMap";
 
 const DetailWarehouseRoute = () => {
     const [routeWarehouse, setRouteWarehouse] = useState(null);
@@ -17,12 +17,6 @@ const DetailWarehouseRoute = () => {
     const match = useRouteMatch();
     const { id } = match.params;
 
-    const routeStatusMap = {
-        0: "Not Ready",
-        1: "Ready",
-        2: "Start",
-        3: "Complete"
-    };
 
 
     useEffect(() => {

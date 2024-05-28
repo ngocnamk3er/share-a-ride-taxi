@@ -56,6 +56,15 @@ public class RoutePickupController {
         return ResponseEntity.ok(routes);
     }
 
+    @GetMapping("/warehouse/{warehouseId}")
+    public ResponseEntity<List<RoutePickup>> getPickUpRouteByWarehouseId(@PathVariable("warehouseId") String warehouseId) {
+        List<RoutePickup> listWarehouses = routePickupService.findByWarehouseId(warehouseId);
+        if (listWarehouses == null || listWarehouses.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(listWarehouses);
+    }
+
     @PostMapping("/{routeId}/pick-up-route-details")
     public ResponseEntity<?> updateRouteDetailsForRoute(@PathVariable("routeId") String routeId, @RequestBody List<RoutePickupDetail> routeDetails) {
         System.out.println("System.out.println(routeDetails);");

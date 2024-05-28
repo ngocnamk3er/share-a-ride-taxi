@@ -11,7 +11,7 @@ import DropOffRoute from "components/route/dropoff-route/DropOffRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import routeStatusMap from "config/statusMap";
 
 const DetailDropOffParcelRoute = () => {
     const [routeDropOff, setRouteDropOff] = useState(null);
@@ -27,14 +27,6 @@ const DetailDropOffParcelRoute = () => {
     const match = useRouteMatch();
     const history = useHistory();
     const { id } = match.params;
-
-    const routeStatusMap = {
-        0: "Not Ready",
-        1: "Ready",
-        2: "Start",
-        3: "Complete"
-    };
-
     const columnsRequest = [
         {
             title: "Sender Name",

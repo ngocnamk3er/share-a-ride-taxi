@@ -85,11 +85,21 @@ public class RouteDropoffController {
     }
 
     @GetMapping("/driver/{driverId}")
-    public ResponseEntity<List<RouteDropoff>> getPickUpRouteByDriverId(@PathVariable("routeId") String driverId) {
+    public ResponseEntity<List<RouteDropoff>> getDropOffRouteByDriverId(@PathVariable("driverId") String driverId) {
         List<RouteDropoff> routes = routeDropoffService.findByDriverId(driverId);
         if (routes == null || routes.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(routes);
     }
+
+    @GetMapping("/warehouse/{wareHouseId}")
+    public ResponseEntity<List<RouteDropoff>> getDropOffRouteByWareHouseId(@PathVariable("wareHouseId") String wareHouseId) {
+        List<RouteDropoff> routes = routeDropoffService.findByWareHouseId(wareHouseId);
+        if (routes == null || routes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(routes);
+    }
+
 }

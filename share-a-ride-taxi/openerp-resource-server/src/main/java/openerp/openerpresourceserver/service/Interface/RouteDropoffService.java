@@ -12,4 +12,6 @@ public interface RouteDropoffService {
     void deleteRouteDropoff(String id);
 
     List<RouteDropoff> findByDriverId(String driverId);
+
+    List<RouteDropoff> findByWareHouseId(String driverId);
 }

@@ -50,5 +50,10 @@ public class RoutePickupServiceImpl implements RoutePickupService {
     public List<RoutePickup> findByDriverId(String driverId) {
         return routePickupRepository.findByDriverId(driverId);
     }
+
+    @Override
+    public List<RoutePickup> findByWarehouseId(String warehouseId) {
+        return routePickupRepository.findByWareHouseId(warehouseId);
+    }
     // Thêm các phương thức khác cần thiết tại đây
 }

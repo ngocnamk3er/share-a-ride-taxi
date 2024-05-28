@@ -11,4 +11,6 @@ public interface RouteWarehouseService {
     void deleteRoute(String id);
 
     List<RouteWarehouse> findByDriverId(String driverId);
+
+    List<RouteWarehouse> getWareHouseRouteByStartWarehouseId(String startWareHouseId);
 }

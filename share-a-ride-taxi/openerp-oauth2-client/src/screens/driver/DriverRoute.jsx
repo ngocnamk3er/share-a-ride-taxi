@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { useRouteMatch } from 'react-router-dom';
 import keycloak from "config/keycloak";
 import { jwtDecode } from "jwt-decode";
+import routeStatusMap from "config/statusMap";
 
 const DriverRoute = () => {
     const [pickupRoutes, setPickupRoutes] = useState();
@@ -16,15 +17,6 @@ const DriverRoute = () => {
     const [driverId, setDriverId] = useState(null);
     const history = useHistory(); // Initialize useHistory hook
     let { path } = useRouteMatch();
-
-
-
-    const routeStatusMap = {
-        0: "Not Ready",
-        1: "Ready",
-        2: "Start",
-        3: "Complete"
-    };
 
     useEffect(() => {
         // Function to fetch pickup routes

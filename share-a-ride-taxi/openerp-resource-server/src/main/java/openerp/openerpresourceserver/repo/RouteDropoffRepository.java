@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface RouteDropoffRepository extends JpaRepository<RouteDropoff, String> {
     List<RouteDropoff> findByDriverId(String driverId);
+
+    List<RouteDropoff> findByWareHouseId(String wareHouseId);
 }

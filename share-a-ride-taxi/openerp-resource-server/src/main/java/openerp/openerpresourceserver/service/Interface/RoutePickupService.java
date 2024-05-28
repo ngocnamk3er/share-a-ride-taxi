@@ -14,5 +14,7 @@ public interface RoutePickupService {
     void deleteById(String id);
 
     List<RoutePickup> findByDriverId(String driverId);
+
+    List<RoutePickup> findByWarehouseId(String warehouseId);
     // Thêm các phương thức khác cần thiết tại đây
 }

@@ -4,11 +4,13 @@ import { TextField, Button, Grid } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
+import { Chip } from "@mui/material";
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import PickUpRoute from "components/route/pickup-route/PickUpRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import routeStatusMap from "config/statusMap";
 
 const DetailPickUpParcelRoute = (props) => {
     const { isDriver } = props
@@ -39,12 +41,20 @@ const DetailPickUpParcelRoute = (props) => {
             title: "Sender Name",
             field: "senderName",
             render: (rowData) => {
+                let displayText = '';
                 if (rowData.type === 'parcel-request') {
-                    return `parcel-request of ${rowData.senderName}`;
+                    displayText = `parcel-request of ${rowData.senderName}`;
                 } else if (rowData.type === 'passenger-request') {
-                    return `passenger-request of ${rowData.passengerName}`;
+                    displayText = `passenger-request of ${rowData.passengerName}`;
                 }
-                return '';
+                return (
+                    <span
+                        style={{ cursor: 'pointer' }}
+                        onClick={(event) => handleRowClick(event, rowData)}
+                    >
+                        {displayText}
+                    </span>
+                );
             },
         },
         {
@@ -79,30 +89,41 @@ const DetailPickUpParcelRoute = (props) => {
                 </IconButton>
             )
         }
+
     ];
 
-    const routeStatusMap = {
-        0: "Not Ready",
-        1: "Ready",
-        2: "Start",
-        3: "Complete"
-    };
 
     const handleActivateClick = (rowData) => {
-        if(isDriver){
+        if (isDriver) {
             console.log("Done clicked for:", rowData.type);
         }
     }
 
-    // const handleRowClick = (event, rowData) => {
-    //     const center = [rowData.pickupLatitude, rowData.pickupLongitude]
-    //     setCenter(center);
-    // };
+    const handleRowClick = (event, rowData) => {
+        const center = [rowData.pickupLatitude, rowData.pickupLongitude]
+        setCenter(center);
+    };
+
+    const getStatusColor = (statusId) => {
+        switch (statusId) {
+            case 0:
+                return 'gray'; // Not Ready
+            case 1:
+                return 'blue'; // Ready
+            case 2:
+                return 'orange'; // In Transit
+            case 3:
+                return 'green'; // Complete
+            default:
+                return 'gray';
+        }
+    };
 
     const handleViewClick = (rowData) => {
         // Xử lý khi click vào View
         console.log("View clicked for:", rowData);
     };
+
 
     useEffect(() => {
         const fetchRoutePickup = async () => {
@@ -187,13 +208,27 @@ const DetailPickUpParcelRoute = (props) => {
         console.log("check combinedRequests:", JSON.stringify(combinedRequests));
     }, [combinedRequests]);
 
+
+
     if (loading) return <CircularProgress />;
     if (!(combinedRequests && driver && warehouse && pickUpParcelRequests)) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;
 
     return (
         <div>
-            <h1>Route {id} Details</h1>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h1>Route {id} Details</h1>
+                {routePickup && (
+                    <Chip
+                        label={routeStatusMap[routePickup.routeStatusId]}
+                        style={{
+                            marginLeft: '20px',
+                            backgroundColor: getStatusColor(routePickup.routeStatusId),
+                            color: 'white'
+                        }}
+                    />
+                )}
+            </div>
             {
                 !isDriver &&
                 <Button

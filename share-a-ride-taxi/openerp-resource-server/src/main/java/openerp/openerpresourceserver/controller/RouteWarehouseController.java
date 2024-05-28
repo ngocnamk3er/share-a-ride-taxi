@@ -69,4 +69,13 @@ public class RouteWarehouseController {
         }
         return ResponseEntity.ok(routes);
     }
+
+    @GetMapping("/start-warehouse/{startWareHouseId}")
+    public ResponseEntity<List<RouteWarehouse>> getWareHouseRouteByStartWarehouseId(@PathVariable("startWareHouseId") String startWareHouseId) {
+        List<RouteWarehouse> routes = routeWarehouseService.getWareHouseRouteByStartWarehouseId(startWareHouseId);
+        if (routes == null || routes.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(routes);
+    }
 }

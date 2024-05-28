@@ -100,15 +100,26 @@ const createRoutineMachineLayer = (props) => {
 
   // Function to simulate running point along the route
   function simulateRunningPoint(route) {
+    const routeLength = route.length;
+    const totalDuration = 20 * 1000; // 10 seconds in milliseconds
+    const timeInterval = totalDuration / routeLength;
     let index = 0;
-    let timer = setInterval(function () {
+
+    let timer = setInterval(() => {
+      if (index >= routeLength) {
+        clearInterval(timer);
+        return;
+      }
+
+      console.log("check index : ", index)
+
       if (runningPointMarker) {
-        runningPointMarker.setLatLng(route.coordinates[index]);
+        runningPointMarker.setLatLng(route[index]);
       } else {
-        runningPointMarker = L.marker(route.coordinates[index], {
+        runningPointMarker = L.marker(route[index], {
           icon: L.divIcon({
-            className: 'running-point-icon',
-            html: '►',
+            className: "running-point-icon",
+            html: "<span style='height: 25px; width: 25px; background-color: #ff0000; border-radius: 50%; display: inline-block;' class='dot'></span>",
             iconSize: [12, 12],
             iconAnchor: [6, 6],
           }),
@@ -116,17 +127,15 @@ const createRoutineMachineLayer = (props) => {
       }
 
       index++;
-
-      if (index >= route.coordinates.length) {
-        clearInterval(timer);
-      }
-    }, 1000); // Move every 1 second
+    }, timeInterval);
   }
 
-  instance.on('routesfound', function (e) {
-    const route = e.routes[0].coordinates;
-    simulateRunningPoint(route);
-  });
+
+  // instance.on('routesfound', function (e) {
+  //   const route = e.routes[0].coordinates;
+  //   console.log("check route : ", route)
+  //   simulateRunningPoint(route);
+  // });
 
   return instance;
 };

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface RoutePickupRepository extends JpaRepository<RoutePickup, String> {
     List<RoutePickup> findByDriverId(String driverId);
+
+    List<RoutePickup> findByWareHouseId(String wareHouseId);
 }

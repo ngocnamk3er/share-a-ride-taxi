@@ -58,4 +58,9 @@ public class RouteWarehouseServiceImpl implements RouteWarehouseService {
     public List<RouteWarehouse> findByDriverId(String driverId) {
         return repository.findByDriverId(driverId);
     }
+
+    @Override
+    public List<RouteWarehouse> getWareHouseRouteByStartWarehouseId(String startWareHouseId) {
+        return repository.findByStartWarehouseId(startWareHouseId);
+    }
 }

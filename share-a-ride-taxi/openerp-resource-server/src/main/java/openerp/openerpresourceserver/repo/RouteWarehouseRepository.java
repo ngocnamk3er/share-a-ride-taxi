@@ -9,5 +9,9 @@ import java.util.List;
 @Repository
 public interface RouteWarehouseRepository extends JpaRepository<RouteWarehouse, String> {
     List<RouteWarehouse> findByDriverId(String driverId);
+
+    List<RouteWarehouse> findByStartWarehouseId(String startWareHouseId);
+
+//    List<RouteWarehouse> findByDropOffHouseId(String startWareHouseId);
     // Để tùy chỉnh các phương thức truy vấn nếu cần thiết
 }
