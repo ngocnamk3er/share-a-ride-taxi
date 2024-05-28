@@ -16,5 +16,7 @@ public interface RouteWarehouseDetailService {
 
     RouteWarehouseDetail findById(UUID id);
 
+    List<RouteWarehouseDetail> findRouteComeIn(String warehouseId);
+
     // You can add more service methods as needed
 }

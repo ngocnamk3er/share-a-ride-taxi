@@ -6,7 +6,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import IconButton from "@mui/material/IconButton";
 import { useHistory } from "react-router-dom";
 import { useRouteMatch } from 'react-router-dom';
-import routeStatusMap from "config/statusMap";
+import {routeStatusMap} from "config/statusMap";
 
 const ParcelRouteList = () => {
     const [pickupRoutes, setPickupRoutes] = useState([]);

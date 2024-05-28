@@ -285,7 +285,7 @@ public class AutoAssignService {
                             //Insert into database
                             RouteWarehouseDetail routeWarehouseDetail = RouteWarehouseDetail.builder()
                                     .warehouseId(routeDropoff.getWareHouseId())
-                                    .sequenceIndex(currentlength + 1)
+                                    .seqIndex(currentlength + 1)
                                     .routeId(wareHouseId + "_route_warehouse_" + day)
                                     .build();
                             routeWarehouseDetailService.save(routeWarehouseDetail);

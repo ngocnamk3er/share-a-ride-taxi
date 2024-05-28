@@ -10,7 +10,9 @@ import PickUpRoute from "components/route/pickup-route/PickUpRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import routeStatusMap from "config/statusMap";
+import { routeStatusMap } from "config/statusMap";
+import { getStatusColor } from "config/statusMap";
+
 
 const DetailPickUpParcelRoute = (props) => {
     const { isDriver } = props
@@ -28,13 +30,6 @@ const DetailPickUpParcelRoute = (props) => {
     const history = useHistory();
     const { id } = match.params;
 
-    const statusLookup = {
-        0: "Received",
-        1: "Driver Assigned",
-        2: "In Transit",
-        3: "Delivered",
-        4: "Cancelled"
-    };
 
     const columnsRequest = [
         {
@@ -102,21 +97,6 @@ const DetailPickUpParcelRoute = (props) => {
     const handleRowClick = (event, rowData) => {
         const center = [rowData.pickupLatitude, rowData.pickupLongitude]
         setCenter(center);
-    };
-
-    const getStatusColor = (statusId) => {
-        switch (statusId) {
-            case 0:
-                return 'gray'; // Not Ready
-            case 1:
-                return 'blue'; // Ready
-            case 2:
-                return 'orange'; // In Transit
-            case 3:
-                return 'green'; // Complete
-            default:
-                return 'gray';
-        }
     };
 
     const handleViewClick = (rowData) => {

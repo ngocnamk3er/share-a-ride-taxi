@@ -8,7 +8,7 @@ import { useHistory } from "react-router-dom";
 import { useRouteMatch } from 'react-router-dom';
 import keycloak from "config/keycloak";
 import { jwtDecode } from "jwt-decode";
-import routeStatusMap from "config/statusMap";
+import {routeStatusMap} from "config/statusMap";
 
 const DriverRoute = () => {
     const [pickupRoutes, setPickupRoutes] = useState();

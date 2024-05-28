@@ -27,7 +27,7 @@ public class RouteWarehouseDetail {
     private boolean visited;
 
     @Column(name = "seq_index")
-    private Integer sequenceIndex;
+    private Integer seqIndex;
 
     @Column(name = "last_updated_stamp")
     private LocalDateTime lastUpdatedStamp;

@@ -11,7 +11,7 @@ import DropOffRoute from "components/route/dropoff-route/DropOffRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import routeStatusMap from "config/statusMap";
+import { routeStatusMap } from "config/statusMap";
 
 const DetailDropOffParcelRoute = () => {
     const [routeDropOff, setRouteDropOff] = useState(null);

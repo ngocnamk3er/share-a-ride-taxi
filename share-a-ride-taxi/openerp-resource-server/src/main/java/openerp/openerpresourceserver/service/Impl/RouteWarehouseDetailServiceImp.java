@@ -49,4 +49,9 @@ public class RouteWarehouseDetailServiceImp implements RouteWarehouseDetailServi
     public RouteWarehouseDetail findById(UUID id) {
         return routeWarehouseDetailRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<RouteWarehouseDetail> findRouteComeIn(String warehouseId) {
+        return routeWarehouseDetailRepository.findRouteComeIn(warehouseId);
+    }
 }
