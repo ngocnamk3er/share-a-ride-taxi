@@ -23,7 +23,7 @@ const DetailWareHouse = () => {
     const [routeWarehousesComeIn, setRouteWarehousesComeIn] = useState([]);
     const [showWarehouseComeInTable, setShowWarehouseComeInTable] = useState(false);
 
-    
+
     const [routeDropOff, setRouteDropOff] = useState([]);
     const [showRouteDropOffable, setShowRouteDropOffable] = useState(false);
 
@@ -121,6 +121,16 @@ const DetailWareHouse = () => {
         }
     };
 
+    const handleStatusChange = async (routeId) => {
+        try {
+            // Call API to change route status to Ready (1)
+            await request("post", `/make-route-ready/${routeId}`);
+            // If successful, update the UI or refetch the route data
+        } catch (error) {
+            console.error("Error changing route status:", error);
+        }
+    };
+
     const driverColumns = [
         { title: "Driver ID", field: "driverId" },
         {
@@ -157,13 +167,25 @@ const DetailWareHouse = () => {
             title: "Status",
             field: "routeStatusId",
             render: (rowData) => (
-                <Chip
-                    label={routeStatusMap[rowData.routeStatusId]}
-                    style={{
-                        backgroundColor: getStatusColor(rowData.routeStatusId),
-                        color: 'white'
-                    }}
-                />
+                <>
+                    <Chip
+                        label={routeStatusMap[rowData.routeStatusId]}
+                        style={{
+                            backgroundColor: getStatusColor(rowData.routeStatusId),
+                            color: 'white',
+                            marginRight: '8px' // Add margin for space
+                        }}
+                    />
+                    {rowData.routeStatusId === 0 && ( // Render button only if routeStatusId is 0
+                        <IconButton
+                            onClick={() => handleStatusChange(rowData.id)}
+                            color="primary"
+                        >
+                            <CheckCircleIcon />
+                        </IconButton>
+                    )}
+                </>
+
             )
         },
     ];

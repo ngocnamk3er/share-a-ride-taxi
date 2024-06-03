@@ -6,6 +6,8 @@ export const routeStatusMap = {
 };
 
 export const getStatusColor = (statusId) => {
+    console.log("check status color : ", statusId)
+
     switch (statusId) {
         case 0:
             return 'gray'; // Not Ready
@@ -16,7 +18,7 @@ export const getStatusColor = (statusId) => {
         case 3:
             return 'green'; // Complete
         default:
-            return 'gray';
+            return 'black';
     }
 };
 

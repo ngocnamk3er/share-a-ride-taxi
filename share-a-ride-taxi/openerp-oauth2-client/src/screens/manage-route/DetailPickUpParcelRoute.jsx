@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { TextField, Button, Grid } from "@mui/material";
+import { TextField, Button, Grid, CircularProgress, Chip, MenuItem, Select, IconButton } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
-import { CircularProgress } from "@mui/material";
-import { Chip } from "@mui/material";
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import PickUpRoute from "components/route/pickup-route/PickUpRoute";
-import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { routeStatusMap } from "config/statusMap";
-import { getStatusColor } from "config/statusMap";
-
+import { routeStatusMap, getStatusColor } from "config/statusMap";
 
 const DetailPickUpParcelRoute = (props) => {
-    const { isDriver } = props
+    const { isDriver } = props;
 
     const [routePickup, setRoutePickup] = useState(null);
     const [driver, setDriver] = useState(null);
@@ -26,10 +21,10 @@ const DetailPickUpParcelRoute = (props) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [center, setCenter] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState('');
     const match = useRouteMatch();
     const history = useHistory();
     const { id } = match.params;
-
 
     const columnsRequest = [
         {
@@ -84,25 +79,35 @@ const DetailPickUpParcelRoute = (props) => {
                 </IconButton>
             )
         }
-
     ];
-
 
     const handleActivateClick = (rowData) => {
         if (isDriver) {
             console.log("Done clicked for:", rowData.type);
         }
-    }
+    };
 
     const handleRowClick = (event, rowData) => {
-        const center = [rowData.pickupLatitude, rowData.pickupLongitude]
+        const center = [rowData.pickupLatitude, rowData.pickupLongitude];
         setCenter(center);
     };
 
     const handleViewClick = (rowData) => {
-        // Xử lý khi click vào View
         console.log("View clicked for:", rowData);
     };
+
+    const handleStatusChange = async (status) => {
+        const newStatus = status;
+        setSelectedStatus(newStatus);
+
+        try {
+            await request('put', `/route-pickups/${id}/status?status=${newStatus}`);
+            setRoutePickup(prevState => ({ ...prevState, routeStatusId: parseInt(newStatus) }));
+        } catch (err) {
+            setError(err);
+        }
+    };
+
 
 
     useEffect(() => {
@@ -110,6 +115,7 @@ const DetailPickUpParcelRoute = (props) => {
             try {
                 const response = await request('get', `/route-pickups/${id}`);
                 setRoutePickup(response.data);
+                setSelectedStatus(response.data.routeStatusId);
             } catch (err) {
                 setError(err);
             } finally {
@@ -121,13 +127,12 @@ const DetailPickUpParcelRoute = (props) => {
             try {
                 const resParcelReq = await request('get', `/parcel-requests/by-pickup-route/${id}`);
                 const pickUpParcelRequests = resParcelReq.data;
-                setPickUpParcelRequests(pickUpParcelRequests)
+                setPickUpParcelRequests(pickUpParcelRequests);
 
                 const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
                 const passengerRequests = resPassengerReq.data;
-                setPassengerRequests(passengerRequests)
+                setPassengerRequests(passengerRequests);
 
-                // Kết hợp cả hai loại yêu cầu
                 const combinedRequests = [
                     ...pickUpParcelRequests.map(request => ({
                         ...request,
@@ -139,7 +144,6 @@ const DetailPickUpParcelRoute = (props) => {
                     })),
                 ];
 
-                // Sắp xếp theo seqIndex
                 combinedRequests.sort((a, b) => a.seqIndex - b.seqIndex);
 
                 setCombinedRequests(combinedRequests);
@@ -150,12 +154,14 @@ const DetailPickUpParcelRoute = (props) => {
             }
         };
 
-
         fetchRoutePickup();
         fetchPickUpRouteRequests();
     }, [id]);
 
     useEffect(() => {
+
+        console.log("check route pick up request :", routePickup)
+
         const fetchDriver = async (driverId) => {
             try {
                 const response = await request('get', `/drivers/user/${driverId}`);
@@ -188,8 +194,6 @@ const DetailPickUpParcelRoute = (props) => {
         console.log("check combinedRequests:", JSON.stringify(combinedRequests));
     }, [combinedRequests]);
 
-
-
     if (loading) return <CircularProgress />;
     if (!(combinedRequests && driver && warehouse && pickUpParcelRequests)) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;
@@ -199,32 +203,47 @@ const DetailPickUpParcelRoute = (props) => {
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <h1>Route {id} Details</h1>
                 {routePickup && (
-                    <Chip
-                        label={routeStatusMap[routePickup.routeStatusId]}
-                        style={{
-                            marginLeft: '20px',
-                            backgroundColor: getStatusColor(routePickup.routeStatusId),
-                            color: 'white'
-                        }}
-                    />
+                    <>
+                        <Chip
+                            label={routeStatusMap[routePickup.routeStatusId]}
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: getStatusColor(routePickup.routeStatusId),
+                                color: 'white'
+                            }}
+                        />
+                        {routePickup.routeStatusId === 1 ? (
+                            ""
+                        ) : (
+                            <Chip
+                                onClick={() => handleStatusChange(1)}
+                                label="Mark as Ready"
+                                style={{
+                                    marginLeft: '20px',
+                                    backgroundColor: 'green',
+                                    color: 'white'
+                                }}
+                            />
+                        )}
+                    </>
                 )}
             </div>
-            {
-                !isDriver &&
+            {!isDriver && (
                 <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => history.push(`/manage-routes/parcel-route-list/pick-drop-off-route/${id}/add-request`)}
+                    onClick={() => history.push(`/manage-routes/parcel-route-list/pick-up-route/${id}/add-request`)}
                     style={{ marginTop: '20px' }}
                 >
-                    Add Request To Drop Off Route
+                    Add Request To Pick Up Route
                 </Button>
-            }
+            )}
             <br />
             <br />
             <Grid container spacing={2}>
                 <Grid item xs={8}>
-                    <PickUpRoute style={{ width: "100%", height: "100%" }}
+                    <PickUpRoute
+                        style={{ width: "100%", height: "100%" }}
                         listLocation={pickUpParcelRequests.map(req => ({
                             lat: req.pickupLatitude,
                             lon: req.pickupLongitude,
@@ -258,7 +277,6 @@ const DetailPickUpParcelRoute = (props) => {
                     />
                 </Grid>
             </Grid>
-
             {routePickup && (
                 <div>
                     <TextField

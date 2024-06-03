@@ -103,4 +103,18 @@ public class RoutePickupController {
         routePickupService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateRoutePickupStatus(@PathVariable String id, @RequestParam Integer status) {
+        RoutePickup existingRoute = routePickupService.findById(id);
+        if (existingRoute == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        existingRoute.setRouteStatusId(status); // Cập nhật trạng thái mới
+        existingRoute.setLastUpdatedStamp(LocalDateTime.now()); // Cập nhật thời gian cập nhật mới
+        RoutePickup updatedRoutePickup = routePickupService.update(id, existingRoute); // Lưu thay đổi
+
+        return ResponseEntity.ok(updatedRoutePickup);
+    }
 }
