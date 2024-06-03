@@ -102,4 +102,18 @@ public class RouteDropoffController {
         return ResponseEntity.ok(routes);
     }
 
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateRoutePickupStatus(@PathVariable String id, @RequestParam Integer status) {
+        RouteDropoff existingRoute = routeDropoffService.findById(id);
+        if (existingRoute == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        existingRoute.setRouteStatusId(status); // Cập nhật trạng thái mới
+        existingRoute.setLastUpdatedStamp(LocalDateTime.now()); // Cập nhật thời gian cập nhật mới
+        RouteDropoff updatedRouteDropoff = routeDropoffService.updateRouteDropoff(id, existingRoute); // Lưu thay đổi
+
+        return ResponseEntity.ok(updatedRouteDropoff);
+    }
+
 }

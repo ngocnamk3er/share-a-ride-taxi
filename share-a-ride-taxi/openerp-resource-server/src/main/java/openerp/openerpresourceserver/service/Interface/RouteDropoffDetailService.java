@@ -13,4 +13,8 @@ public interface RouteDropoffDetailService {
     void deleteRouteDropoffDetail(UUID id);
 
     void deleteAllByRouteId(String routeId);
+
+    List<RouteDropoffDetail> findAllByRouteId(String routeId);
+
+    RouteDropoffDetail updateVisitedStatus(String routeId, UUID requestId, boolean visited);
 }

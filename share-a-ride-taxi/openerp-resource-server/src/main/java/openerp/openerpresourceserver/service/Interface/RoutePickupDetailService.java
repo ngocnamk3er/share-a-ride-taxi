@@ -19,5 +19,7 @@ public interface RoutePickupDetailService {
     void deleteById(UUID id);
 
     void deleteAllByRouteId(String routeId);
+
+    RoutePickupDetail updateVisitedStatus(String routeId, UUID requestId, boolean visited);
     // Thêm các phương thức khác cần thiết tại đây
 }

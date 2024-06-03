@@ -5,20 +5,24 @@ export const routeStatusMap = {
     3: "Complete"
 };
 
-export const getStatusColor = (statusId) => {
-    console.log("check status color : ", statusId)
+export const routeStatusMapReverse = {
+    NotReady: 0,
+    Ready: 1,
+    IN_TRANSIT: 2,
+    Complete: 3
+};
 
+export const getStatusColor = (statusId) => {
     switch (statusId) {
-        case 0:
-            return 'gray'; // Not Ready
-        case 1:
-            return 'blue'; // Ready
-        case 2:
-            return 'orange'; // In Transit
-        case 3:
-            return 'green'; // Complete
+        case routeStatusMapReverse.NotReady:
+            return 'gray';
+        case routeStatusMapReverse.Ready:
+            return 'blue';
+        case routeStatusMapReverse.IN_TRANSIT:
+            return 'orange';
+        case routeStatusMapReverse.Complete:
+            return 'green';
         default:
             return 'black';
     }
 };
-

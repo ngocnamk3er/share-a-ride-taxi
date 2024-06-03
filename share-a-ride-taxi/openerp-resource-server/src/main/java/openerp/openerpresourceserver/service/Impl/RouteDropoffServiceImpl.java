@@ -43,6 +43,11 @@ public class RouteDropoffServiceImpl implements RouteDropoffService {
     }
 
     @Override
+    public RouteDropoff findById(String id) {
+        return routeDropoffRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public void deleteRouteDropoff(String id) {
         routeDropoffRepository.deleteById(id);
     }

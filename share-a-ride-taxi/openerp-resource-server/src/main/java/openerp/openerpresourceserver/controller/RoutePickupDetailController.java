@@ -48,4 +48,17 @@ public class RoutePickupDetailController {
         routePickupDetailService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/visited")
+    public ResponseEntity<RoutePickupDetail> updateVisitedStatus(
+            @RequestParam String routeId,
+            @RequestParam UUID requestId,
+            @RequestParam boolean visited) {
+        RoutePickupDetail updatedRoutePickupDetail = routePickupDetailService.updateVisitedStatus(routeId, requestId, visited);
+        if (updatedRoutePickupDetail != null) {
+            return ResponseEntity.ok().body(updatedRoutePickupDetail);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

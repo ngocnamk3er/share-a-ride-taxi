@@ -6,14 +6,16 @@ import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
 import { Button } from "@mui/material";
 import { Grid } from "@mui/material";
+import { Chip } from "@mui/material";
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import DropOffRoute from "components/route/dropoff-route/DropOffRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { routeStatusMap } from "config/statusMap";
+import { routeStatusMap, getStatusColor } from "config/statusMap";
 
-const DetailDropOffParcelRoute = () => {
+const DetailDropOffParcelRoute = (props) => {
+    const { isDriver } = props;
     const [routeDropOff, setRouteDropOff] = useState(null);
     const [driver, setDriver] = useState(null);
     const [warehouse, setWarehouse] = useState(null);
@@ -25,6 +27,7 @@ const DetailDropOffParcelRoute = () => {
     const [error, setError] = useState(null);
     const [center, setCenter] = useState(null);
     const match = useRouteMatch();
+    const [selectedStatus, setSelectedStatus] = useState('');
     const history = useHistory();
     const { id } = match.params;
     const columnsRequest = [
@@ -188,6 +191,18 @@ const DetailDropOffParcelRoute = () => {
         setCenter(center);
     };
 
+    const handleStatusChange = async (status) => {
+        const newStatus = status;
+        setSelectedStatus(newStatus);
+
+        try {
+            await request('put', `/route-dropoffs/${id}/status?status=${newStatus}`);
+            setRouteDropOff(prevState => ({ ...prevState, routeStatusId: parseInt(newStatus) }));
+        } catch (err) {
+            setError(err);
+        }
+    };
+
     useEffect(() => {
         if (reqLocations && driver && warehouse) {
             console.log("okok")
@@ -200,7 +215,39 @@ const DetailDropOffParcelRoute = () => {
 
     return (
         <div>
-            <h1>Route {id} Details</h1>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h1>Route {id} Details</h1>
+                {routeDropOff && (
+                    <>
+                        <Chip
+                            label={routeStatusMap[routeDropOff.routeStatusId]}
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: getStatusColor(routeDropOff.routeStatusId),
+                                color: 'white'
+                            }}
+                        />
+                        {routeDropOff.routeStatusId === 0 && !isDriver && <Chip
+                            onClick={() => handleStatusChange(1)}
+                            label="Mark as Ready"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                        {routeDropOff.routeStatusId === 1 && isDriver && <Chip
+                            onClick={() => handleStatusChange(2)}
+                            label="Start"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                    </>
+                )}
+            </div>
             <Button
                 variant="contained"
                 color="primary"

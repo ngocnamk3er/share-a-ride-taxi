@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { TextField, Button, Grid, CircularProgress, Chip, MenuItem, Select, IconButton } from "@mui/material";
+import { TextField, Button, Grid, CircularProgress, Chip, IconButton } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { StandardTable } from "erp-hust/lib/StandardTable";
 import PickUpRoute from "components/route/pickup-route/PickUpRoute";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { routeStatusMap, getStatusColor } from "config/statusMap";
+import { routeStatusMap, getStatusColor, routeStatusMapReverse } from "config/statusMap";
 
 const DetailPickUpParcelRoute = (props) => {
     const { isDriver } = props;
@@ -81,11 +81,33 @@ const DetailPickUpParcelRoute = (props) => {
         }
     ];
 
-    const handleActivateClick = (rowData) => {
-        if (isDriver) {
-            console.log("Done clicked for:", rowData.type);
+    const handleActivateClick = async (rowData) => {
+        if (isDriver && routePickup.routeStatusId === routeStatusMapReverse.IN_TRANSIT) {
+            const params = new URLSearchParams({
+                routeId: routePickup.id,
+                requestId: rowData.requestId,
+                visited: !rowData.visited
+            });
+
+            try {
+                const response = await request('put', `/route-pickup-details/visited?${params.toString()}`);
+
+                // Cập nhật trạng thái visited của request trong danh sách combinedRequests
+                setCombinedRequests((prevRequests) =>
+                    prevRequests.map((request) =>
+                        request.requestId === rowData.requestId && request.routeId === rowData.routeId
+                            ? { ...request, visited: !request.visited }
+                            : request
+                    )
+                );
+
+                console.log("Updated visited status for:", rowData.type);
+            } catch (error) {
+                console.error("Error updating visited status:", error);
+            }
         }
     };
+
 
     const handleRowClick = (event, rowData) => {
         const center = [rowData.pickupLatitude, rowData.pickupLongitude];
@@ -107,8 +129,6 @@ const DetailPickUpParcelRoute = (props) => {
             setError(err);
         }
     };
-
-
 
     useEffect(() => {
         const fetchRoutePickup = async () => {
@@ -159,8 +179,7 @@ const DetailPickUpParcelRoute = (props) => {
     }, [id]);
 
     useEffect(() => {
-
-        console.log("check route pick up request :", routePickup)
+        console.log("check route pick up request:", routePickup);
 
         const fetchDriver = async (driverId) => {
             try {
@@ -212,19 +231,33 @@ const DetailPickUpParcelRoute = (props) => {
                                 color: 'white'
                             }}
                         />
-                        {routePickup.routeStatusId === 1 ? (
-                            ""
-                        ) : (
-                            <Chip
-                                onClick={() => handleStatusChange(1)}
-                                label="Mark as Ready"
-                                style={{
-                                    marginLeft: '20px',
-                                    backgroundColor: 'green',
-                                    color: 'white'
-                                }}
-                            />
-                        )}
+                        {routePickup.routeStatusId === routeStatusMapReverse.NotReady && !isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.Ready)}
+                            label="Mark as Ready"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                        {routePickup.routeStatusId === routeStatusMapReverse.Ready && isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.IN_TRANSIT)}
+                            label="Start"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                        {routePickup.routeStatusId === 2 && isDriver && <Chip
+                            onClick={() => handleStatusChange(3)}
+                            label="Mark as Complete"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
                     </>
                 )}
             </div>

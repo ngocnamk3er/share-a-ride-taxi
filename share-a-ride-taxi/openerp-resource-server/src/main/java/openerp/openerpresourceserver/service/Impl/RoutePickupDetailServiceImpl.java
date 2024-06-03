@@ -58,5 +58,15 @@ public class RoutePickupDetailServiceImpl implements RoutePickupDetailService {
         routePickupDetailRepository.deleteAllByRouteId(routeId);
     }
 
+    @Override
+    public RoutePickupDetail updateVisitedStatus(String routeId, UUID requestId, boolean visited) {
+        RoutePickupDetail routePickupDetail = routePickupDetailRepository.findByRouteIdAndRequestId(routeId, requestId);
+        if (routePickupDetail != null) {
+            routePickupDetail.setVisited(visited);
+            routePickupDetail.setLastUpdatedStamp(LocalDateTime.now());
+            return routePickupDetailRepository.save(routePickupDetail);
+        }
+        return null;
+    }
     // Thêm các phương thức khác cần thiết tại đây
 }

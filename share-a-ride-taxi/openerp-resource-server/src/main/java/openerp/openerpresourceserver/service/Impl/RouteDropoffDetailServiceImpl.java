@@ -55,4 +55,20 @@ public class RouteDropoffDetailServiceImpl implements RouteDropoffDetailService 
     public void deleteAllByRouteId(String routeId) {
         routeDropoffDetailRepository.deleteAllByRouteId(routeId);
     }
+
+    @Override
+    public List<RouteDropoffDetail> findAllByRouteId(String routeId) {
+        return routeDropoffDetailRepository.findAllByRouteId(routeId);
+    }
+
+    @Override
+    public RouteDropoffDetail updateVisitedStatus(String routeId, UUID requestId, boolean visited) {
+        RouteDropoffDetail routeDropoffDetail = routeDropoffDetailRepository.findByRouteIdAndRequestId(routeId, requestId);
+        if (routeDropoffDetail != null) {
+            routeDropoffDetail.setVisited(visited);
+            return routeDropoffDetailRepository.save(routeDropoffDetail);
+        } else {
+            return null;
+        }
+    }
 }
