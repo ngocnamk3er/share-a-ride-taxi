@@ -104,4 +104,21 @@ public class PassengerRequestController {
         passengerRequestService.deletePassengerRequest(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/update-visited/{requestId}")
+    public ResponseEntity<PassengerRequest> updateVisited(@PathVariable UUID requestId, @RequestParam Boolean visited) {
+        // Kiểm tra xem yêu cầu hành khách có tồn tại hay không
+        PassengerRequest passengerRequest = passengerRequestService.getPassengerRequestById(requestId);
+        if (passengerRequest == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Cập nhật trạng thái visited
+        passengerRequest.setVisited(visited);
+
+        // Lưu lại thay đổi
+        PassengerRequest updatedPassengerRequest = passengerRequestService.savePassengerRequest(passengerRequest);
+        return ResponseEntity.ok(updatedPassengerRequest);
+    }
+
 }

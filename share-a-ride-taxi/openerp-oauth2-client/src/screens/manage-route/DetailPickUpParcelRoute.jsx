@@ -90,7 +90,14 @@ const DetailPickUpParcelRoute = (props) => {
             });
 
             try {
-                const response = await request('put', `/route-pickup-details/visited?${params.toString()}`);
+                if (rowData.type === 'passenger-request') {
+                    console.log("in passenger-request")
+                    // Gửi yêu cầu đến API cập nhật visited cho passenger-request
+                    const response = await request('put', `/passenger-requests/update-visited/${rowData.requestId}?visited=${!rowData.visited}`);
+                } else {
+                    // Gửi yêu cầu đến API cập nhật visited cho parcel-request
+                    const response = await request('put', `/route-pickup-details/visited?${params.toString()}`);
+                }
 
                 // Cập nhật trạng thái visited của request trong danh sách combinedRequests
                 setCombinedRequests((prevRequests) =>
@@ -107,7 +114,6 @@ const DetailPickUpParcelRoute = (props) => {
             }
         }
     };
-
 
     const handleRowClick = (event, rowData) => {
         const center = [rowData.pickupLatitude, rowData.pickupLongitude];
