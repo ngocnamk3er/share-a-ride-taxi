@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.service.Interface;
 
+import openerp.openerpresourceserver.DTO.response.WareHouseWithIndex;
 import openerp.openerpresourceserver.entity.Warehouse;
 
 import java.util.List;
@@ -10,5 +11,5 @@ public interface WarehouseService {
     Warehouse saveWarehouse(Warehouse warehouse);
     void deleteWarehouse(String id);
 
-    List<Warehouse> getWarehouseByWarehoueRouteId(String id);
+    List<WareHouseWithIndex> getWarehouseByWarehoueRouteId(String id);
 }

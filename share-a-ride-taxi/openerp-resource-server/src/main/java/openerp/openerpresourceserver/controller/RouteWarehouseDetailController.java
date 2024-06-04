@@ -25,4 +25,16 @@ public class RouteWarehouseDetailController {
         }
         return ResponseEntity.ok(detail);
     }
+
+    @PutMapping("/update-visited")
+    public ResponseEntity<RouteWarehouseDetail> updateVisitedStatus(
+            @RequestParam UUID id, @RequestParam boolean visited) {
+        RouteWarehouseDetail updatedDetail = routeWarehouseDetailService.updateVisitedStatus(id, visited);
+        if (updatedDetail == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(updatedDetail);
+    }
+
+
 }

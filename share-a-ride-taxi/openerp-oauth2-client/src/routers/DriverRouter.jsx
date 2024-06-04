@@ -39,14 +39,14 @@ export default function DriverRouter() {
                     render={(props) => <DetailPickUpParcelRoute {...props} isDriver={true} />}
                 />
                 <Route
-                    component={DetailDropOffParcelRoute}
                     exact
                     path={`${path}/route/drop-off-route/:id`}
+                    render={(props) => <DetailDropOffParcelRoute {...props} isDriver={true} />}
                 ></Route>
                 <Route
-                    component={DetailWarehouseRoute}
                     exact
                     path={`${path}/route/warehouse-route/:id`}
+                    render={(props) => <DetailWarehouseRoute {...props} isDriver={true} />}
                 ></Route>
                 <Route
                     component={Warehouse}

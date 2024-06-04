@@ -16,7 +16,7 @@ const createRoutineMachineLayer = (props) => {
   const iconUrls = [
     require(`../../../assets/img/driver.png`),
     require(`../../../assets/img/warehouse.png`),
-    ...listLocation.map((_, i) => require(`../../../assets/img/warehouse2.png`)),
+    ...listLocation.map((_, i) => require(`../../../assets/img/warehouse${i+1}.png`)),
   ];
 
   // Define your custom icons

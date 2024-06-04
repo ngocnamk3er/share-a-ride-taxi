@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -53,5 +54,17 @@ public class RouteWarehouseDetailServiceImp implements RouteWarehouseDetailServi
     @Override
     public List<RouteWarehouseDetail> findRouteComeIn(String warehouseId) {
         return routeWarehouseDetailRepository.findRouteComeIn(warehouseId);
+    }
+
+    @Override
+    public RouteWarehouseDetail updateVisitedStatus(UUID id, boolean visited) {
+        Optional<RouteWarehouseDetail> detailOptional = routeWarehouseDetailRepository.findById(id);
+        if (detailOptional.isPresent()) {
+            RouteWarehouseDetail detail = detailOptional.get();
+            detail.setVisited(visited);
+            detail.setLastUpdatedStamp(LocalDateTime.now());
+            return routeWarehouseDetailRepository.save(detail);
+        }
+        return null;
     }
 }

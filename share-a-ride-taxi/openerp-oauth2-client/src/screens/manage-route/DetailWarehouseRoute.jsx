@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { TextField, Button } from "@mui/material";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { TextField } from "@mui/material";
+import { Grid } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Chip } from "@mui/material";
+import { useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
 import WarehouseRoute from "../../components/route/warehouse-route/WarehouseRoute"
-import {routeStatusMap} from "config/statusMap";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { StandardTable } from "erp-hust/lib/StandardTable";
+import { routeStatusMap } from "config/statusMap";
+import { getStatusColor } from "config/statusMap";
+import { routeStatusMapReverse } from "config/statusMap";
 
-const DetailWarehouseRoute = () => {
+
+const DetailWarehouseRoute = (props) => {
+    const { isDriver } = props;
     const [routeWarehouse, setRouteWarehouse] = useState(null);
     const [driver, setDriver] = useState(null);
     const [startWarehouse, setStartWarehouse] = useState(null);
@@ -16,8 +26,82 @@ const DetailWarehouseRoute = () => {
     const [error, setError] = useState(null);
     const match = useRouteMatch();
     const { id } = match.params;
+    const [selectedStatus, setSelectedStatus] = useState('');
+
+    const columnsWareHouse = [
+        {
+            title: "Warehouse Name",
+            field: "warehouseName",
+        },
+        {
+            title: "View",
+            sorting: false,
+            cellStyle: { width: '10px', padding: '0px', textAlign: 'center' },
+            headerStyle: { width: '10px', padding: '0px', textAlign: 'center' },
+            render: (rowData) => (
+                <IconButton
+                    style={{
+                        width: 50,
+                    }}
+                    onClick={() => {
+                        // handleViewClick(rowData);
+                    }}
+                    variant="contained"
+                    color="primary"
+                >
+                    <VisibilityIcon />
+                </IconButton>
+            ),
+        },
+        {
+            title: "Done",
+            field: "visited",
+            render: rowData => (
+                <IconButton
+                    onClick={() => handleActivateClick(rowData)}
+                    color={rowData.visited ? 'primary' : 'text.disabled'}
+                >
+                    <CheckCircleIcon />
+                </IconButton>
+            )
+        }
+    ];
 
 
+
+    const handleActivateClick = async (rowData) => {
+        if (isDriver && routeWarehouse.routeStatusId === routeStatusMapReverse.IN_TRANSIT) {
+            console.log("handleActivateClick ")
+            try {
+                // Gọi API để cập nhật trạng thái visited
+                const response = await request('put', `/route-warehouse-details/update-visited?id=${rowData.id}&visited=${!rowData.visited}`);
+
+                // Cập nhật lại danh sách dropOffWarehouses sau khi thay đổi
+                const updatedDropOffWarehouses = dropOffWarehouses.map(warehouse => {
+                    if (warehouse.id === rowData.id) {
+                        return { ...warehouse, visited: !warehouse.visited };
+                    }
+                    return warehouse;
+                });
+
+                setDropOffWarehouses(updatedDropOffWarehouses);
+            } catch (error) {
+                setError(error);
+            }
+        }
+    };
+
+    const handleStatusChange = async (status) => {
+        try {
+            // Gọi API để cập nhật routeStatusId
+            const response = await request('put', `/route-warehouses/${id}/status?statusId=${status}`);
+
+            // Cập nhật lại trạng thái của routeWarehouse
+            setRouteWarehouse(response.data);
+        } catch (error) {
+            setError(error);
+        }
+    };
 
     useEffect(() => {
         fetchRouteWarehouse();
@@ -77,14 +161,14 @@ const DetailWarehouseRoute = () => {
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         if (driver && startWarehouse && dropOffWarehouses) {
             console.log("check all")
             console.log(driver)
             console.log(startWarehouse)
             console.log(dropOffWarehouses)
         }
-    },[driver,startWarehouse, dropOffWarehouses])
+    }, [driver, startWarehouse, dropOffWarehouses])
 
     if (loading) return <CircularProgress />;
     if (!(driver && startWarehouse && dropOffWarehouses)) return <CircularProgress />;
@@ -92,12 +176,78 @@ const DetailWarehouseRoute = () => {
 
     return (
         <div>
-            <h1>Route {id} Details</h1>
-            <WarehouseRoute style={{ width: "100%", height: "80vh" }}
-                driver={driver}
-                startWarehouse={startWarehouse}
-                listLocation={dropOffWarehouses}
-            />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <h1>Route {id} Details</h1>
+                {routeWarehouse && (
+                    <>
+                        <Chip
+                            label={routeStatusMap[routeWarehouse.routeStatusId]}
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: getStatusColor(routeWarehouse.routeStatusId),
+                                color: 'white'
+                            }}
+                        />
+                        {routeWarehouse.routeStatusId === routeStatusMapReverse.NotReady && !isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.Ready)}
+                            label="Mark as Ready"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                        {routeWarehouse.routeStatusId === routeStatusMapReverse.Ready && isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.IN_TRANSIT)}
+                            label="Start"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                        {routeWarehouse.routeStatusId === routeStatusMapReverse.IN_TRANSIT && isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.Complete)}
+                            label="Mark as Complete"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                    </>
+
+                )}
+            </div>
+            <Grid container spacing={2}>
+                <Grid item xs={8}>
+                    <WarehouseRoute style={{ width: "100%", height: "80vh" }}
+                        driver={driver}
+                        startWarehouse={startWarehouse}
+                        listLocation={dropOffWarehouses}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    <StandardTable
+                        columns={columnsWareHouse}
+                        data={dropOffWarehouses}
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            marginTop: "-40px",
+                            marginBottom: "20px",
+                            overflowY: "scroll",
+                            overflowX: "hidden"
+                        }}
+                        options={{
+                            selection: false,
+                            pageSize: 5,
+                            search: true,
+                            sorting: true,
+                        }}
+                    />
+                </Grid>
+            </Grid>
             <br />
             {WarehouseRoute && (
                 <div>

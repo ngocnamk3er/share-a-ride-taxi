@@ -18,5 +18,7 @@ public interface RouteWarehouseDetailService {
 
     List<RouteWarehouseDetail> findRouteComeIn(String warehouseId);
 
+    RouteWarehouseDetail updateVisitedStatus(UUID id, boolean visited);
+
     // You can add more service methods as needed
 }

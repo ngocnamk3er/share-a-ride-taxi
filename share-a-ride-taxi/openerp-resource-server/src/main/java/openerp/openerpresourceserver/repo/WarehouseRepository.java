@@ -10,10 +10,12 @@ import java.util.List;
 
 @Repository
 public interface WarehouseRepository extends JpaRepository<Warehouse, String> {
-    @Query("SELECT w FROM Warehouse w " +
+    @Query("SELECT w.warehouseId, w.warehouseName, w.address, w.addressNote, w.lat, w.lon, " +
+            "w.createdAt, w.updatedAt, w.createdByUserId, rwd.visited, rwd.seqIndex , rwd.id " +
+            "FROM Warehouse w " +
             "INNER JOIN RouteWarehouseDetail rwd ON w.warehouseId = rwd.warehouseId " +
             "INNER JOIN RouteWarehouse rw ON rw.id = rwd.routeId " +
             "WHERE rw.id = :routeId " +
-            "ORDER BY w.warehouseId ASC")
-    List<Warehouse> getWarehouseByWarehoueRouteId(@Param("routeId") String id);
+            "ORDER BY rwd.seqIndex ASC")
+    List<Object[]> getWarehouseByWarehoueRouteId(@Param("routeId") String id);
 }

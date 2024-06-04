@@ -1,6 +1,7 @@
 package openerp.openerpresourceserver.controller;
 
 import lombok.RequiredArgsConstructor;
+import openerp.openerpresourceserver.DTO.response.WareHouseWithIndex;
 import openerp.openerpresourceserver.entity.Warehouse;
 import openerp.openerpresourceserver.service.Interface.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class WarehouseController {
     }
 
     @GetMapping("/by-warehouse-route/{id}")
-    public List<Warehouse> getWarehouseByWarehouseRouteId(@PathVariable String id) {
+    public List<WareHouseWithIndex> getWarehouseByWarehouseRouteId(@PathVariable String id) {
         return warehouseService.getWarehouseByWarehoueRouteId(id);
     }
 
@@ -50,4 +51,6 @@ public class WarehouseController {
     public void deleteWarehouse(@PathVariable String id) {
         warehouseService.deleteWarehouse(id);
     }
+
+
 }

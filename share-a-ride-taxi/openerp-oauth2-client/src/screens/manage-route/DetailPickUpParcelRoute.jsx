@@ -255,8 +255,8 @@ const DetailPickUpParcelRoute = (props) => {
                                 color: 'white'
                             }}
                         />}
-                        {routePickup.routeStatusId === 2 && isDriver && <Chip
-                            onClick={() => handleStatusChange(3)}
+                        {routePickup.routeStatusId === routeStatusMapReverse.IN_TRANSIT && isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.Complete)}
                             label="Mark as Complete"
                             style={{
                                 marginLeft: '20px',

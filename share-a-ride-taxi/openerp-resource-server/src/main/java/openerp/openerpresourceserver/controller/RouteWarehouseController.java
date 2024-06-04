@@ -78,4 +78,15 @@ public class RouteWarehouseController {
         }
         return ResponseEntity.ok(routes);
     }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<RouteWarehouse> updateRouteStatus(@PathVariable String id, @RequestParam Integer statusId) {
+        RouteWarehouse existingRouteWarehouse = routeWarehouseService.getRouteById(id);
+        if (existingRouteWarehouse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        existingRouteWarehouse.setRouteStatusId(statusId);
+        RouteWarehouse updatedRouteWarehouse = routeWarehouseService.updateRoute(id, existingRouteWarehouse);
+        return ResponseEntity.ok(updatedRouteWarehouse);
+    }
 }
