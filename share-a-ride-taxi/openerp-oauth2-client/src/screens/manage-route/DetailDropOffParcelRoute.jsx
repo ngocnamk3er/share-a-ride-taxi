@@ -12,7 +12,7 @@ import DropOffRoute from "components/route/dropoff-route/DropOffRoute";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { routeStatusMap, getStatusColor } from "config/statusMap";
+import { routeStatusMap, getStatusColor, routeStatusMapReverse } from "config/statusMap";
 
 const DetailDropOffParcelRoute = (props) => {
     const { isDriver } = props;
@@ -35,12 +35,20 @@ const DetailDropOffParcelRoute = (props) => {
             title: "Sender Name",
             field: "senderName",
             render: (rowData) => {
+                let displayText = '';
                 if (rowData.type === 'parcel-request') {
-                    return `parcel-request of ${rowData.senderName}`;
+                    displayText = `parcel-request of ${rowData.senderName}`;
                 } else if (rowData.type === 'passenger-request') {
-                    return `passenger-request of ${rowData.passengerName}`;
+                    displayText = `passenger-request of ${rowData.passengerName}`;
                 }
-                return '';
+                return (
+                    <span
+                        style={{ cursor: 'pointer' }}
+                        onClick={(event) => handleRowClick(event, rowData)}
+                    >
+                        {displayText}
+                    </span>
+                );
             },
         },
         {
@@ -68,9 +76,8 @@ const DetailDropOffParcelRoute = (props) => {
             field: "visited",
             render: rowData => (
                 <IconButton
-                    // onClick={() => handleActivateClick(rowData.driverId, rowData.warehouseId)}
-                    disabled={!rowData.visited}
-                    color="primary"
+                    onClick={() => handleActivateClick(rowData)}
+                    color={rowData.visited ? 'primary' : 'text.disabled'}
                 >
                     <CheckCircleIcon />
                 </IconButton>
@@ -79,7 +86,46 @@ const DetailDropOffParcelRoute = (props) => {
     ];
 
 
+    const handleActivateClick = async (rowData) => {
+        if(isDriver){
+            console.log("isDriver")
+        }
 
+        if(routeDropOff.routeStatusId === routeStatusMapReverse.IN_TRANSIT){
+            console.log("isDriver2")
+        }
+
+        if (isDriver && routeDropOff.routeStatusId === routeStatusMapReverse.IN_TRANSIT) {
+            const params = new URLSearchParams({
+                routeId: routeDropOff.id,
+                requestId: rowData.requestId,
+                visited: !rowData.visited
+            });
+
+            try {
+                if (rowData.type === 'passenger-request') {
+                    // Gửi yêu cầu đến API cập nhật visited cho passenger-request
+                    const response = await request('put', `/passenger-requests/update-visited/${rowData.requestId}?visited=${!rowData.visited}`);
+                } else {
+                    // Gửi yêu cầu đến API cập nhật visited cho parcel-request
+                    const response = await request('put', `/route-dropoff-details/visited?${params.toString()}`);
+                }
+
+                // Cập nhật trạng thái visited của request trong danh sách combinedRequests
+                setCombinedRequests((prevRequests) =>
+                    prevRequests.map((request) =>
+                        request.requestId === rowData.requestId && request.routeId === rowData.routeId
+                            ? { ...request, visited: !request.visited }
+                            : request
+                    )
+                );
+
+                console.log("Updated visited status for:", rowData.type);
+            } catch (error) {
+                console.error("Error updating visited status:", error);
+            }
+        }
+    };
 
     useEffect(() => {
         const fetchRouteDropOff = async () => {
@@ -227,8 +273,8 @@ const DetailDropOffParcelRoute = (props) => {
                                 color: 'white'
                             }}
                         />
-                        {routeDropOff.routeStatusId === 0 && !isDriver && <Chip
-                            onClick={() => handleStatusChange(1)}
+                        {routeDropOff.routeStatusId === routeStatusMapReverse.NotReady && !isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.Ready)}
                             label="Mark as Ready"
                             style={{
                                 marginLeft: '20px',
@@ -236,9 +282,18 @@ const DetailDropOffParcelRoute = (props) => {
                                 color: 'white'
                             }}
                         />}
-                        {routeDropOff.routeStatusId === 1 && isDriver && <Chip
-                            onClick={() => handleStatusChange(2)}
+                        {routeDropOff.routeStatusId === routeStatusMapReverse.Ready && isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.IN_TRANSIT)}
                             label="Start"
+                            style={{
+                                marginLeft: '20px',
+                                backgroundColor: 'green',
+                                color: 'white'
+                            }}
+                        />}
+                        {routeDropOff.routeStatusId === routeStatusMapReverse.IN_TRANSIT && isDriver && <Chip
+                            onClick={() => handleStatusChange(routeStatusMapReverse.Complete)}
+                            label="Mark as Complete"
                             style={{
                                 marginLeft: '20px',
                                 backgroundColor: 'green',
@@ -286,7 +341,6 @@ const DetailDropOffParcelRoute = (props) => {
                             search: true,
                             sorting: true,
                         }}
-                        onRowClick={handleRowClick}
                     />
                 </Grid>
             </Grid>
