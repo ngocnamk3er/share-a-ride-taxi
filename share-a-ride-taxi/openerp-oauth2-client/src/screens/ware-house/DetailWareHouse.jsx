@@ -9,6 +9,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { routeStatusMap } from "config/statusMap";
 import { getStatusColor } from "config/statusMap";
+import { routeStatusMapReverse } from "config/statusMap";
 
 const DetailWareHouse = () => {
     const [warehouse, setWarehouse] = useState(null);
@@ -16,17 +17,12 @@ const DetailWareHouse = () => {
     const [showDriverTable, setShowDriverTable] = useState(false);
     const [routePickups, setRoutePickups] = useState([]);
     const [showPickupTable, setShowPickupTable] = useState(false);
-
     const [routeWarehousesGoOut, setRouteWarehousesGoOut] = useState([]);
     const [showWarehouseGoOutTable, setShowWarehouseGoOutTable] = useState(false);
-
     const [routeWarehousesComeIn, setRouteWarehousesComeIn] = useState([]);
     const [showWarehouseComeInTable, setShowWarehouseComeInTable] = useState(false);
-
-
     const [routeDropOff, setRouteDropOff] = useState([]);
     const [showRouteDropOffable, setShowRouteDropOffable] = useState(false);
-
     const { id } = useParams();
     const tableRef = useRef(null);
 
@@ -121,13 +117,40 @@ const DetailWareHouse = () => {
         }
     };
 
-    const handleStatusChange = async (routeId) => {
+    const handlePickupStatusChange = async (routePickup) => {
         try {
-            // Call API to change route status to Ready (1)
-            await request("post", `/make-route-ready/${routeId}`);
-            // If successful, update the UI or refetch the route data
+            const params = new URLSearchParams({
+                routeId: routePickup.id,
+                requestId: routePickup.requestId,
+                visited: !routePickup.visited
+            });
+            await request('put', `/route-pickups/${routePickup.id}/status?status=${routeStatusMapReverse.Ready}`);
+            setRoutePickups(prevState => prevState.map(item => item.id === routePickup.id ? { ...item, routeStatusId: routeStatusMapReverse.Ready } : item));
         } catch (error) {
-            console.error("Error changing route status:", error);
+            console.error("Error changing pickup route status:", error);
+        }
+    };
+
+    const handleDropOffStatusChange = async (routeDropOff) => {
+        try {
+            const params = new URLSearchParams({
+                routeId: routeDropOff.id,
+                requestId: routeDropOff.requestId,
+                visited: !routeDropOff.visited
+            });
+            await request('put', `/route-dropoffs/${routeDropOff.id}/status?status=${routeStatusMapReverse.Ready}`);
+            setRouteDropOff(prevState => prevState.map(item => item.id === routeDropOff.id ? { ...item, routeStatusId: routeStatusMapReverse.Ready } : item));
+        } catch (error) {
+            console.error("Error changing drop off route status:", error);
+        }
+    };
+
+    const handleWarehouseStatusChange = async (routeId, status) => {
+        try {
+            await request('put', `/route-warehouses/${routeId}/status?statusId=${routeStatusMapReverse.Ready}`);
+            setRouteWarehousesGoOut(prevState => prevState.map(item => item.id === routeId ? { ...item, routeStatusId: routeStatusMapReverse.Ready } : item));
+        } catch (error) {
+            console.error("Error changing warehouse route status:", error);
         }
     };
 
@@ -157,8 +180,7 @@ const DetailWareHouse = () => {
             )
         }
     ];
-
-    const routeColumns = [
+    const pickupRouteColumns = [
         {
             title: "Route ID",
             field: "id"
@@ -173,22 +195,93 @@ const DetailWareHouse = () => {
                         style={{
                             backgroundColor: getStatusColor(rowData.routeStatusId),
                             color: 'white',
-                            marginRight: '8px' // Add margin for space
+                            marginRight: '8px'
                         }}
                     />
-                    {rowData.routeStatusId === 0 && ( // Render button only if routeStatusId is 0
-                        <IconButton
-                            onClick={() => handleStatusChange(rowData.id)}
-                            color="primary"
-                        >
-                            <CheckCircleIcon />
-                        </IconButton>
-                    )}
+                    {rowData.routeStatusId === 0 &&
+                        <Chip
+                            onClick={() => handlePickupStatusChange(rowData)}
+                            label="Mark As Ready"
+                            style={{
+                                backgroundColor: 'green',
+                                color: 'white',
+                                marginRight: '8px'
+                            }}
+                        />
+                    }
                 </>
-
             )
         },
     ];
+
+    const dropOffRouteColumns = [
+        {
+            title: "Route ID",
+            field: "id"
+        },
+        {
+            title: "Status",
+            field: "routeStatusId",
+            render: (rowData) => (
+                <>
+                    <Chip
+                        label={routeStatusMap[rowData.routeStatusId]}
+                        style={{
+                            backgroundColor: getStatusColor(rowData.routeStatusId),
+                            color: 'white',
+                            marginRight: '8px'
+                        }}
+                    />
+                    {rowData.routeStatusId === 0 &&
+                        <Chip
+                            onClick={() => handleDropOffStatusChange(rowData)}
+                            label="Mark As Ready"
+                            style={{
+                                backgroundColor: 'green',
+                                color: 'white',
+                                marginRight: '8px'
+                            }}
+                        />
+                    }
+                </>
+            )
+        },
+    ];
+
+    const warehouseRouteColumns = [
+        {
+            title: "Route ID",
+            field: "id"
+        },
+        {
+            title: "Status",
+            field: "routeStatusId",
+            render: (rowData) => (
+                <>
+                    <Chip
+                        label={routeStatusMap[rowData.routeStatusId]}
+                        style={{
+                            backgroundColor: getStatusColor(rowData.routeStatusId),
+                            color: 'white',
+                            marginRight: '8px'
+                        }}
+                    />
+                    {rowData.routeStatusId === 0 &&
+                        <Chip
+                            onClick={() => handleWarehouseStatusChange(rowData.id, 1)}
+                            label="Mark As Ready"
+                            style={{
+                                backgroundColor: 'green',
+                                color: 'white',
+                                marginRight: '8px'
+                            }}
+                        />
+                    }
+                </>
+            )
+        },
+    ];
+
 
     const warehouseRouteComeInColumns = [
         {
@@ -317,7 +410,7 @@ const DetailWareHouse = () => {
                             {showPickupTable && (
                                 <StandardTable
                                     title="Pickup Routes"
-                                    columns={routeColumns}
+                                    columns={pickupRouteColumns}
                                     data={routePickups}
                                     options={{
                                         selection: false,
@@ -349,7 +442,7 @@ const DetailWareHouse = () => {
                             {showWarehouseGoOutTable && (
                                 <StandardTable
                                     title="Route Warehouses Go Out"
-                                    columns={routeColumns}
+                                    columns={warehouseRouteColumns}
                                     data={routeWarehousesGoOut}
                                     options={{
                                         selection: false,
@@ -417,8 +510,8 @@ const DetailWareHouse = () => {
                             </ButtonBase>
                             {showRouteDropOffable && (
                                 <StandardTable
-                                    title="Warehouse Routes Come In"
-                                    columns={routeColumns}
+                                    title="Drop Off Routes"
+                                    columns={dropOffRouteColumns}
                                     data={routeDropOff}
                                     options={{
                                         selection: false,

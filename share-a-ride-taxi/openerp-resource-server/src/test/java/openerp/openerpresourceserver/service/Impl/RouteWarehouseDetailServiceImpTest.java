@@ -35,7 +35,7 @@ class RouteWarehouseDetailServiceImpTest {
                 .routeId("123")
                 .warehouseId("warehouseId")
                 .visited(false)
-                .sequenceIndex(1)
+                .seqIndex(1)
                 .build();
 
         // Giả lập repository.save() trả về đối tượng đã được lưu
