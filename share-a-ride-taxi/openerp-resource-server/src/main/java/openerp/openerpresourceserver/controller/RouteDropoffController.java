@@ -1,10 +1,9 @@
 package openerp.openerpresourceserver.controller;
 
 import lombok.AllArgsConstructor;
-import openerp.openerpresourceserver.entity.RouteDropoff;
-import openerp.openerpresourceserver.entity.RouteDropoffDetail;
-import openerp.openerpresourceserver.entity.RoutePickup;
-import openerp.openerpresourceserver.entity.RoutePickupDetail;
+import openerp.openerpresourceserver.entity.*;
+import openerp.openerpresourceserver.enums.RequestStatus;
+import openerp.openerpresourceserver.enums.RouteStatus;
 import openerp.openerpresourceserver.service.Interface.RouteDropoffDetailService;
 import openerp.openerpresourceserver.service.Interface.RouteDropoffService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,10 +108,16 @@ public class RouteDropoffController {
             return ResponseEntity.notFound().build();
         }
 
+        if(status == RouteStatus.IN_TRANSIT.ordinal()){
+            existingRoute.setCreatedStamp(LocalDateTime.now());
+        }
+        if(status == RouteStatus.COMPLETE.ordinal()){
+            existingRoute.setEndStamp(LocalDateTime.now());
+        }
+
         existingRoute.setRouteStatusId(status); // Cập nhật trạng thái mới
         existingRoute.setLastUpdatedStamp(LocalDateTime.now()); // Cập nhật thời gian cập nhật mới
         RouteDropoff updatedRouteDropoff = routeDropoffService.updateRouteDropoff(id, existingRoute); // Lưu thay đổi
-
         return ResponseEntity.ok(updatedRouteDropoff);
     }
 

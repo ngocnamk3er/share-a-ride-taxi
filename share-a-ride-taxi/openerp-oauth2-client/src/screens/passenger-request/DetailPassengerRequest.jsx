@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { request } from "../../api";
-import { Typography, CircularProgress, Grid } from "@mui/material";
+import { Typography, CircularProgress, Grid, Chip } from "@mui/material";
 import RoutingMapTwoPoint from "../../components/findroute/RoutingMapTwoPoint";
 import withScreenSecurity from 'components/common/withScreenSecurity';
+import { requestStatusMap, getRequestStatusColor } from "../../config/statusMap";
 
 const DetailPassengerRequest = () => {
     const [passengerRequest, setPassengerRequest] = useState(null);
@@ -31,11 +32,6 @@ const DetailPassengerRequest = () => {
             <Grid item xs={12}>
                 <Typography variant="h4" gutterBottom>
                     Passenger Request Detail
-                </Typography>
-            </Grid>
-            <Grid item xs={12}>
-                <Typography>
-                    <strong>ID:</strong> {passengerRequest.id}
                 </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -84,9 +80,13 @@ const DetailPassengerRequest = () => {
                 </Typography>
             </Grid>
             <Grid item xs={12}>
-                <Typography>
-                    <strong>Status :</strong> {passengerRequest.statusId}
-                </Typography>
+                <Chip
+                    label={requestStatusMap[passengerRequest.statusId]}
+                    style={{
+                        backgroundColor: getRequestStatusColor(passengerRequest.statusId),
+                        color: 'white'
+                    }}
+                />
             </Grid>
             <Grid item xs={12}>
                 <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}

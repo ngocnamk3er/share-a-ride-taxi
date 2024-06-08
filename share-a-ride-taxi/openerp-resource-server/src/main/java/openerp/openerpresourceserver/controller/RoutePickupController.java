@@ -2,8 +2,12 @@ package openerp.openerpresourceserver.controller;
 
 import com.amazonaws.services.ec2.model.Route;
 import lombok.RequiredArgsConstructor;
+import openerp.openerpresourceserver.entity.PassengerRequest;
 import openerp.openerpresourceserver.entity.RoutePickup;
 import openerp.openerpresourceserver.entity.RoutePickupDetail;
+import openerp.openerpresourceserver.enums.RequestStatus;
+import openerp.openerpresourceserver.enums.RouteStatus;
+import openerp.openerpresourceserver.service.Interface.PassengerRequestService;
 import openerp.openerpresourceserver.service.Interface.RoutePickupDetailService;
 import openerp.openerpresourceserver.service.Interface.RoutePickupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,7 @@ public class RoutePickupController {
 
     private final RoutePickupService routePickupService;
     private final RoutePickupDetailService routePickupDetailService;
+    private final PassengerRequestService passengerRequestService;
 
     @PostMapping
     public ResponseEntity<RoutePickup> createRoutePickup(@RequestBody RoutePickup routePickup) {
@@ -110,6 +115,22 @@ public class RoutePickupController {
         if (existingRoute == null) {
             return ResponseEntity.notFound().build();
         }
+
+
+        if(status == RouteStatus.IN_TRANSIT.ordinal()){
+            List<PassengerRequest> passengerRequestList = passengerRequestService.getPassengerRequestByRouteId(id);
+            for (PassengerRequest passengerRequest : passengerRequestList){
+                passengerRequest.setStatusId(RequestStatus.IN_TRANSIT.ordinal());
+                passengerRequestService.savePassengerRequest(passengerRequest);
+            }
+            existingRoute.setStartExecuteStamp(LocalDateTime.now());
+        }
+
+        if(status ==RouteStatus.COMPLETE.ordinal()){
+            existingRoute.setEndStamp(LocalDateTime.now());
+        }
+
+
 
         existingRoute.setRouteStatusId(status); // Cập nhật trạng thái mới
         existingRoute.setLastUpdatedStamp(LocalDateTime.now()); // Cập nhật thời gian cập nhật mới

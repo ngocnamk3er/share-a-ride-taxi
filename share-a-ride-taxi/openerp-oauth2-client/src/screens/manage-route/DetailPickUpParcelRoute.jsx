@@ -129,8 +129,9 @@ const DetailPickUpParcelRoute = (props) => {
         setSelectedStatus(newStatus);
 
         try {
-            await request('put', `/route-pickups/${id}/status?status=${newStatus}`);
-            setRoutePickup(prevState => ({ ...prevState, routeStatusId: parseInt(newStatus) }));
+            const res = await request('put', `/route-pickups/${id}/status?status=${newStatus}`);
+            const newRoute = res.data;
+            setRoutePickup(newRoute);
         } catch (err) {
             setError(err);
         }

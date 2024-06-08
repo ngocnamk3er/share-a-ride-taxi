@@ -242,8 +242,9 @@ const DetailDropOffParcelRoute = (props) => {
         setSelectedStatus(newStatus);
 
         try {
-            await request('put', `/route-dropoffs/${id}/status?status=${newStatus}`);
-            setRouteDropOff(prevState => ({ ...prevState, routeStatusId: parseInt(newStatus) }));
+            const res = await request('put', `/route-dropoffs/${id}/status?status=${newStatus}`);
+            const newRoute = res.data;
+            setRouteDropOff(newRoute);
         } catch (err) {
             setError(err);
         }

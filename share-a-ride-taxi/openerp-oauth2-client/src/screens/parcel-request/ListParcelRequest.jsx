@@ -8,10 +8,12 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Chip from '@mui/material/Chip';
+import { requestStatusMap, getRequestStatusColor } from "../../config/statusMap"; // Adjust the import path as necessary
 
 const ListParcelRequest = () => {
     const [parcelRequests, setParcelRequests] = useState([]);
-    const history = useHistory(); // Initialize useHistory hook
+    const history = useHistory();
     let { path } = useRouteMatch();
 
     useEffect(() => {
@@ -25,12 +27,10 @@ const ListParcelRequest = () => {
     }
 
     const handleRowClick = (event, rowData) => {
-        // Navigate to new URL without page reload
         history.push(`${path}/${rowData.requestId}`);
     }
 
     const handleEditClick = (rowData) => {
-        // Navigate to edit page for selected parcel request
         history.push(`/parcel-request/update/${rowData.requestId}`);
     }
 
@@ -38,7 +38,6 @@ const ListParcelRequest = () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this parcel request?");
         if (confirmDelete) {
             request("delete", `/parcel-requests/${rowData.requestId}`, () => {
-                // Remove the deleted parcel request from the state
                 setParcelRequests(prevState => prevState.filter(request => request.requestId !== rowData.requestId));
             }).then(() => {
                 alert("Parcel request deleted successfully.");
@@ -49,18 +48,8 @@ const ListParcelRequest = () => {
     }
 
     const handleViewClick = (rowData) => {
-        // Navigate to view page for selected parcel request
         history.push(`${path}/${rowData.requestId}`);
     }
-
-    // Lookup object for status
-    const statusLookup = {
-        0: "Received",
-        1: "Driver Assigned",
-        2: "In Transit",
-        3: "Delivered",
-        4: "Cancelled"
-    };
 
     const columns = [
         {
@@ -90,7 +79,15 @@ const ListParcelRequest = () => {
         {
             title: "Status",
             field: "statusId",
-            render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
+            render: (rowData) => (
+                <Chip
+                    label={requestStatusMap[rowData.statusId]}
+                    style={{
+                        backgroundColor: getRequestStatusColor(rowData.statusId),
+                        color: 'white'
+                    }}
+                />
+            )
         },
         {
             title: "View",

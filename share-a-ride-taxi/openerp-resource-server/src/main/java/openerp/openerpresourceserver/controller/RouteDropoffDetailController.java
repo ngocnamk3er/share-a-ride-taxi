@@ -1,6 +1,10 @@
 package openerp.openerpresourceserver.controller;
 
+import lombok.AllArgsConstructor;
+import openerp.openerpresourceserver.entity.ParcelRequest;
 import openerp.openerpresourceserver.entity.RouteDropoffDetail;
+import openerp.openerpresourceserver.enums.RequestStatus;
+import openerp.openerpresourceserver.service.Interface.ParcelRequestService;
 import openerp.openerpresourceserver.service.Interface.RouteDropoffDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,10 +16,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/route-dropoff-details")
+@AllArgsConstructor
 public class RouteDropoffDetailController {
 
-    @Autowired
-    private RouteDropoffDetailService routeDropoffDetailService;
+    private final ParcelRequestService parcelRequestService;
+
+    private final RouteDropoffDetailService routeDropoffDetailService;
 
     // API to get all RouteDropoffDetail by routeId
     @GetMapping("/by-route/{routeId}")
@@ -56,6 +62,9 @@ public class RouteDropoffDetailController {
             @RequestParam UUID requestId,
             @RequestParam boolean visited) {
         RouteDropoffDetail updatedRouteDropoffDetail = routeDropoffDetailService.updateVisitedStatus(routeId, requestId, visited);
+        ParcelRequest parcelRequest = parcelRequestService.getParcelRequestById(requestId);
+        parcelRequest.setStatusId(RequestStatus.DELIVERED.ordinal());
+        parcelRequestService.createParcelRequest(parcelRequest);
         if (updatedRouteDropoffDetail != null) {
             return ResponseEntity.ok().body(updatedRouteDropoffDetail);
         } else {

@@ -93,10 +93,7 @@ const DetailWarehouseRoute = (props) => {
 
     const handleStatusChange = async (status) => {
         try {
-            // Gọi API để cập nhật routeStatusId
             const response = await request('put', `/route-warehouses/${id}/status?statusId=${status}`);
-
-            // Cập nhật lại trạng thái của routeWarehouse
             setRouteWarehouse(response.data);
         } catch (error) {
             setError(error);
@@ -253,35 +250,35 @@ const DetailWarehouseRoute = (props) => {
                 <div>
                     <TextField
                         label="Start warehouse id"
-                        value={WarehouseRoute.startWarehouseId}
+                        value={routeWarehouse.startWarehouseId}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Driver ID"
-                        value={WarehouseRoute.driverId}
+                        value={routeWarehouse.driverId}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Start Execute Time"
-                        value={WarehouseRoute.startExecuteStamp}
+                        value={routeWarehouse.startExecuteStamp}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="End Time"
-                        value={WarehouseRoute.endStamp}
+                        value={routeWarehouse.endStamp}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"
                     />
                     <TextField
                         label="Route Status ID"
-                        value={routeStatusMap[WarehouseRoute.routeStatusId]}
+                        value={routeStatusMap[routeWarehouse.routeStatusId]}
                         InputProps={{ readOnly: true }}
                         fullWidth
                         margin="normal"

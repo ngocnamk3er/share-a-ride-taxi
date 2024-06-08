@@ -2,11 +2,13 @@ package openerp.openerpresourceserver.controller;
 
 import openerp.openerpresourceserver.entity.RouteDropoff;
 import openerp.openerpresourceserver.entity.RouteWarehouse;
+import openerp.openerpresourceserver.enums.RouteStatus;
 import openerp.openerpresourceserver.service.Interface.RouteWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -85,6 +87,14 @@ public class RouteWarehouseController {
         if (existingRouteWarehouse == null) {
             return ResponseEntity.notFound().build();
         }
+
+        if(statusId == RouteStatus.IN_TRANSIT.ordinal()){
+            existingRouteWarehouse.setStartExecuteStamp(LocalDateTime.now());
+        }
+        if(statusId == RouteStatus.COMPLETE.ordinal()){
+            existingRouteWarehouse.setEndStamp(LocalDateTime.now());
+        }
+
         existingRouteWarehouse.setRouteStatusId(statusId);
         RouteWarehouse updatedRouteWarehouse = routeWarehouseService.updateRoute(id, existingRouteWarehouse);
         return ResponseEntity.ok(updatedRouteWarehouse);

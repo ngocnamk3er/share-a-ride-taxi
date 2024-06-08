@@ -6,21 +6,15 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Chip from '@mui/material/Chip';
 import { useHistory } from "react-router-dom";
 import { useRouteMatch } from 'react-router-dom';
+import { requestStatusMap, getRequestStatusColor } from "../../config/statusMap"; // Adjust the import path as necessary
 
 const ListPassengerRequest = () => {
     const [passengerRequests, setPassengerRequests] = useState([]);
-    const history = useHistory(); // Initialize useHistory hook
+    const history = useHistory();
     let { path } = useRouteMatch();
-
-    const statusLookup = {
-        0: "Received",
-        1: "Driver Assigned",
-        2: "In Transit",
-        3: "Delivered",
-        4: "Cancelled"
-    };
 
     useEffect(() => {
         request("get", "/passenger-requests", (res) => {
@@ -29,44 +23,30 @@ const ListPassengerRequest = () => {
     }, [])
 
     const handleRowClick = (event, rowData) => {
-        // Navigate to new URL without page reload
         history.push(`${path}/${rowData.requestId}`);
     }
 
     const handleEditClick = (rowData) => {
-        // Navigate to new URL without page reload
         history.push(`/passenger-request/update/${rowData.requestId}`);
     }
 
     const handleDeleteClick = async (rowData) => {
-        // Confirm with user before deleting
         if (window.confirm("Are you sure you want to delete this passenger request?")) {
             try {
-                // Send delete request to API
                 await request("delete", `/passenger-requests/${rowData.requestId}`);
-                // Handle success response
                 alert("Passenger request deleted successfully!");
-                // Remove deleted request from current data
                 setPassengerRequests(prevPassengerRequests => prevPassengerRequests.filter(request => request.requestId !== rowData.requestId));
             } catch (error) {
-                // Handle error response
                 alert("Error deleting passenger request!");
             }
         }
     }
-    
-
 
     const handleViewClick = (rowData) => {
-        // Navigate to new URL without page reload
         history.push(`${path}/${rowData.requestId}`);
     }
 
     const columns = [
-        // {
-        //     title: "Passenger Id",
-        //     field: "id",
-        // },
         {
             title: "Passenger Name",
             field: "passengerName",
@@ -94,7 +74,15 @@ const ListPassengerRequest = () => {
         {
             title: "Status",
             field: "statusId",
-            render: (rowData) => statusLookup[rowData.statusId] // Render status label using lookup
+            render: (rowData) => (
+                <Chip
+                    label={requestStatusMap[rowData.statusId]}
+                    style={{
+                        backgroundColor: getRequestStatusColor(rowData.statusId),
+                        color: 'white'
+                    }}
+                />
+            )
         },
         {
             title: "View",
@@ -102,7 +90,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleViewClick(rowData)
+                        handleViewClick(rowData);
                     }}
                     variant="contained"
                     color="primary"
@@ -117,7 +105,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleEditClick(rowData)
+                        handleEditClick(rowData);
                     }}
                     variant="contained"
                     color="success"
@@ -132,7 +120,7 @@ const ListPassengerRequest = () => {
             render: (rowData) => (
                 <IconButton
                     onClick={() => {
-                        handleDeleteClick(rowData)
+                        handleDeleteClick(rowData);
                     }}
                     variant="contained"
                     color="error"
@@ -142,10 +130,6 @@ const ListPassengerRequest = () => {
             ),
         },
     ];
-
-    const demoFunction = (passengerRequest) => {
-        alert("You clicked on Passenger Request: " + passengerRequest.passengerName)
-    }
 
     return (
         <div>

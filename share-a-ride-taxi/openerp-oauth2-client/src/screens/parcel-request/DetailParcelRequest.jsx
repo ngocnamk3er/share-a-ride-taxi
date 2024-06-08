@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { request } from "../../api";
-import { Typography, CircularProgress, Grid } from "@mui/material";
+import { Typography, CircularProgress, Grid, Chip } from "@mui/material";
 import RoutingMapTwoPoint from "../../components/findroute/RoutingMapTwoPoint";
 import withScreenSecurity from 'components/common/withScreenSecurity';
+import { requestStatusMap, getRequestStatusColor } from "../../config/statusMap";
 
 const DetailParcelRequest = () => {
     const [parcelRequest, setParcelRequest] = useState(null);
@@ -33,9 +34,6 @@ const DetailParcelRequest = () => {
             </Typography>
             <Grid container spacing={2}>
                 <Grid item xs={6}>
-                    <Typography>
-                        <strong>ID:</strong> {parcelRequest.requestId}
-                    </Typography>
                     <Typography>
                         <strong>Sender Name:</strong> {parcelRequest.senderName}
                     </Typography>
@@ -77,9 +75,14 @@ const DetailParcelRequest = () => {
                 </Grid>
             </Grid>
             <br />
-            <Typography>
-                <strong>Status :</strong> {parcelRequest.statusId}
-            </Typography>
+            <Chip
+                label={requestStatusMap[parcelRequest.statusId]}
+                style={{
+                    backgroundColor: getRequestStatusColor(parcelRequest.statusId),
+                    color: 'white'
+                }}
+            />
+            <br />
             <RoutingMapTwoPoint style={{ width: "100%", height: "80vh" }}
                 // pickupLocation={{ lat: parcelRequest.pickupLocationLatitude, lon: parcelRequest.pickupLocationLongitude }}
                 // dropoffLocation={{ lat: parcelRequest.dropoffLocationLatitude, lon: parcelRequest.dropoffLocationLongitude }}
