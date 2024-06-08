@@ -29,8 +29,10 @@ const WarehouseRoute = (props) => {
     const { driver } = props;
     const { startWarehouse } = props;
     const { listLocation } = props;
+    const { combinedRequests } = props;
     const { style } = props;
 
+    console.log("check listLocation in WarehouseRoute :", listLocation);
 
     return (
         <>
@@ -39,7 +41,7 @@ const WarehouseRoute = (props) => {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <WarehouseRoutingMachine listLocation={listLocation} driver={driver} startWarehouse={startWarehouse} />
+                <WarehouseRoutingMachine listLocation={listLocation} driver={driver} startWarehouse={startWarehouse} combinedRequests={combinedRequests}/>
                 <ResetCenterView center={center} />
             </MapContainer>
         </>

@@ -34,7 +34,7 @@ const AddRequestToPickUpRoute = () => {
         },
         'column2': {
             id: 'column2',
-            title: 'Assigned requests',
+            title: 'Current Route',
             taskIds: []
         }
     });
