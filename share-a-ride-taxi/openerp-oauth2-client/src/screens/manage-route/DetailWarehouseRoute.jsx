@@ -4,9 +4,10 @@ import { TextField } from "@mui/material";
 import { Grid } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { Chip } from "@mui/material";
-import { useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
 import { CircularProgress } from "@mui/material";
+import { Button } from "@mui/material";
 import WarehouseRoute from "../../components/route/warehouse-route/WarehouseRoute"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -26,6 +27,7 @@ const DetailWarehouseRoute = (props) => {
     const [error, setError] = useState(null);
     const match = useRouteMatch();
     const { id } = match.params;
+    const history = useHistory();
     const [selectedStatus, setSelectedStatus] = useState('');
 
     const columnsWareHouse = [
@@ -216,6 +218,18 @@ const DetailWarehouseRoute = (props) => {
 
                 )}
             </div>
+            {!isDriver && (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => history.push(`/manage-routes/parcel-route-list/warehouse-route/${id}/add-request`)}
+                    style={{ marginTop: '20px' }}
+                >
+                    Add Request To Pick Up Route
+                </Button>
+            )}
+            <br />
+            <br />
             <Grid container spacing={2}>
                 <Grid item xs={8}>
                     <WarehouseRoute style={{ width: "100%", height: "80vh" }}
@@ -245,7 +259,7 @@ const DetailWarehouseRoute = (props) => {
                     />
                 </Grid>
             </Grid>
-            <br />
+            <br />=
             {WarehouseRoute && (
                 <div>
                     <TextField

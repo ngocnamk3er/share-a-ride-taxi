@@ -7,6 +7,7 @@ import DetailDropOffParcelRoute from "screens/manage-route/DetailDropOffParcelRo
 import DetailWarehouseRoute from "screens/manage-route/DetailWarehouseRoute";
 import AddRequestToPickUpRoute from "screens/manage-route/AddRequestToPickUpRoute";
 import AddRequestToDropOffRoute from "screens/manage-route/AddRequestToDropOffRoute";
+import AddRequestToWarehouseRoute from "screens/manage-route/AddRequestToWarehouseRoute";
 
 export default function ManageRouteRouter() {
     let { path } = useRouteMatch();
@@ -19,11 +20,6 @@ export default function ManageRouteRouter() {
                     path={`${path}/parcel-route-list`}
                 ></Route>
                 <Route
-                    component={DetailPickUpParcelRoute}
-                    exact
-                    path={`${path}/parcel-route-list/pick-up-route/:id`}
-                ></Route>
-                <Route
                     component={AddRequestToPickUpRoute}
                     exact
                     path={`${path}/parcel-route-list/pick-up-route/:id/add-request`}
@@ -34,12 +30,22 @@ export default function ManageRouteRouter() {
                     path={`${path}/parcel-route-list/drop-off-route/:id/add-request`}
                 ></Route>
                 <Route
+                    component={AddRequestToDropOffRoute}
+                    exact
+                    path={`${path}/parcel-route-list/warehouse-route/:id/add-request`}
+                ></Route>
+                <Route
+                    component={DetailPickUpParcelRoute}
+                    exact
+                    path={`${path}/parcel-route-list/pick-up-route/:id`}
+                ></Route>
+                <Route
                     component={DetailDropOffParcelRoute}
                     exact
                     path={`${path}/parcel-route-list/drop-off-route/:id`}
                 ></Route>
                 <Route
-                    component={DetailWarehouseRoute}
+                    component={AddRequestToWarehouseRoute}
                     exact
                     path={`${path}/parcel-route-list/warehouse-route/:id`}
                 ></Route>
