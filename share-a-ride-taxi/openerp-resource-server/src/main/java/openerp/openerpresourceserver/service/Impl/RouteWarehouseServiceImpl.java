@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.service.Impl;
 
+import lombok.RequiredArgsConstructor;
 import openerp.openerpresourceserver.entity.RouteWarehouse;
 import openerp.openerpresourceserver.repo.RouteWarehouseRepository;
 import openerp.openerpresourceserver.service.Interface.RouteWarehouseService;
@@ -10,14 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RouteWarehouseServiceImpl implements RouteWarehouseService {
 
     private final RouteWarehouseRepository repository;
-
-    @Autowired
-    public RouteWarehouseServiceImpl(RouteWarehouseRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public List<RouteWarehouse> getAllRoutes() {

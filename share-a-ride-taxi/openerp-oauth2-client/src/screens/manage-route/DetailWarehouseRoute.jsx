@@ -1,39 +1,35 @@
 import React, { useEffect, useState } from "react";
 import withScreenSecurity from 'components/common/withScreenSecurity';
-import { TextField } from "@mui/material";
-import { Grid } from "@mui/material";
-import { IconButton } from "@mui/material";
-import { Chip } from "@mui/material";
+import { TextField, Grid, IconButton, Chip, CircularProgress, Button } from "@mui/material";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { request } from "../../api";
-import { CircularProgress } from "@mui/material";
-import { Button } from "@mui/material";
 import WarehouseRoute from "../../components/route/warehouse-route/WarehouseRoute"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { StandardTable } from "erp-hust/lib/StandardTable";
-import { routeStatusMap } from "config/statusMap";
-import { getStatusColor } from "config/statusMap";
-import { routeStatusMapReverse } from "config/statusMap";
-
+import { routeStatusMap, routeStatusMapReverse, getStatusColor } from "config/statusMap";
 
 const DetailWarehouseRoute = (props) => {
     const { isDriver } = props;
     const [routeWarehouse, setRouteWarehouse] = useState(null);
     const [driver, setDriver] = useState(null);
     const [startWarehouse, setStartWarehouse] = useState(null);
-    const [dropOffWarehouses, setDropOffWarehouses] = useState(null);
+    const [dropOffWarehouses, setDropOffWarehouses] = useState([]);
+    const [passengerRequests, setPassengerRequests] = useState([]);
+    const [combinedRequests, setCombinedRequests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const match = useRouteMatch();
     const { id } = match.params;
     const history = useHistory();
-    const [selectedStatus, setSelectedStatus] = useState('');
 
-    const columnsWareHouse = [
+    const columnsCombined = [
         {
-            title: "Warehouse Name",
-            field: "warehouseName",
+            title: "Name",
+            field: "name",
+            render: rowData => (
+                rowData.type === "passenger-request" ? `passenger-request of ${rowData.passengerName}` : `transit warehouse ${rowData.warehouseName}`
+            )
         },
         {
             title: "View",
@@ -68,30 +64,37 @@ const DetailWarehouseRoute = (props) => {
             )
         }
     ];
-
-
-
     const handleActivateClick = async (rowData) => {
+        console.log("check row id ", rowData.id)
         if (isDriver && routeWarehouse.routeStatusId === routeStatusMapReverse.IN_TRANSIT) {
-            console.log("handleActivateClick ")
             try {
-                // Gọi API để cập nhật trạng thái visited
-                const response = await request('put', `/route-warehouse-details/update-visited?id=${rowData.id}&visited=${!rowData.visited}`);
-
-                // Cập nhật lại danh sách dropOffWarehouses sau khi thay đổi
-                const updatedDropOffWarehouses = dropOffWarehouses.map(warehouse => {
-                    if (warehouse.id === rowData.id) {
-                        return { ...warehouse, visited: !warehouse.visited };
-                    }
-                    return warehouse;
-                });
-
-                setDropOffWarehouses(updatedDropOffWarehouses);
+                if (rowData.type === "transit-warehouse") {
+                    const response = await request('put', `/route-warehouse-details/update-visited/${rowData.id}?visited=${!rowData.visited}`);
+                    const updatedDropOffWarehouses = dropOffWarehouses.map(warehouse => {
+                        if (warehouse.id === rowData.id) {
+                            return { ...warehouse, visited: !warehouse.visited };
+                        }
+                        return warehouse;
+                    });
+                    setDropOffWarehouses(updatedDropOffWarehouses);
+                    updateCombinedRequests(passengerRequests, updatedDropOffWarehouses);
+                } else if (rowData.type === "passenger-request") {
+                    const response = await request('put', `/passenger-requests/update-visited/${rowData.id}?visited=${!rowData.visited}`);
+                    const updatedPassengerRequests = passengerRequests.map(request => {
+                        if (request.requestId === rowData.id) {
+                            return { ...request, visited: !request.visited };
+                        }
+                        return request;
+                    });
+                    setPassengerRequests(updatedPassengerRequests);
+                    updateCombinedRequests(updatedPassengerRequests, dropOffWarehouses);
+                }
             } catch (error) {
                 setError(error);
             }
         }
     };
+
 
     const handleStatusChange = async (status) => {
         try {
@@ -104,17 +107,20 @@ const DetailWarehouseRoute = (props) => {
 
     useEffect(() => {
         fetchRouteWarehouse();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     useEffect(() => {
         if (routeWarehouse) {
-            console.log("check routeWarehouse : ", routeWarehouse)
             fetchDriver();
-            fetchStartWarehouse()
+            fetchStartWarehouse();
             fetchDropOffWarehouses();
+            fetchPassengerRequests();
         }
-    }, [routeWarehouse])
+    }, [routeWarehouse]);
+
+    useEffect(() => {
+        console.log("check combinedRequests ", combinedRequests)
+    }, [combinedRequests])
 
     const fetchRouteWarehouse = async () => {
         try {
@@ -122,9 +128,7 @@ const DetailWarehouseRoute = (props) => {
             setRouteWarehouse(response.data);
         } catch (err) {
             setError(err);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     const fetchStartWarehouse = async () => {
@@ -133,8 +137,6 @@ const DetailWarehouseRoute = (props) => {
             setStartWarehouse(response.data);
         } catch (err) {
             setError(err);
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -144,8 +146,6 @@ const DetailWarehouseRoute = (props) => {
             setDriver(response.data);
         } catch (err) {
             setError(err);
-        } finally {
-            setLoading(false);
         }
     }
 
@@ -153,24 +153,121 @@ const DetailWarehouseRoute = (props) => {
         try {
             const response = await request('get', `/warehouses/by-warehouse-route/${id}`);
             setDropOffWarehouses(response.data);
+            updateCombinedRequests(passengerRequests, response.data);
         } catch (err) {
             setError(err);
-        } finally {
-            setLoading(false);
+        } 
+    }
+
+    const fetchPassengerRequests = async () => {
+        try {
+            const response = await request('get', `/passenger-requests/get-by-route-id/${id}`);
+            setPassengerRequests(response.data);
+            updateCombinedRequests(response.data, dropOffWarehouses);
+        } catch (err) {
+            setError(err);
         }
     }
 
-    useEffect(() => {
-        if (driver && startWarehouse && dropOffWarehouses) {
-            console.log("check all")
-            console.log(driver)
-            console.log(startWarehouse)
-            console.log(dropOffWarehouses)
+    const updateCombinedRequests = (passengerRequests, dropOffWarehouses) => {
+        setCombinedRequests(prevCombinedRequests => {
+            const updatedCombinedRequests = [...prevCombinedRequests];
+
+            // Update passenger requests
+            passengerRequests.forEach(request => {
+                const existingRequestIndex = updatedCombinedRequests.findIndex(
+                    item => item.id === request.requestId && item.type === 'passenger-request'
+                );
+
+                if (existingRequestIndex > -1) {
+                    updatedCombinedRequests[existingRequestIndex] = {
+                        id: request.requestId,
+                        type: 'passenger-request',
+                        passengerName: request.passengerName,
+                        pickupAddress: request.pickupAddress,
+                        pickupLatitude: request.pickupLatitude,
+                        pickupLongitude: request.pickupLongitude,
+                        dropoffLatitude: request.dropoffLatitude,
+                        dropoffLongitude: request.dropoffLongitude,
+                        dropoffAddress: request.dropoffAddress,
+                        visited: request.visited,
+                        seqIndex: request.seqIndex
+                    };
+                } else {
+                    updatedCombinedRequests.push({
+                        id: request.requestId,
+                        type: 'passenger-request',
+                        passengerName: request.passengerName,
+                        pickupAddress: request.pickupAddress,
+                        pickupLatitude: request.pickupLatitude,
+                        pickupLongitude: request.pickupLongitude,
+                        dropoffLatitude: request.dropoffLatitude,
+                        dropoffLongitude: request.dropoffLongitude,
+                        dropoffAddress: request.dropoffAddress,
+                        visited: request.visited,
+                        seqIndex: request.seqIndex
+                    });
+                }
+            });
+
+            // Update drop-off warehouses
+            dropOffWarehouses.forEach(warehouse => {
+                const existingWarehouseIndex = updatedCombinedRequests.findIndex(
+                    item => item.id === warehouse.id && item.type === 'transit-warehouse'
+                );
+
+                if (existingWarehouseIndex > -1) {
+                    updatedCombinedRequests[existingWarehouseIndex] = {
+                        id: warehouse.id,
+                        type: 'transit-warehouse',
+                        warehouseName: warehouse.warehouseName,
+                        address: warehouse.address,
+                        lat: warehouse.lat,
+                        lon: warehouse.lon,
+                        visited: warehouse.visited,
+                        seqIndex: warehouse.seqIndex
+                    };
+                } else {
+                    updatedCombinedRequests.push({
+                        id: warehouse.id,
+                        type: 'transit-warehouse',
+                        warehouseName: warehouse.warehouseName,
+                        address: warehouse.address,
+                        lat: warehouse.lat,
+                        lon: warehouse.lon,
+                        visited: warehouse.visited,
+                        seqIndex: warehouse.seqIndex
+                    });
+                }
+            });
+
+            // Sort combinedRequests by seqIndex
+            updatedCombinedRequests.sort((a, b) => a.seqIndex - b.seqIndex);
+
+            return updatedCombinedRequests;
+        });
+    };
+
+    // const { isDriver } = props;
+    // const [routeWarehouse, setRouteWarehouse] = useState(null);
+    // const [driver, setDriver] = useState(null);
+    // const [startWarehouse, setStartWarehouse] = useState(null);
+    // const [dropOffWarehouses, setDropOffWarehouses] = useState([]);
+    // const [passengerRequests, setPassengerRequests] = useState([]);
+    // const [combinedRequests, setCombinedRequests] = useState([]);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
+    // const match = useRouteMatch();
+    // const { id } = match.params;
+    // const history = useHistory();
+
+    useEffect(()=>{
+        if(driver && routeWarehouse && startWarehouse && passengerRequests.length &&  passengerRequests.length &&  combinedRequests.length ){
+            setLoading(false);
         }
-    }, [driver, startWarehouse, dropOffWarehouses])
+    },[combinedRequests, driver, passengerRequests, routeWarehouse, startWarehouse])
 
     if (loading) return <CircularProgress />;
-    if (!(driver && startWarehouse && dropOffWarehouses)) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;
 
     return (
@@ -232,16 +329,17 @@ const DetailWarehouseRoute = (props) => {
             <br />
             <Grid container spacing={2}>
                 <Grid item xs={8}>
-                    <WarehouseRoute style={{ width: "100%", height: "80vh" }}
+                    <WarehouseRoute
+                        style={{ width: "100%", height: "80vh" }}
                         driver={driver}
                         startWarehouse={startWarehouse}
-                        listLocation={dropOffWarehouses}
+                        combinedRequests={combinedRequests}
                     />
                 </Grid>
                 <Grid item xs={4}>
                     <StandardTable
-                        columns={columnsWareHouse}
-                        data={dropOffWarehouses}
+                        columns={columnsCombined}
+                        data={combinedRequests}
                         style={{
                             width: "100%",
                             height: "100%",
@@ -259,7 +357,7 @@ const DetailWarehouseRoute = (props) => {
                     />
                 </Grid>
             </Grid>
-            <br />=
+            <br />
             {WarehouseRoute && (
                 <div>
                     <TextField

@@ -154,8 +154,8 @@ const AddRequestToWarehouseRoute = () => {
     useEffect(() => {
         fetchPassengerRequests();
         fetchRequestsOfRoute();
-        fetchRouteWarehouse();
         fetchTransitWarehouses();
+        fetchRouteWarehouse();
     }, [id]);
 
     useEffect(() => {
@@ -229,6 +229,7 @@ const AddRequestToWarehouseRoute = () => {
 
     const handleUpdateRouteClick = async () => {
         const assignedPassengerRequests = [];
+        const assignedTransitWarehouses = [];
 
         columns['column2'].taskIds.forEach((taskId, index) => {
             if (taskId.type === 'passenger-request') {
@@ -238,11 +239,26 @@ const AddRequestToWarehouseRoute = () => {
                     seqIndex: index + 1,
                     routeType: "WAREHOUSE_ROUTE",
                 });
+            } else if (taskId.type === 'transit-warehouse') {
+                assignedTransitWarehouses.push({
+                    warehouseId: taskId.id,
+                    routeId: id,
+                    visited: false, // Assuming default value
+                    seqIndex: index + 1,
+                    // You may need to adjust this depending on your API requirements
+                });
             }
         });
 
         try {
+            // Update assigned passenger requests
             await request("put", `/passenger-requests/add-to-route/${id}`, null, null, assignedPassengerRequests);
+
+            // Create RouteWarehouseDetails for transit warehouses
+            if (assignedTransitWarehouses.length > 0) {
+                await request("post", `/route-warehouses/${id}/warehouse-route-details`, null, null, assignedTransitWarehouses);
+            }
+
             const newPath = path.replace('/:id/add-request', `/${id}`);
             history.push(newPath);
         } catch (error) {

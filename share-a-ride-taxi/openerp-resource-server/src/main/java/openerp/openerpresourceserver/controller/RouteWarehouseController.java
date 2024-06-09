@@ -1,10 +1,12 @@
 package openerp.openerpresourceserver.controller;
 
-import openerp.openerpresourceserver.entity.RouteDropoff;
-import openerp.openerpresourceserver.entity.RouteWarehouse;
+import lombok.RequiredArgsConstructor;
+import openerp.openerpresourceserver.entity.*;
 import openerp.openerpresourceserver.enums.RouteStatus;
+import openerp.openerpresourceserver.service.Interface.RouteWarehouseDetailService;
 import openerp.openerpresourceserver.service.Interface.RouteWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/route-warehouses")
+@RequiredArgsConstructor
 public class RouteWarehouseController {
 
     private final RouteWarehouseService routeWarehouseService;
-
-    @Autowired
-    public RouteWarehouseController(RouteWarehouseService routeWarehouseService) {
-        this.routeWarehouseService = routeWarehouseService;
-    }
+    private final RouteWarehouseDetailService routeWarehouseDetailService;
 
     @GetMapping
     public List<RouteWarehouse> getAllRouteWarehouses() {
@@ -41,7 +40,30 @@ public class RouteWarehouseController {
         RouteWarehouse createdRouteWarehouse = routeWarehouseService.createRoute(routeWarehouse);
         return ResponseEntity.ok(createdRouteWarehouse);
     }
+    @PostMapping("/{routeId}/warehouse-route-details")
+    public ResponseEntity<?> updateRouteDetailsForRoute(@PathVariable("routeId") String routeId, @RequestBody List<RouteWarehouseDetail> routeDetails) {
+        System.out.println("System.out.println(routeDetails);");
+        System.out.println(routeDetails);
 
+        // Kiểm tra xem RoutePickup có tồn tại không
+        RouteWarehouse existingRoute = routeWarehouseService.getRouteById(routeId);
+        if (existingRoute == null) {
+            return new ResponseEntity<>("Route not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Xóa tất cả RoutePickupDetail của Route hiện tại
+        routeWarehouseDetailService.deleteAllByRouteId(routeId);
+
+        // Thêm mới danh sách RoutePickupDetail được cung cấp
+        for (RouteWarehouseDetail routeDetail : routeDetails) {
+            routeDetail.setRouteId(routeId);
+            routeDetail.setCreatedStamp(LocalDateTime.now());
+            routeDetail.setLastUpdatedStamp(LocalDateTime.now());
+            routeWarehouseDetailService.save(routeDetail);
+        }
+
+        return ResponseEntity.ok("Route details updated successfully");
+    }
     @PutMapping("/{id}")
     public ResponseEntity<RouteWarehouse> updateRouteWarehouse(@PathVariable String id, @RequestBody RouteWarehouse routeWarehouse) {
         RouteWarehouse existingRouteWarehouse = routeWarehouseService.getRouteById(id);

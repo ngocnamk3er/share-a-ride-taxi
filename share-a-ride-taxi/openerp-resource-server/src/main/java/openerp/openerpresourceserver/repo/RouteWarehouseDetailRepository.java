@@ -14,4 +14,5 @@ public interface RouteWarehouseDetailRepository extends JpaRepository<RouteWareh
     @Query("SELECT rwd FROM RouteWarehouseDetail rwd WHERE rwd.warehouseId = :warehouseId AND rwd.seqIndex != 1")
     List<RouteWarehouseDetail> findRouteComeIn(String warehouseId);
     // You can add custom query methods if needed
+    void deleteAllByRouteId(String routeId);
 }

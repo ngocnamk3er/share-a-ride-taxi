@@ -18,6 +18,8 @@ public interface RouteWarehouseDetailService {
 
     List<RouteWarehouseDetail> findRouteComeIn(String warehouseId);
 
+    void deleteAllByRouteId(String routeId);
+
     RouteWarehouseDetail updateVisitedStatus(UUID id, boolean visited);
 
     // You can add more service methods as needed

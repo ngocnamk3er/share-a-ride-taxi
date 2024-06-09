@@ -1,5 +1,6 @@
 package openerp.openerpresourceserver.service.Impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import openerp.openerpresourceserver.entity.RouteWarehouseDetail;
 import openerp.openerpresourceserver.repo.RouteWarehouseDetailRepository;
@@ -55,7 +56,11 @@ public class RouteWarehouseDetailServiceImp implements RouteWarehouseDetailServi
     public List<RouteWarehouseDetail> findRouteComeIn(String warehouseId) {
         return routeWarehouseDetailRepository.findRouteComeIn(warehouseId);
     }
-
+    @Override
+    @Transactional
+    public void deleteAllByRouteId(String routeId){
+        routeWarehouseDetailRepository.deleteAllByRouteId(routeId);
+    };
     @Override
     public RouteWarehouseDetail updateVisitedStatus(UUID id, boolean visited) {
         Optional<RouteWarehouseDetail> detailOptional = routeWarehouseDetailRepository.findById(id);

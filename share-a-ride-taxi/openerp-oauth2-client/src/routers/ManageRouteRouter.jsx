@@ -30,7 +30,7 @@ export default function ManageRouteRouter() {
                     path={`${path}/parcel-route-list/drop-off-route/:id/add-request`}
                 ></Route>
                 <Route
-                    component={AddRequestToDropOffRoute}
+                    component={AddRequestToWarehouseRoute}
                     exact
                     path={`${path}/parcel-route-list/warehouse-route/:id/add-request`}
                 ></Route>
@@ -45,7 +45,7 @@ export default function ManageRouteRouter() {
                     path={`${path}/parcel-route-list/drop-off-route/:id`}
                 ></Route>
                 <Route
-                    component={AddRequestToWarehouseRoute}
+                    component={DetailWarehouseRoute}
                     exact
                     path={`${path}/parcel-route-list/warehouse-route/:id`}
                 ></Route>
