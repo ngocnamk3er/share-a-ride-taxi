@@ -94,12 +94,12 @@ const AddRequestToWarehouseRoute = () => {
         }
     };
 
-    const fetchRequestsOfRoute = async () => {
+    const fetchPassengerRequestsAndTransitWarehouses = async () => {
         try {
             const resPassengerReq = await request("get", `/passenger-requests/get-by-route-id/${id}`);
-            setPassengerRequestsOfRoute(resPassengerReq.data);
-
-            const passengerTaskIds = resPassengerReq.data.map(request => ({
+            const passengerRequests = resPassengerReq.data;
+    
+            const passengerTaskIds = passengerRequests.map(request => ({
                 id: request.requestId,
                 type: 'passenger-request',
                 description: "passenger-request of " + request.passengerName,
@@ -111,25 +111,11 @@ const AddRequestToWarehouseRoute = () => {
                 dropoffLongitude: request.dropoffLongitude,
                 dropoffAddress: request.dropoffAddress
             }));
-
-            setColumns(prevColumns => ({
-                ...prevColumns,
-                'column2': {
-                    ...prevColumns['column2'],
-                    taskIds: passengerTaskIds.sort((a, b) => a.seqIndex - b.seqIndex)
-                }
-            }));
-        } catch (error) {
-            console.error("Error fetching requests:", error);
-        }
-    };
-
-    const fetchTransitWarehouses = async () => {
-        try {
+    
             const response = await request('get', `/warehouses/by-warehouse-route/${id}`);
             const warehouses = response.data;
-
-            const taskIds = warehouses.map(warehouse => ({
+    
+            const transitTaskIds = warehouses.map(warehouse => ({
                 id: warehouse.warehouseId,
                 type: 'transit-warehouse',
                 description: "Transit Warehouse: " + warehouse.warehouseName,
@@ -138,23 +124,25 @@ const AddRequestToWarehouseRoute = () => {
                 lon: warehouse.lon,
                 address: warehouse.address
             }));
-
-            setColumns(prevColumns => ({
-                ...prevColumns,
+    
+            const updatedColumns = {
+                ...columns,
                 'column2': {
-                    ...prevColumns['column2'],
-                    taskIds: taskIds.sort((a, b) => a.seqIndex - b.seqIndex)
+                    ...columns['column2'],
+                    taskIds: [...passengerTaskIds, ...transitTaskIds].sort((a, b) => a.seqIndex - b.seqIndex)
                 }
-            }));
+            };
+    
+            setColumns(updatedColumns);
         } catch (error) {
-            console.error("Error fetching transit warehouses:", error);
+            console.error("Error fetching requests or transit warehouses:", error);
         }
     };
+    
 
     useEffect(() => {
         fetchPassengerRequests();
-        fetchRequestsOfRoute();
-        fetchTransitWarehouses();
+        fetchPassengerRequestsAndTransitWarehouses();
         fetchRouteWarehouse();
     }, [id]);
 
