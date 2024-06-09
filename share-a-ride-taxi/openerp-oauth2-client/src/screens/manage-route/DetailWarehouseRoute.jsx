@@ -128,7 +128,7 @@ const DetailWarehouseRoute = (props) => {
             setRouteWarehouse(response.data);
         } catch (err) {
             setError(err);
-        } 
+        }
     };
 
     const fetchStartWarehouse = async () => {
@@ -156,7 +156,7 @@ const DetailWarehouseRoute = (props) => {
             updateCombinedRequests(passengerRequests, response.data);
         } catch (err) {
             setError(err);
-        } 
+        }
     }
 
     const fetchPassengerRequests = async () => {
@@ -261,11 +261,11 @@ const DetailWarehouseRoute = (props) => {
     // const { id } = match.params;
     // const history = useHistory();
 
-    useEffect(()=>{
-        if(driver && routeWarehouse && startWarehouse && passengerRequests.length &&  passengerRequests.length &&  combinedRequests.length ){
+    useEffect(() => {
+        if (driver && routeWarehouse && combinedRequests.length > 0) {
             setLoading(false);
         }
-    },[combinedRequests, driver, passengerRequests, routeWarehouse, startWarehouse])
+    }, [combinedRequests, driver, routeWarehouse])
 
     if (loading) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;

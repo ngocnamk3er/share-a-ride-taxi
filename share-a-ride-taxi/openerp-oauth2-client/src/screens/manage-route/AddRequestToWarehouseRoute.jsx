@@ -50,6 +50,8 @@ const AddRequestToWarehouseRoute = () => {
 
             const filteredRequests = res.data.filter(request => request.statusId === 0);
 
+            console.log("check filteredRequests : ", filteredRequests);
+
             setUnAssignedPassengerRequests(filteredRequests);
 
             const taskIds = filteredRequests.map(request => ({
