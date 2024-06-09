@@ -127,15 +127,13 @@ const AddRequestToWarehouseRoute = () => {
                 address: warehouse.address
             }));
     
-            const updatedColumns = {
-                ...columns,
+            setColumns(prevColumns => ({
+                ...prevColumns,
                 'column2': {
-                    ...columns['column2'],
+                    ...prevColumns['column2'],
                     taskIds: [...passengerTaskIds, ...transitTaskIds].sort((a, b) => a.seqIndex - b.seqIndex)
                 }
-            };
-    
-            setColumns(updatedColumns);
+            }));
         } catch (error) {
             console.error("Error fetching requests or transit warehouses:", error);
         }
