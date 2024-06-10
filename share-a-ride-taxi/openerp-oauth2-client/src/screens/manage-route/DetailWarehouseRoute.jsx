@@ -113,8 +113,9 @@ const DetailWarehouseRoute = (props) => {
         if (routeWarehouse) {
             fetchDriver();
             fetchStartWarehouse();
-            fetchDropOffWarehouses();
-            fetchPassengerRequests();
+            fetchDropOffWarehouseAndPassengerRequests();
+            // fetchDropOffWarehouses();
+            // fetchPassengerRequests();
         }
     }, [routeWarehouse]);
 
@@ -149,21 +150,13 @@ const DetailWarehouseRoute = (props) => {
         }
     }
 
-    const fetchDropOffWarehouses = async () => {
+    const fetchDropOffWarehouseAndPassengerRequests = async () => {
         try {
-            const response = await request('get', `/warehouses/by-warehouse-route/${id}`);
-            setDropOffWarehouses(response.data);
-            updateCombinedRequests(passengerRequests, response.data);
-        } catch (err) {
-            setError(err);
-        }
-    }
-
-    const fetchPassengerRequests = async () => {
-        try {
-            const response = await request('get', `/passenger-requests/get-by-route-id/${id}`);
-            setPassengerRequests(response.data);
-            updateCombinedRequests(response.data, dropOffWarehouses);
+            const warehouseResponse = await request('get', `/warehouses/by-warehouse-route/${id}`);
+            const passengerResponse = await request('get', `/passenger-requests/get-by-route-id/${id}`);
+            setDropOffWarehouses(warehouseResponse.data);
+            setPassengerRequests(passengerResponse.data);
+            updateCombinedRequests(passengerResponse.data, warehouseResponse.data);
         } catch (err) {
             setError(err);
         }
@@ -265,7 +258,7 @@ const DetailWarehouseRoute = (props) => {
         if (driver && routeWarehouse && combinedRequests.length > 0) {
             setLoading(false);
         }
-    }, [combinedRequests, driver, routeWarehouse])
+    }, [driver, routeWarehouse, combinedRequests])
 
     if (loading) return <CircularProgress />;
     if (error) return <div>Error loading data: {error.message}</div>;
