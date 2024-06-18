@@ -131,11 +131,11 @@ const createRoutineMachineLayer = (props) => {
   }
 
 
-  // instance.on('routesfound', function (e) {
-  //   const route = e.routes[0].coordinates;
-  //   console.log("check route : ", route)
-  //   simulateRunningPoint(route);
-  // });
+  instance.on('routesfound', function (e) {
+    const route = e.routes[0].coordinates;
+    console.log("check route : ", route)
+    simulateRunningPoint(route);
+  });
 
   return instance;
 };

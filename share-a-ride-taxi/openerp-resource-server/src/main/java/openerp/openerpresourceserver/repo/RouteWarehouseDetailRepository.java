@@ -15,4 +15,6 @@ public interface RouteWarehouseDetailRepository extends JpaRepository<RouteWareh
     List<RouteWarehouseDetail> findRouteComeIn(String warehouseId);
     // You can add custom query methods if needed
     void deleteAllByRouteId(String routeId);
+
+    List<RouteWarehouseDetail> findByRouteId(String routeId);
 }

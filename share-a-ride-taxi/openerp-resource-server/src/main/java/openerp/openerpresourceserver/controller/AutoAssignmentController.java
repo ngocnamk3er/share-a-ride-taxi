@@ -26,9 +26,6 @@ import java.util.*;
 public class AutoAssignmentController {
 
     private final AutoAssignService autoAssignService;
-    private final ParcelRequestService parcelRequestService;
-    private final WarehouseService warehouseService;
-    private final GraphHopperCalculator graphHopperCalculator;
     private final RouteWarehouseService routeWarehouseService;
 
     @GetMapping("/assign-parcel-route/{day}")

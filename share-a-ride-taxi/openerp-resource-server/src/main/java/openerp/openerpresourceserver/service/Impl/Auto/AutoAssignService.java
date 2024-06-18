@@ -25,24 +25,24 @@ public class AutoAssignService {
     private List<ParcelRequest> parcelPassengers;
     private List<Warehouse> warehouses;
 
-    //Driver
+    // Driver
     private final DriverService driverService;
 
-    //PickUp
+    // PickUp
     private final RoutePickupService routePickupService;
     private final RoutePickupDetailService routePickupDetailService;
     private final Vector<Pair<Warehouse, ParcelRequest>> vectorPickUp = new Vector<>();
     private final Vector<RoutePickupDetail> routePickupDetailVector = new Vector<>();
     private final Vector<RoutePickup> vectorRoutePickup = new Vector<>();
 
-    //DropOff
+    // DropOff
     private final RouteDropoffService routeDropoffService;
     private final RouteDropoffDetailService routeDropoffDetailService;
     private final Vector<Pair<Warehouse, ParcelRequest>> vectorDropoff = new Vector<>();
     private final Vector<RouteDropoffDetail> routeDropoffDetailVector = new Vector<>();
     private final Vector<RouteDropoff> vectorRouteDropoff = new Vector<>();
 
-    //Warehouse
+    // Warehouse
     private final RouteWarehouseService routeWarehouseService;
     private final RouteWarehouseDetailService routeWarehouseDetailService;
     private final HashMap<String, Set<String>> pickUpWareHouseToDropOffWareHouse = new HashMap<>();
@@ -50,14 +50,16 @@ public class AutoAssignService {
     private final HashMap<RouteWarehouse, Vector<RouteWarehouseDetail>> routeWarehouseToDetailVector = new HashMap<>();
 
     public String autoAssign(String day) throws Exception {
+        // Retrieve all parcel requests and warehouses
         parcelPassengers = parcelRequestService.getAllParcelRequests();
         warehouses = warehouseService.getAllWarehouses();
 
+        // Perform clustering for pick up, drop off, and warehouse routes
         clusteringPickUp(day);
         clusteringDropoff(day);
         clusteringWareHouse(day);
 
-
+        // Collect details of pick up and drop off routes for reporting
         String pickupDetails = routePickupDetailVector.stream()
                 .map(routePickupDetail -> "RouteId : " + routePickupDetail.getRouteId() + " RequestId: " + routePickupDetail.getRequestId() + " SeqIndex : " + routePickupDetail.getSeqIndex())
                 .collect(Collectors.joining("\n"));
@@ -66,8 +68,8 @@ public class AutoAssignService {
                 .map(routeDropoffDetail -> "RouteId : " + routeDropoffDetail.getRouteId() + " RequestId: " + routeDropoffDetail.getRequestId() + " SeqIndex : " + routeDropoffDetail.getSeqIndex())
                 .collect(Collectors.joining("\n"));
 
+        // Collect details of warehouse routes for reporting
         StringBuilder result = new StringBuilder();
-
         for (Map.Entry<String, Set<String>> entry : pickUpWareHouseToDropOffWareHouse.entrySet()) {
             String wareHouseId = entry.getKey();
             Set<String> dropOffWareHouseVector = entry.getValue();
@@ -78,21 +80,20 @@ public class AutoAssignService {
             }
         }
 
-
-        // Nối hai kết quả lại
+        // Combine all details for the final report
         String combinedDetails = pickupDetails
                 .concat("\n-------------------\n")
                 .concat(result.toString())
                 .concat("-------------------\n")
                 .concat(dropoffDetails);
 
+        // Clear data structures for the next execution
         clearDataStructures();
         return combinedDetails;
-
     }
 
     private void clusteringPickUp(String day) throws Exception {
-
+        // Clustering pick up requests to nearest warehouse
         for (ParcelRequest parcelRequest : parcelPassengers) {
             Coordinate parcelRequestPickUpLocation = new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getPickupLongitude());
             Warehouse pickUpWarehouse = new Warehouse();
@@ -109,16 +110,16 @@ public class AutoAssignService {
         }
         vectorPickUp.sort(Comparator.comparing(pair -> pair.getFirst().getWarehouseId()));
 
-        Set<String> pickUpWareHouseName = new HashSet<>(); // Khởi tạo một Set rỗng để lưu trữ wareHouseId
+        Set<String> pickUpWareHouseName = new HashSet<>();
 
         for (Pair<Warehouse, ParcelRequest> pair : vectorPickUp) {
-            pickUpWareHouseName.add(pair.getFirst().getWarehouseId()); // Thêm wareHouseId vào Set
+            pickUpWareHouseName.add(pair.getFirst().getWarehouseId());
         }
 
+        // Assign drivers to pick up routes
         for (String wareHouseId : pickUpWareHouseName) {
             List<Driver> drivers = driverService.getDriversByWarehouseId(wareHouseId);
             Driver driver = drivers.get(0);
-            //Insert into database
             RoutePickup routePickup = RoutePickup.builder()
                     .wareHouseId(wareHouseId)
                     .id(wareHouseId + "_pickup_route_" + day)
@@ -129,7 +130,7 @@ public class AutoAssignService {
             routePickupService.save(routePickup);
         }
 
-
+        // Create pick up route details and save them
         HashMap<String, Integer> warehousePickUpHouseIdToLength = new HashMap<>();
         for (int i = 0; i < vectorPickUp.size(); i++) {
             Pair<Warehouse, ParcelRequest> pair = vectorPickUp.get(i);
@@ -139,7 +140,6 @@ public class AutoAssignService {
             currentlength = currentlength + 1;
             warehousePickUpHouseIdToLength.put(warehousePickUp.getWarehouseId(), currentlength);
 
-            //Insert into database
             RoutePickupDetail routePickupDetail = RoutePickupDetail.builder()
                     .routeId(warehousePickUp.getWarehouseId() + "_pickup_route_" + day)
                     .requestId(parcelRequest.getRequestId())
@@ -151,9 +151,11 @@ public class AutoAssignService {
             routePickupDetailVector.add(routePickupDetail);
             routePickupDetailService.save(routePickupDetail);
         }
+        tspPickUpRoute();
     }
 
     private void clusteringDropoff(String day) throws Exception {
+        // Clustering drop off requests to nearest warehouse
         for (ParcelRequest parcelRequest : parcelPassengers) {
             Coordinate parcelRequestDropOffLocation = new Coordinate(parcelRequest.getDropoffLatitude(), parcelRequest.getDropoffLongitude());
             Warehouse dropOffWarehouse = new Warehouse();
@@ -170,16 +172,16 @@ public class AutoAssignService {
         }
         vectorDropoff.sort(Comparator.comparing(pair -> pair.getFirst().getWarehouseId()));
 
-        Set<String> dropOffWareHouseName = new HashSet<>(); // Khởi tạo một Set rỗng để lưu trữ wareHouseId
+        Set<String> dropOffWareHouseName = new HashSet<>();
 
         for (Pair<Warehouse, ParcelRequest> pair : vectorDropoff) {
-            dropOffWareHouseName.add(pair.getFirst().getWarehouseId()); // Thêm wareHouseId vào Set
+            dropOffWareHouseName.add(pair.getFirst().getWarehouseId());
         }
 
+        // Assign drivers to drop off routes
         for (String wareHouseId : dropOffWareHouseName) {
             List<Driver> drivers = driverService.getDriversByWarehouseId(wareHouseId);
             Driver driver = drivers.get(0);
-            //Insert into database
             RouteDropoff routeDropoff = RouteDropoff.builder()
                     .wareHouseId(wareHouseId)
                     .id(wareHouseId + "_dropoff_route_" + day)
@@ -191,7 +193,7 @@ public class AutoAssignService {
             routeDropoffService.createRouteDropoff(routeDropoff);
         }
 
-
+        // Create drop off route details and save them
         HashMap<String, Integer> wareDropOffHouseIdToLength = new HashMap<>();
         for (int i = 0; i < vectorDropoff.size(); i++) {
             Pair<Warehouse, ParcelRequest> pair = vectorDropoff.get(i);
@@ -201,7 +203,6 @@ public class AutoAssignService {
             currentlength = currentlength + 1;
             wareDropOffHouseIdToLength.put(warehouseDropOff.getWarehouseId(), currentlength);
 
-            //Insert into database
             RouteDropoffDetail routePickupDetail = RouteDropoffDetail.builder()
                     .routeId(warehouseDropOff.getWarehouseId() + "_dropoff_route_" + day)
                     .requestId(parcelRequest.getRequestId())
@@ -214,14 +215,15 @@ public class AutoAssignService {
         }
     }
 
-    private void clusteringWareHouse(String day) {
+    private void clusteringWareHouse(String day) throws Exception {
+        // Clustering warehouses for route optimization
         for (RoutePickup routePickup : vectorRoutePickup) {
             String wareHouseId = routePickup.getWareHouseId();
 
             if (pickUpWareHouseToDropOffWareHouse.get(routePickup.getWareHouseId()) == null) {
                 pickUpWareHouseToDropOffWareHouse.put(wareHouseId, new HashSet<>());
 
-                //Insert into database
+                // Assign drivers to warehouse routes
                 List<Driver> drivers = driverService.getDriversByWarehouseId(wareHouseId);
                 Driver driver = drivers.get(0);
                 RouteWarehouse routeWarehouse = RouteWarehouse.builder()
@@ -235,30 +237,24 @@ public class AutoAssignService {
             }
         }
 
-
+        // Create warehouse route details
         HashMap<String, Integer> startWarehousHouseIdToLength = new HashMap<>();
         for (Map.Entry<String, Set<String>> entry : pickUpWareHouseToDropOffWareHouse.entrySet()) {
             String wareHouseId = entry.getKey();
-
-            //routeDropOff đi ra từ Warehouse này
             Set<String> dropOffWareHouseSet = entry.getValue();
 
-            //routePickUpDetail đi tới Warehouse này
             Vector<RoutePickupDetail> routePickUpDetailOfThisWareHouse = new Vector<>();
-
-            //routeDropOffDetail đi ra từ Warehouse này
-            Vector<RouteDropoffDetail> routeDropOffDetailFromThisWareHouse = new Vector<>();//route detail co don hang chay ra tu day
-
-            //routePickUp đi tới Warehouse này
+            Vector<RouteDropoffDetail> routeDropOffDetailFromThisWareHouse = new Vector<>();
             Vector<RoutePickup> routePickUpOfThisWareHouse = new Vector<>();
 
-            //Tìm các routePickup hướng tới wareHouse này
+            // Find route pickups directed to this warehouse
             for (RoutePickup routePickup : vectorRoutePickup) {
                 if (routePickup.getWareHouseId().equals(wareHouseId)) {
                     routePickUpOfThisWareHouse.add(routePickup);
                 }
             }
-            //Tìm các routePickUpDetail hướng tới wareHouse này
+
+            // Find route pickup details directed to this warehouse
             for (RoutePickup routePickup : routePickUpOfThisWareHouse) {
                 for (RoutePickupDetail routePickupDetail : routePickupDetailVector) {
                     if (routePickupDetail.getRouteId().equals(routePickup.getId())) {
@@ -266,7 +262,8 @@ public class AutoAssignService {
                     }
                 }
             }
-            // Tìm các routeDropOffDetail đi ra wareHouse này
+
+            // Find route drop off details going out of this warehouse
             for (RoutePickupDetail routePickupDetail : routePickUpDetailOfThisWareHouse) {
                 for (RouteDropoffDetail routeDropoffDetail : routeDropoffDetailVector) {
                     if (routeDropoffDetail.getRequestId() == routePickupDetail.getRequestId()) {
@@ -275,14 +272,15 @@ public class AutoAssignService {
                 }
             }
 
-            //Tìm các routeDropOff đi ra từ wareHouse này
+            // Find route drop offs going out of this warehouse
             for (RouteDropoff routeDropoff : vectorRouteDropoff) {
                 for (RouteDropoffDetail routeDropoffDetail : routeDropOffDetailFromThisWareHouse) {
                     if (routeDropoffDetail.getRouteId().equals(routeDropoff.getId())) {
                         if (!dropOffWareHouseSet.contains(routeDropoff.getWareHouseId())) {
                             int currentlength = startWarehousHouseIdToLength.get(wareHouseId) == null ? 0 : startWarehousHouseIdToLength.get(wareHouseId);
                             startWarehousHouseIdToLength.put(wareHouseId, currentlength + 1);
-                            //Insert into database
+
+                            // Save warehouse route details
                             RouteWarehouseDetail routeWarehouseDetail = RouteWarehouseDetail.builder()
                                     .warehouseId(routeDropoff.getWareHouseId())
                                     .seqIndex(currentlength + 1)
@@ -294,29 +292,125 @@ public class AutoAssignService {
                     }
                 }
             }
-
         }
+        solveTSPWarehouseRoute(day);
     }
 
-    private void tspPickUpRoute(){
-        for (RoutePickup routePickup : vectorRoutePickup){
+    private void tspPickUpRoute() throws Exception {
+        for (RoutePickup routePickup : vectorRoutePickup) {
+            // Lấy tất cả RoutePickupDetail cho routePickup hiện tại
+            List<RoutePickupDetail> routePickupDetails = routePickupDetailVector.stream()
+                    .filter(detail -> detail.getRouteId().equals(routePickup.getId()))
+                    .collect(Collectors.toList());
 
+            if (routePickupDetails.size() < 2) {
+                continue; // Nếu ít hơn 2 điểm thì không cần tối ưu
+            }
+
+            // Lấy tọa độ của các điểm trong routePickupDetails
+            List<Coordinate> coordinates = new ArrayList<>();
+            for (RoutePickupDetail detail : routePickupDetails) {
+                ParcelRequest parcelRequest = parcelPassengers.stream()
+                        .filter(request -> request.getRequestId().equals(detail.getRequestId()))
+                        .findFirst()
+                        .orElseThrow(() -> new Exception("ParcelRequest not found"));
+                coordinates.add(new Coordinate(parcelRequest.getPickupLatitude(), parcelRequest.getPickupLongitude()));
+            }
+
+            // Áp dụng thuật toán Nearest Neighbor để sắp xếp lại thứ tự các điểm
+            List<Integer> optimizedOrder = solveTSPUsingNearestNeighbor(coordinates);
+
+            // Cập nhật lại thứ tự các RoutePickupDetail theo kết quả tối ưu
+            for (int i = 0; i < optimizedOrder.size(); i++) {
+                routePickupDetails.get(optimizedOrder.get(i)).setSeqIndex(i + 1);
+            }
+
+            // Lưu lại các chi tiết đã cập nhật
+            for (RoutePickupDetail detail : routePickupDetails) {
+                routePickupDetailService.save(detail);
+            }
         }
     }
 
     private void tspDropOffRoute(){
+        // Placeholder for TSP algorithm for drop off routes
         for (RouteDropoff routeDropoff : vectorRouteDropoff){
-
+            // Implement TSP algorithm here
         }
     }
 
-    private void tspWarehouseRoute(){
-        for (RouteDropoff routeDropoff : vectorRouteDropoff){
 
+    private void solveTSPWarehouseRoute(String day) throws Exception {
+        for (RouteWarehouse routeWarehouse : routeWarehouseVector) {
+            // Get all RouteWarehouseDetail for the current routeWarehouse
+            List<RouteWarehouseDetail> routeWarehouseDetails = routeWarehouseToDetailVector.get(routeWarehouse);
+
+            if (routeWarehouseDetails.size() < 2) {
+                continue; // No need to optimize if less than 2 points
+            }
+
+            // Get coordinates of points in routeWarehouseDetails
+            List<Coordinate> coordinates = new ArrayList<>();
+            for (RouteWarehouseDetail detail : routeWarehouseDetails) {
+                Warehouse warehouse = warehouses.stream()
+                        .filter(w -> w.getWarehouseId().equals(detail.getWarehouseId()))
+                        .findFirst()
+                        .orElseThrow(() -> new Exception("Warehouse not found"));
+                coordinates.add(new Coordinate(warehouse.getLat(), warehouse.getLon()));
+            }
+
+            // Apply TSP algorithm to re-order the points
+            List<Integer> optimizedOrder = solveTSPUsingNearestNeighbor(coordinates);
+
+            // Update the sequence index of RouteWarehouseDetail according to the optimized result
+            for (int i = 0; i < optimizedOrder.size(); i++) {
+                routeWarehouseDetails.get(optimizedOrder.get(i)).setSeqIndex(i + 1);
+            }
+
+            // Save the updated details
+            for (RouteWarehouseDetail detail : routeWarehouseDetails) {
+                routeWarehouseDetailService.save(detail);
+            }
         }
+    }
+
+    private List<Integer> solveTSPUsingNearestNeighbor(List<Coordinate> coordinates) throws Exception {
+        int n = coordinates.size();
+        boolean[] visited = new boolean[n];
+        List<Integer> path = new ArrayList<>();
+
+        int current = 0;
+        path.add(current);
+        visited[current] = true;
+
+        for (int i = 1; i < n; i++) {
+            double minDistance = Double.MAX_VALUE;
+            int next = -1;
+            for (int j = 0; j < n; j++) {
+                if (!visited[j]) {
+                    double distance = calculateDistance(coordinates.get(current), coordinates.get(j));
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        next = j;
+                    }
+                }
+            }
+            if (next != -1) {
+                path.add(next);
+                visited[next] = true;
+                current = next;
+            }
+        }
+        return path;
+    }
+
+    private double calculateDistance(Coordinate a, Coordinate b) throws Exception {
+        ResponsePath path = graphHopperCalculator.calculate(a, b);
+        return path.getDistance();
     }
 
     private void clearDataStructures() {
+        // Clear all data structures for the next execution
         vectorPickUp.clear();
         routePickupDetailVector.clear();
         vectorRoutePickup.clear();
@@ -325,5 +419,4 @@ public class AutoAssignService {
         vectorRouteDropoff.clear();
         pickUpWareHouseToDropOffWareHouse.clear();
     }
-
 }

@@ -72,4 +72,9 @@ public class RouteWarehouseDetailServiceImp implements RouteWarehouseDetailServi
         }
         return null;
     }
+
+    @Override
+    public List<RouteWarehouseDetail> findByRouteId(String routeId) {
+        return routeWarehouseDetailRepository.findByRouteId(routeId);
+    }
 }
